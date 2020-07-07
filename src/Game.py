@@ -1,6 +1,6 @@
 import random
-import matplotlib.pyplot as plt
-from matplotlib.ticker import MultipleLocator
+# import matplotlib.pyplot as plt
+# from matplotlib.ticker import MultipleLocator
 from Board import Board
 from Player import Player
 from Unit.Unit import Unit
@@ -35,44 +35,38 @@ class Game:
         player_1 = Player([1, 1], self.grid_size, 1, 'Blue')
         player_2 = Player([self.grid_size - 1, self.grid_size - 1],
                           self.grid_size, 2, 'Red')
-        #player_3 = Player([1, self.grid_size - 1], self.grid_size, 3, 'Purple')
-        #player_4 = Player([self.grid_size - 1, 1], self.grid_size, 4, 'Green')
+        # player_3 = Player([1, self.grid_size - 1], self.grid_size, 3, 'Purple')
+        # player_4 = Player([self.grid_size - 1, 1], self.grid_size, 4, 'Green')
         return [player_1, player_2]  # , player_3, player_4]
 
     def play(self):
         turn = 1
-        while True:
-            print('while players dead')
+        self.player_has_not_won = True
+        while self.player_has_not_won:
 
-            self.players_dead = 0
-            for player in self.board.players:
-                if player.status == 'Deceased':
-                    self.players_dead += 1
-                if self.players_dead > (len(self.board.players) - 1):
-                    break
+            self.player_has_not_won = self.check_if_player_has_won()
+            if not self.player_has_not_won:
+                break
 
             self.complete_turn(turn)
 
             turn += 1
 
         if self.players_dead >= (len(self.board.players) - 1):
+            self.player_has_won()
 
-            self.show()
+    def player_has_won(self):
+        self.state_obsolete()
 
-            for player in self.board.players:
-                if player.status == 'Playing':
-                    self.game_won = True
-                    print('Player', player.player_number, 'WINS!')
+        for player in self.board.players:
+            if player.status == 'Playing':
+                self.game_won = True
+                print('Player', player.player_number, 'WINS!')
 
-                elif player.status == 'Deceased':
-                    print('Player', player.player_number, 'has lost... 😢')
+            elif player.status == 'Deceased':
+                print('Player', player.player_number, 'has lost... 😢')
 
-    def complete_turn(self, turn):
-        print('Turn', turn)
-        self.check_if_player_has_won()
-        self.move_phase()
-        self.combat_phase()
-        self.economic_phase(turn)
+        exit()
 
     def check_if_player_has_won(self):
         for player in self.board.players:
@@ -86,13 +80,27 @@ class Game:
             if player.death_count == len(player.ships):
                 player.status = 'Deceased'
 
+        self.players_dead = 0
+        for player in self.board.players:
+            if player.status == 'Deceased':
+                self.players_dead += 1
+            if self.players_dead == (len(self.board.players) - 1):
+                return False
+
+    def complete_turn(self, turn):
+        print('Turn', turn)
+        self.check_if_player_has_won()
+        self.move_phase()
+        self.combat_phase()
+        self.economic_phase(turn)
+
     def move_phase(self):
         for player in self.board.players:
             player.check_colonization()
             for ship in player.ships:
                 for _ in range(0, 3):  # 3 rounds of movements
                     ship.move()
-                    self.show()
+                    self.state_obsolete()
 
     def combat_phase(self):
         self.combat()
@@ -109,90 +117,12 @@ class Game:
         print('Every Player got their daily allowence of', 20, 'creds.')
         print('-------------------------------------------')
 
-    def show(self, fontsize=10):
-        print('show')
-        fig, ax = plt.subplots()
-        fig = plt.figsize = (10, 10)
-        ax.xaxis.set_minor_locator(MultipleLocator(0.5))
-        ax.yaxis.set_minor_locator(MultipleLocator(0.5))
-
-        for player in self.board.players:
-            for ship in player.ships:
-                if ship.status != 'Deceased':
-                    label = ship.label + str(ship.ID)
-                    color = player.player_color
-                    if player.player_number == 1:
-                        ax.text(
-                            ship.x - 0.25,
-                            ship.y - 0.25,
-                            label,
-                            fontsize=fontsize,
-                            color=color,
-                            horizontalalignment='center',
-                            verticalalignment='center')
-                    if player.player_number == 2:
-                        ax.text(
-                            ship.x + 0.25,
-                            ship.y + 0.25,
-                            label,
-                            fontsize=fontsize,
-                            color=color,
-                            horizontalalignment='center',
-                            verticalalignment='center')
-                    if player.player_number == 3:
-                        ax.text(
-                            ship.x - 0.25,
-                            ship.y + 0.25,
-                            label,
-                            fontsize=fontsize,
-                            color=color,
-                            horizontalalignment='center',
-                            verticalalignment='center')
-                    if player.player_number == 3:
-                        ax.text(
-                            ship.x + 0.25,
-                            ship.y - 0.25,
-                            label,
-                            fontsize=fontsize,
-                            color=color,
-                            horizontalalignment='center',
-                            verticalalignment='center')
-
-        for planet in self.board.planets:
-            if planet.tier == 1:
-                plt.gca().add_patch(
-                    plt.Circle(planet.position, radius=.25, fc='0.75'))
-            elif planet.tier == 2:
-                plt.gca().add_patch(
-                    plt.Circle(planet.position, radius=.25, fc='#ffcccb'))
-            elif planet.tier == 3:
-                plt.gca().add_patch(
-                    plt.Circle(planet.position, radius=.25, fc='g'))
-
-        for asteroid in self.board.asteroids:
-            if asteroid.size == 1:
-                plt.gca().add_patch(
-                    plt.Circle(planet.position, radius=.05, fc='0.5'))
-            elif asteroid.size == 2:
-                plt.gca().add_patch(
-                    plt.Circle(planet.position, radius=.1, fc='0.5'))
-            elif asteroid.size == 3:
-                plt.gca().add_patch(
-                    plt.Circle(planet.position, radius=.125, fc='0.5'))
-
-        x_max, y_max = [self.grid_size + 1, self.grid_size + 1]
-        plt.xlim(-0.5, x_max - 0.5)
-        plt.ylim(-0.5, y_max - 0.5)
-
-        plt.grid(which='minor')
-        plt.show()
-
     # combat functions
     def combat(self):
         print('fighting (combat)')
         possible_fights_var = self.possible_fights()
         players_and_ships = []
-        #print('num_of_possible_fights', num_of_possible_fights)
+        # print('num_of_possible_fights', num_of_possible_fights)
         for position in possible_fights_var:
             print(position)
             if len(position[0][2]
@@ -262,7 +192,7 @@ class Game:
                 print('Player', player_2.player_number, 'found', found_creds,
                       'creds at co-ords', [ship_1.x, ship_1.y])
                 print('-------------------------------------------')
-                self.show()
+                self.state_obsolete()
 
             elif ship_2.status == 'Deceased':
                 print("Player", player_2.player_number,
@@ -273,7 +203,7 @@ class Game:
                 print('Player', player_1.player_number, 'found', found_creds,
                       'creds at co-ords', [ship_2.x, ship_2.y])
                 print('-------------------------------------------')
-                self.show()
+                self.state_obsolete()
 
     def hit_or_miss(self, player_1, player_2, ship_1, ship_2, first_to_shoot):
         print('fighting (hit or miss)')
