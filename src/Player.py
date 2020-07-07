@@ -1,5 +1,5 @@
 import random
-import Board.Board
+from Board import Board
 from Unit.Unit import Unit
 from Unit.Scout import Scout
 from Unit.Destroyer import Destroyer
