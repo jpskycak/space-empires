@@ -1,5 +1,4 @@
 import random
-from Player import Player
 from Unit.Unit import Unit
 from Unit.Scout import Scout
 from Unit.Destroyer import Destroyer
@@ -21,8 +20,8 @@ class Board:
     def __init__(self, grid_size):
         self.grid_size = grid_size
         self.players = []
-        self.player_home_bases = [
-            [1, 1], [self.grid_size - 1, self.grid_size - 1]]
+        self.player_home_bases = [[1, 1],
+                                  [self.grid_size - 1, self.grid_size - 1]]
 
     # check stuffs
     def check_colonization(self):
@@ -37,16 +36,22 @@ class Board:
                         if ship.x == planet.x and ship.y == planet.y and not planet.is_colonized:
 
                             if ship.terraform_tech >= 4 - planet.tier:  # if the colony ship can colonize the planet
-                                print('Player', player.player_number, 'just colonized a tier',
-                                      planet.tier, 'planet at co-ords:', (planet.x, planet.y))
-                                self.create_colony(
-                                    player, planet, planet.position)
+                                print('Player', player.player_number,
+                                      'just colonized a tier', planet.tier,
+                                      'planet at co-ords:',
+                                      (planet.x, planet.y))
+                                self.create_colony(player, planet,
+                                                   planet.position)
                                 index = player.ships.index(ship)
                                 player.ships.remove(player.ships[index])
 
                             else:
-                                print('Player', player.player_number, "can' colonize a tier", planet.tier, 'planet at co-ords:',
-                                      (planet.x, planet.y), 'because their terraform tech is', ship.terraform_tech)
+                                print('Player', player.player_number,
+                                      "can' colonize a tier", planet.tier,
+                                      'planet at co-ords:',
+                                      (planet.x, planet.y),
+                                      'because their terraform tech is',
+                                      ship.terraform_tech)
 
     # create <instert thing here> stuffs
     def create_planets_and_asteroids(self):
@@ -83,8 +88,8 @@ class Board:
 
     def create_players(self):
         player_1 = Player([1, 1], self.grid_size, 1, 'Blue')
-        player_2 = Player(
-            [self.grid_size - 1, self.grid_size - 1], self.grid_size, 2, 'Red')
+        player_2 = Player([self.grid_size - 1, self.grid_size - 1],
+                          self.grid_size, 2, 'Red')
         #player_3 = Player([1, self.grid_size - 1], self.grid_size, 3, 'Purple')
         #player_4 = Player([self.grid_size - 1, 1], self.grid_size, 4, 'Green')
         return [player_1, player_2]  # , player_3, player_4]
@@ -107,22 +112,22 @@ class Board:
                     for ship_2 in player_2.ships:  # ship
 
                         if ship_1.fighting_class > ship_2.fighting_class:
-                            order.append(
-                                (player_ships.index(player_1), ship_1))
+                            order.append((player_ships.index(player_1),
+                                          ship_1))
 
                         elif ship_2.fighting_class > ship_1.fighting_class:
-                            order.append(
-                                (player_ships.index(player_2), ship_2))
+                            order.append((player_ships.index(player_2),
+                                          ship_2))
 
                         else:
 
                             if ship_1.attack > ship_2.attack:
-                                order.append(
-                                    (player_ships.index(player_1), ship_1))
+                                order.append((player_ships.index(player_1),
+                                              ship_1))
 
                             elif ship_2.attack > ship_1.attack:
-                                order.append(
-                                    (player_ships.index(player_2), ship_2))
+                                order.append((player_ships.index(player_2),
+                                              ship_2))
         print('order', order)
         return order
 
@@ -158,8 +163,8 @@ class Board:
             # print('player and ships', player_and_ships_arr) #player and ships
 
             # if len(player_and_ships_arr) > 0:
-                # print('player', player_and_ships_arr[0]) #player
-                # print('ships', player_and_ships_arr[1]) #arr of ships
+            # print('player', player_and_ships_arr[0]) #player
+            # print('ships', player_and_ships_arr[1]) #arr of ships
 
             if len(player_and_ships_arr) > 0:
                 temp.append((x, y))
@@ -173,7 +178,9 @@ class Board:
 
 
 class Planet:
-    def __init__(self, position, tier):  # tier 1 uninhabitable at all like a small moon, tier 2 is barren, like mars, but only habitable by terraform 2 colony ships tier 3 is like earth, fully habatible by any colony ship
+    def __init__(
+            self, position, tier
+    ):  # tier 1 uninhabitable at all like a small moon, tier 2 is barren, like mars, but only habitable by terraform 2 colony ships tier 3 is like earth, fully habatible by any colony ship
         self.position = position
         self.x = position[0]
         self.y = position[1]
@@ -184,7 +191,9 @@ class Planet:
 
 
 class Asteroid:
-    def __init__(self, position, size, tier):  # tier 1 uninhabitable at all like a small moon, tier 2 is barren, like mars, but only habitable by terraform 2 colony ships tier 3 is like earth, fully habatible by any colony ship
+    def __init__(
+            self, position, size, tier
+    ):  # tier 1 uninhabitable at all like a small moon, tier 2 is barren, like mars, but only habitable by terraform 2 colony ships tier 3 is like earth, fully habatible by any colony ship
         self.position = position
         self.x = position[0]
         self.y = position[1]
