@@ -1,5 +1,4 @@
 import random
-from Player import Player
 from Unit.Unit import Unit
 from Unit.Scout import Scout
 from Unit.Destroyer import Destroyer
@@ -87,13 +86,7 @@ class Board:
         player.colonies.append(
             Colony(len(player.colonies) + 1, position, self.grid_size))
 
-    def create_players(self):
-        player_1 = Player([1, 1], self.grid_size, 1, 'Blue')
-        player_2 = Player([self.grid_size - 1, self.grid_size - 1],
-                          self.grid_size, 2, 'Red')
-        #player_3 = Player([1, self.grid_size - 1], self.grid_size, 3, 'Purple')
-        #player_4 = Player([self.grid_size - 1, 1], self.grid_size, 4, 'Green')
-        return [player_1, player_2]  # , player_3, player_4]
+
 
     # combat stuffs
     # [[player1, [ship1, ship2]], [player2, [ship1]]]

@@ -28,8 +28,16 @@ class Game:
 
     # main functions
     def initialize_game(self):
-        self.board.players = self.board.create_players()
+        self.board.players = self.create_players()
         self.board.create_planets_and_asteroids()
+
+    def create_players(self):
+        player_1 = Player([1, 1], self.grid_size, 1, 'Blue')
+        player_2 = Player([self.grid_size - 1, self.grid_size - 1],
+                          self.grid_size, 2, 'Red')
+        #player_3 = Player([1, self.grid_size - 1], self.grid_size, 3, 'Purple')
+        #player_4 = Player([self.grid_size - 1, 1], self.grid_size, 4, 'Green')
+        return [player_1, player_2]  # , player_3, player_4]
 
     def play(self):
         turn = 1
