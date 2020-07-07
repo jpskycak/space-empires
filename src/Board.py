@@ -1,4 +1,5 @@
 import random
+from Player import Player
 from Unit.Unit import Unit
 from Unit.Scout import Scout
 from Unit.Destroyer import Destroyer
@@ -18,7 +19,6 @@ from Unit.Carrier import Carrier
 class Board:
     # grid_size is grid size and player_positions is the array of the home bases of players
     def __init__(self, grid_size):
-        from Player import Player
         self.grid_size = grid_size
         self.players = []
         self.player_home_bases = [[1, 1],
