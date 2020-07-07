@@ -1,8 +1,22 @@
 import random
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
-from Board_Class import Board
-from Player_Class import Player
+from Board import Board
+from Player import Player
+from Unit.Unit import Unit
+from Unit.Scout import Scout
+from Unit.Destroyer import Destroyer
+from Unit.Cruiser import Cruiser
+from Unit.Battle_Cruiser import BattleCruiser
+from Unit.Battleship import Battleship
+from Unit.Dreadnaught import Dreadnaught
+from Unit.Colony_Ship import Colony_Ship
+from Unit.Colony import Colony
+from Unit.Ship_Yard import Ship_Yard
+from Unit.Base import Base
+from Unit.Miner import Miner
+from Unit.Decoy import Decoy
+from Unit.Carrier import Carrier
 
 
 class Game:
@@ -22,6 +36,7 @@ class Game:
         while True:
             print('while players dead')
 
+            self.players_dead = 0
             for player in self.board.players:
                 if player.status == 'Deceased':
                     self.players_dead += 1
@@ -276,6 +291,6 @@ class Game:
                 if len(self.board.list_of_ships_at_x_y(self.board.players, i, j)) > 0:
                     positions_of_ships.append(self.board.list_of_ships_at_x_y(
                         self.board.players, i, j))  # ex below
-                # tuples so no change #(((1,1), (3, ([player_1, (ship_1, ship_2)], [player_2, (ship_1)]))), ((2,3), (2, ([player_1, (ship_1, ship_2)])))
+        # tuples so no change #(((1,1), (3, ([player_1, (ship_1, ship_2)], [player_2, (ship_1)]))), ((2,3), (2, ([player_1, (ship_1, ship_2)])))
         print('positions_of_ships', positions_of_ships)
         return positions_of_ships

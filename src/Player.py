@@ -1,6 +1,19 @@
 import random
-from Board_Class import Board
-from Unit_Class import Unit, Scout, Destroyer, Cruiser, BattleCruiser, Battleship, Dreadnaught, Colony_Ship, Colony, Ship_Yard, Miner, Base, Decoy, Carrier
+from Board import Board
+from Unit.Unit import Unit
+from Unit.Scout import Scout
+from Unit.Destroyer import Destroyer
+from Unit.Cruiser import Cruiser
+from Unit.Battle_Cruiser import BattleCruiser
+from Unit.Battleship import Battleship
+from Unit.Dreadnaught import Dreadnaught
+from Unit.Colony_Ship import Colony_Ship
+from Unit.Colony import Colony
+from Unit.Ship_Yard import Ship_Yard
+from Unit.Base import Base
+from Unit.Miner import Miner
+from Unit.Decoy import Decoy
+from Unit.Carrier import Carrier
 
 
 class Player(Board):

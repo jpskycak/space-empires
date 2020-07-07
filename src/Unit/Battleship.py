@@ -1,0 +1,15 @@
+from Unit import Unit
+
+
+class Battleship(Unit):
+    def __init__(self, ID, position, grid_size, can_move, attack_tech=0, defense_tech=0, speed_tech=0):
+        super().__init__(ID, position, grid_size, can_move,
+                         attack_tech, defense_tech, speed_tech)
+        self.name = 'Battleship'
+        self.label = 'BB'
+        self.hull_size = 5
+        self.attack = 5
+        self.defense = 2
+        self.armor = 3
+        self.cost = 20
+        self.fighting_class = 4
