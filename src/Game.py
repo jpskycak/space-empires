@@ -73,7 +73,8 @@ class Game:
             for ship in player.ships:
                 if ship.status == 'Deceased':
                     player.death_count += 1
-                player.ships.remove(ship)
+                    print(player.death_count)
+                    player.ships.remove(ship)
 
             if player.death_count == len(player.ships):
                 player.status = 'Deceased'
@@ -101,9 +102,9 @@ class Game:
             player.check_colonization()
             for ship in player.ships:
                 for _ in range(0, 3):  # 3 rounds of movements
-                    self.state_obsolete()
+                    ship.move()
 
-        ship.move()
+        self.state_obsolete()
 
     def combat_phase(self):
         self.combat()
@@ -238,9 +239,9 @@ class Game:
                           player_1.player_number, "'s unit", ship_1.name,
                           ship_1.ID)
 
-        if ship_1.armor <= 0:  #
+        if ship_1.armor < 0:  #
             ship_1.status = 'Deceased'  # change statuses
-        elif ship_2.armor <= 0:  # of dead ships
+        elif ship_2.armor < 0:  # of dead ships
             ship_2.status = 'Deceased'
 
     # misc functions
