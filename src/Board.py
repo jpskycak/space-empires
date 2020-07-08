@@ -86,10 +86,9 @@ class Board:
         player.colonies.append(
             Colony(len(player.colonies) + 1, position, self.grid_size))
 
-
-
     # combat stuffs
     # [[player1, [ship1, ship2]], [player2, [ship1]]]
+
     def find_order_of_ships(self, player_ships):
         print('fighting (find order)')
         order = []
