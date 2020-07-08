@@ -122,7 +122,7 @@ class Player(Board):
 
     def maintenance(self):
         for ship in self.ships:
-            if not isinstance(ship, Base) and not isinstance(ship, Colony) and not isinstance(ship, Colony_Ship) and not isinstance(ship, Decoy):
+            if not isinstance(ship, Base)  and not isinstance(ship, Colony) and not isinstance(ship, Colony_Ship) and not isinstance(ship, Decoy):
                 cost = ship.defense_tech + ship.defense + ship.armor
 
                 if self.creds >= cost:
@@ -130,8 +130,7 @@ class Player(Board):
 
                 else:
                     self.ships.remove(ship)
-                    print('Player', self.player_number,
-                          "couldn't maintain their", ship.name)
+                    print('Player', self.player_number, "couldn't maintain their", ship.name)
 
     # helper functions
     def determine_availible_ship_classes(self, creds):

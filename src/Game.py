@@ -33,8 +33,7 @@ class Game:
 
     def create_players(self):
         player_1 = Player([1, 1], self.grid_size, 1, 'Blue')
-        player_2 = Player(
-            [self.grid_size - 1, self.grid_size - 1], self.grid_size, 2, 'Red')
+        player_2 = Player([self.grid_size - 1, self.grid_size - 1], self.grid_size, 2, 'Red')
         print('oi')
         player_3 = Player([1, self.grid_size - 1], self.grid_size, 3, 'Purple')
         player_4 = Player([self.grid_size - 1, 1], self.grid_size, 4, 'Green')
@@ -49,7 +48,7 @@ class Game:
             print(self.player_has_not_won)
             if not self.player_has_not_won:
                 break
-
+            
             self.complete_turn(turn)
 
             turn += 1
@@ -79,7 +78,7 @@ class Game:
 
             if player.death_count == len(player.ships):
                 player.status = 'Deceased'
-
+                
         self.players_dead = 0
         for player in self.board.players:
             if player.status == 'Deceased':
