@@ -33,21 +33,22 @@ class Game:
 
     def create_players(self):
         player_1 = Player([1, 1], self.grid_size, 1, 'Blue')
-        player_2 = Player([self.grid_size - 1, self.grid_size - 1],
-                          self.grid_size, 2, 'Red')
-        # player_3 = Player([1, self.grid_size - 1], self.grid_size, 3, 'Purple')
-        # player_4 = Player([self.grid_size - 1, 1], self.grid_size, 4, 'Green')
-        return [player_1, player_2]  # , player_3, player_4]
+        player_2 = Player([self.grid_size - 1, self.grid_size - 1], self.grid_size, 2, 'Red')
+        print('oi')
+        player_3 = Player([1, self.grid_size - 1], self.grid_size, 3, 'Purple')
+        player_4 = Player([self.grid_size - 1, 1], self.grid_size, 4, 'Green')
+        return [player_1, player_2, player_3, player_4]
 
     def play(self):
         turn = 1
         self.player_has_not_won = True
         while self.player_has_not_won:
-
+            print('oi2')
             self.player_has_not_won = self.check_if_player_has_won()
+            print(self.player_has_not_won)
             if not self.player_has_not_won:
                 break
-
+            
             self.complete_turn(turn)
 
             turn += 1
@@ -79,6 +80,7 @@ class Game:
 
             if player.death_count == len(player.ships):
                 player.status = 'Deceased'
+                self.board.player.remove(player)
 
         self.players_dead = 0
         for player in self.board.players:
@@ -86,6 +88,8 @@ class Game:
                 self.players_dead += 1
             if self.players_dead == (len(self.board.players) - 1):
                 return False
+            else:
+                return True
 
     def complete_turn(self, turn):
         print('Turn', turn)
@@ -99,8 +103,9 @@ class Game:
             player.check_colonization()
             for ship in player.ships:
                 for _ in range(0, 3):  # 3 rounds of movements
-                    ship.move()
                     self.state_obsolete()
+
+        ship.move()
 
     def combat_phase(self):
         self.combat()
@@ -244,12 +249,9 @@ class Game:
     def state_obsolete(self):  # obsolete but can be used for debugging
         for player in self.board.players:
             print('Player', player.player_number, ': Status:', player.status)
-            for player_unit in player.ships:
-                print('    ', player_unit.name, ':', 'Ship ID:',
-                      player_unit.ID, ':', [player_unit.x, player_unit.y],
-                      player_unit.status)
-                if player_unit.status == 'Deceased':
-                    player.ships.remove(player_unit)
+            for ship in player.ships:
+                print('    ', ship.name, ':', 'Ship ID:',
+                      ship.ID, ':', [ship.x, ship.y])
 
     # helper functions
     def dice_roll(self, start, end):
