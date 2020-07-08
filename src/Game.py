@@ -64,9 +64,6 @@ class Game:
                 self.game_won = True
                 print('Player', player.player_number, 'WINS!')
 
-            elif player.status == 'Deceased':
-                print('Player', player.player_number, 'has lost... 😢')
-
         exit()
 
     def check_if_player_has_won(self):
@@ -80,8 +77,7 @@ class Game:
 
             if player.death_count == len(player.ships):
                 player.status = 'Deceased'
-                self.board.player.remove(player)
-
+                
         self.players_dead = 0
         for player in self.board.players:
             if player.status == 'Deceased':
@@ -90,6 +86,8 @@ class Game:
                 return False
             else:
                 return True
+
+        
 
     def complete_turn(self, turn):
         print('Turn', turn)
