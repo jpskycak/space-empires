@@ -75,45 +75,45 @@ class Player(Board):
     ):  # actual function should be in here because you can only upgrade new ships not ones in the field
         print('upgrading')
         while self.creds > 10 * self.attack_tech and self.creds > 10 * self.defense_tech and self.creds > 5 * self.fighting_class_tech + 10 and self.creds > 10 * self.speed_tech + 10 and self.creds > 10 * self.ship_yard_tech and self.creds > 15 * self.terraform_tech and self.creds > 5 * self.ship_size_tech + 10:
-            stat_to_upgrade = random.randint(0, 6)
-            if stat_to_upgrade == 0 and self.attack_tech < 3:  # offense
+            stat_to_upgrade = random.randint(1, 7)
+            if stat_to_upgrade == 1 and self.attack_tech < 3:  # offense
                 self.attack_tech += 1
                 self.creds -= 10 * self.attack_tech
                 print('Player', self.player_number,
                       'upgraded their attack strength from',
                       self.attack_tech - 1, 'to', self.attack_tech)
-            elif stat_to_upgrade == 1 and self.defense_tech < 3:  # defense
+            elif stat_to_upgrade == 2 and self.defense_tech < 3:  # defense
                 self.defense_tech += 1
                 self.creds -= 10 * self.defense_tech
                 print('Player', self.player_number,
                       'upgraded their defense strength from',
                       self.defense_tech - 1, 'to', self.defense_tech)
-            elif stat_to_upgrade == 2 and self.defense_tech < 3:  # defense
+            elif stat_to_upgrade == 3 and self.fighting_class_tech < 3:  # defense
                 self.fighting_class_tech += 1
                 self.creds -= 5 * self.fighting_class_tech + 10
                 print('Player', self.player_number,
                       'upgraded their defense strength from',
                       self.fighting_class_tech - 1, 'to',
                       self.fighting_class_tech)
-            elif stat_to_upgrade == 3 and self.speed_tech < 3:  # speed
+            elif stat_to_upgrade == 4 and self.speed_tech < 3:  # speed
                 self.speed_tech += 1
                 self.creds -= 10 * self.speed_tech + 10
                 print('Player', self.player_number,
                       'upgraded their speed from', self.speed_tech - 1, 'to',
                       self.speed_tech)
-            elif stat_to_upgrade == 4 and self.ship_yard_tech < 2:  # ship yard
+            elif stat_to_upgrade == 5 and self.ship_yard_tech < 2:  # ship yard
                 self.ship_yard_tech += 0.5
                 self.creds -= 10 * self.ship_yard_tech
                 print('Player', self.player_number,
                       "upgraded their ship-yard's building size from",
                       self.ship_yard_tech - 1, 'to', self.ship_yard_tech)
-            elif stat_to_upgrade == 5 and self.terraform_tech < 2:  # ship yard
+            elif stat_to_upgrade == 6 and self.terraform_tech < 2:  # ship yard
                 self.terraform_tech += 1
                 self.creds -= 15 * self.terraform_tech
                 print('Player', self.player_number,
                       "upgraded their ship-yard's building size from",
                       self.terraform_tech - 1, 'to', self.terraform_tech)
-            elif stat_to_upgrade == 6 and self.ship_size_tech < 6:  # ship yard
+            elif stat_to_upgrade == 7 and self.ship_size_tech < 6:  # ship yard
                 self.ship_size_tech += 1
                 self.creds -= 5 * self.ship_size_tech + 10
                 print('Player', self.player_number,
@@ -122,7 +122,7 @@ class Player(Board):
 
     def maintenance(self):
         for ship in self.ships:
-            if not isinstance(ship, Base)  and not isinstance(ship, Colony) and not isinstance(ship, Colony_Ship) and not isinstance(ship, Decoy):
+            if not isinstance(ship, Base) and not isinstance(ship, Colony) and not isinstance(ship, Colony_Ship) and not isinstance(ship, Decoy):
                 cost = ship.defense_tech + ship.defense + ship.armor
 
                 if self.creds >= cost:
@@ -130,7 +130,8 @@ class Player(Board):
 
                 else:
                     self.ships.remove(ship)
-                    print('Player', self.player_number, "couldn't maintain their", ship.name)
+                    print('Player', self.player_number,
+                          "couldn't maintain their", ship.name)
 
     # helper functions
     def determine_availible_ship_classes(self, creds):
