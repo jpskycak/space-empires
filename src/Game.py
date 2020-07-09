@@ -3,7 +3,7 @@ import random
 # from matplotlib.ticker import MultipleLocator
 from Board import Board
 from Player import Player
-from Unit.Unit import Unit
+from Unit import Unit
 from Unit.Scout import Scout
 from Unit.Destroyer import Destroyer
 from Unit.Cruiser import Cruiser
@@ -33,7 +33,8 @@ class Game:
 
     def create_players(self):
         player_1 = Player([1, 1], self.grid_size, 1, 'Blue')
-        player_2 = Player([self.grid_size - 1, self.grid_size - 1], self.grid_size, 2, 'Red')
+        player_2 = Player(
+            [self.grid_size - 1, self.grid_size - 1], self.grid_size, 2, 'Red')
         print('oi')
         player_3 = Player([1, self.grid_size - 1], self.grid_size, 3, 'Purple')
         player_4 = Player([self.grid_size - 1, 1], self.grid_size, 4, 'Green')
@@ -43,12 +44,11 @@ class Game:
         turn = 1
         self.player_has_not_won = True
         while self.player_has_not_won:
-            print('oi2')
             self.player_has_not_won = self.check_if_player_has_won()
             print(self.player_has_not_won)
             if not self.player_has_not_won:
                 break
-            
+
             self.complete_turn(turn)
 
             turn += 1
@@ -77,8 +77,9 @@ class Game:
                     player.ships.remove(ship)
 
             if player.death_count == len(player.ships):
+                print(player, 'is dead')
                 player.status = 'Deceased'
-                
+
         self.players_dead = 0
         for player in self.board.players:
             if player.status == 'Deceased':

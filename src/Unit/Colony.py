@@ -1,4 +1,4 @@
-from Unit.Unit import Unit
+from Unit import Unit
 
 
 class Colony(Unit):

@@ -1,5 +1,5 @@
 import random
-from Unit.Unit import Unit
+from Unit import Unit
 from Unit.Scout import Scout
 from Unit.Destroyer import Destroyer
 from Unit.Cruiser import Cruiser
@@ -20,8 +20,10 @@ class Board:
     def __init__(self, grid_size):
         self.grid_size = grid_size
         self.players = []
-        self.player_home_bases = [[1, 1],
-                                  [self.grid_size - 1, self.grid_size - 1]]
+        self.player_home_bases = [[1, 1], [self.grid_size - 1, self.grid_size - 1]]
+
+        for position in self.player_home_bases:
+            self.create_planet(position)
 
     # check stuffs
     def check_colonization(self):
@@ -40,14 +42,13 @@ class Board:
                                       'just colonized a tier', planet.tier,
                                       'planet at co-ords:',
                                       (planet.x, planet.y))
-                                self.create_colony(player, planet,
-                                                   planet.position)
+                                self.create_colony(player, planet, planet.position)
                                 index = player.ships.index(ship)
                                 player.ships.remove(player.ships[index])
 
                             else:
                                 print('Player', player.player_number,
-                                      "can' colonize a tier", planet.tier,
+                                      "can't colonize a tier", planet.tier,
                                       'planet at co-ords:',
                                       (planet.x, planet.y),
                                       'because their terraform tech is',
@@ -151,7 +152,12 @@ class Board:
                 for ship in player.ships:  # ship
 
                     if ship.x == x and ship.y == y:
-                        player_and_ships_arr[1].append(ship)
+
+                        if ship.name != Colony_Ship or ship.name != Decoy or ship.name != Miner: #if it can fight
+                            player_and_ships_arr[1].append(ship)
+
+                        else: #if not then die
+                            player.ships.remove(ship)
 
             # print('player and ships', player_and_ships_arr) #player and ships
 
@@ -159,16 +165,44 @@ class Board:
             # print('player', player_and_ships_arr[0]) #player
             # print('ships', player_and_ships_arr[1]) #arr of ships
 
+            
+            
             if len(player_and_ships_arr) > 0:
                 temp.append((x, y))
                 temp.append(count)
                 temp.append(player_and_ships_arr)
                 all_data.append(temp)
 
+            all_data = self.screen_ship_combat(player_and_ships_arr)
+
         #print('all_data', all_data)
         # ((0,0), (3, ([player_1, (ship_1, ship_2)], [player_2, (ship_1)])), (1,0), (3, ([player_1, (ship_1)], [player_2, (ship_1, ship_2)]
         return all_data
 
+    def screen_ship_combat(self, data):
+        for position in data:
+            players = []
+
+            for player in position[1][1]:
+                players.append(players)
+
+            for player_1 in player:
+
+                for player_2 in player:
+
+                    if player_1 != player_2:
+
+                        if len(player_1.ships) > len(player_2.ships):
+                            
+                            for i in range(len(player_1.ships), len(player_2.ships), -1):
+                                player_1.ships.pop()
+
+                        elif len(player_1.ships) < len(player_2.ships):               
+
+                            for i in range(len(player_2.ships), len(player_1.ships), -1):
+                                player_2.ships.pop()
+
+        return data
 
 class Planet:
     def __init__(
