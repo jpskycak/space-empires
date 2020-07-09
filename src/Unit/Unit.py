@@ -7,7 +7,7 @@ LEFT = 3
 
 
 class Unit:
-    def __init__(self, ID, position, grid_size, can_move=True, attack_tech=0, defense_tech=0, speed_tech=0, ship_yard_tech=0):
+    def __init__(self, ID, position, grid_size, can_move=True, attack_tech=0, defense_tech=0, movement_tech=0, ship_yard_tech=0):
         self.ID = ID
         self.x = position[0]
         self.y = position[1]
@@ -16,7 +16,7 @@ class Unit:
         self.can_move = can_move
         self.attack_tech = 0
         self.defense_tech = 0
-        self.speed_tech = 0
+        self.movement_tech = 0
         self.ship_yard_tech = 0
 
     def move(self):
@@ -24,7 +24,7 @@ class Unit:
         # 0 is up   1 is right    2 is down   3 is left
         direction = random.randint(0, 3)
         if self.can_move:
-            for _ in range(0, self.speed_tech + 1):
+            for _ in range(0, self.movement_tech + 1):
                 if direction == UP:
                     if self.y > 0:
                         self.y -= 1

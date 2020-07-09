@@ -44,7 +44,7 @@ class Player(Board):
         self.build_fleet(position)
         self.attack_tech = 0
         self.defense_tech = 0
-        self.speed_tech = 0
+        self.movement_tech = 0
         self.ship_yard_tech = 0
         self.terraform_tech = 0
         self.ship_size_tech = 0
@@ -72,7 +72,7 @@ class Player(Board):
 
     def upgrade(self):  # actual function should be in here because you can only upgrade new ships not ones in the field
         print('upgrading')
-        while self.creds > 10 * self.attack_tech and self.creds > 10 * self.defense_tech and self.creds > 5 * self.fighting_class_tech + 10 and self.creds > 10 * self.speed_tech + 10 and self.creds > 10 * self.ship_yard_tech and self.creds > 15 * self.terraform_tech and self.creds > 5 * self.ship_size_tech + 10:
+        while self.creds > 10 * self.attack_tech and self.creds > 10 * self.defense_tech and self.creds > 5 * self.fighting_class_tech + 10 and self.creds > 10 * self.movement_tech + 10 and self.creds > 10 * self.ship_yard_tech and self.creds > 15 * self.terraform_tech and self.creds > 5 * self.ship_size_tech + 10:
             stat_to_upgrade = random.randint(1, 7)
             print('stat_to_upgrade', stat_to_upgrade)
             if stat_to_upgrade == 1 and self.attack_tech < 3:  # offense
@@ -87,32 +87,32 @@ class Player(Board):
                 print('Player', self.player_number,
                       'upgraded their defense strength from',
                       self.defense_tech - 1, 'to', self.defense_tech)
-            elif stat_to_upgrade == 3 and self.fighting_class_tech < 3:  # defense
+            elif stat_to_upgrade == 3 and self.fighting_class_tech < 3:  # tactics
                 self.fighting_class_tech += 1
                 self.creds -= 5 * self.fighting_class_tech + 10
                 print('Player', self.player_number,
                       'upgraded their defense strength from',
                       self.fighting_class_tech - 1, 'to',
                       self.fighting_class_tech)
-            elif stat_to_upgrade == 4 and self.speed_tech < 3:  # speed
-                self.speed_tech += 1
-                self.creds -= 10 * self.speed_tech + 10
+            elif stat_to_upgrade == 4 and self.movement_tech < 3:  # speed
+                self.movement_tech += 1
+                self.creds -= 10 * self.movement_tech + 10
                 print('Player', self.player_number,
-                      'upgraded their speed from', self.speed_tech - 1, 'to',
-                      self.speed_tech)
+                      'upgraded their speed from', self.movement_tech - 1, 'to',
+                      self.movement_tech)
             elif stat_to_upgrade == 5 and self.ship_yard_tech < 2:  # ship yard
                 self.ship_yard_tech += 0.5
                 self.creds -= 10 * self.ship_yard_tech
                 print('Player', self.player_number,
                       "upgraded their ship-yard's building size from",
                       self.ship_yard_tech - 1, 'to', self.ship_yard_tech)
-            elif stat_to_upgrade == 6 and self.terraform_tech < 2:  # ship yard
+            elif stat_to_upgrade == 6 and self.terraform_tech < 2:  # terraform
                 self.terraform_tech += 1
                 self.creds -= 15 * self.terraform_tech
                 print('Player', self.player_number,
                       "upgraded their ship-yard's building size from",
                       self.terraform_tech - 1, 'to', self.terraform_tech)
-            elif stat_to_upgrade == 7 and self.ship_size_tech < 6:  # ship yard
+            elif stat_to_upgrade == 7 and self.ship_size_tech < 6:  # biggest ship size that you can build
                 self.ship_size_tech += 1
                 self.creds -= 5 * self.ship_size_tech + 10
                 print('Player', self.player_number,
