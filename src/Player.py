@@ -91,14 +91,14 @@ class Player(Board):
                 self.fighting_class_tech += 1
                 self.creds -= 5 * self.fighting_class_tech + 10
                 print('Player', self.player_number,
-                      'upgraded their defense strength from',
+                      'upgraded their fighting class from',
                       self.fighting_class_tech - 1, 'to',
                       self.fighting_class_tech)
             elif stat_to_upgrade == 4 and self.movement_tech < 3:  # speed
                 self.movement_tech += 1
                 self.creds -= 10 * self.movement_tech + 10
                 print('Player', self.player_number,
-                      'upgraded their speed from', self.movement_tech - 1, 'to',
+                      'upgraded their movement tech from', self.movement_tech - 1, 'to',
                       self.movement_tech)
             elif stat_to_upgrade == 5 and self.ship_yard_tech < 2:  # ship yard
                 self.ship_yard_tech += 0.5
@@ -110,13 +110,13 @@ class Player(Board):
                 self.terraform_tech += 1
                 self.creds -= 15 * self.terraform_tech
                 print('Player', self.player_number,
-                      "upgraded their ship-yard's building size from",
+                      "upgraded their ablility to terraform from",
                       self.terraform_tech - 1, 'to', self.terraform_tech)
             elif stat_to_upgrade == 7 and self.ship_size_tech < 6:  # biggest ship size that you can build
                 self.ship_size_tech += 1
                 self.creds -= 5 * self.ship_size_tech + 10
                 print('Player', self.player_number,
-                      "upgraded their ship-yard's building size from",
+                      "upgraded their max building size from",
                       self.ship_size_tech - 1, 'to', self.ship_size_tech)
 
     def maintenance(self):
