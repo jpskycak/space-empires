@@ -76,6 +76,7 @@ class Player(Board):
         print('upgrading')
         while self.creds > 10 * self.attack_tech and self.creds > 10 * self.defense_tech and self.creds > 5 * self.fighting_class_tech + 10 and self.creds > 10 * self.speed_tech + 10 and self.creds > 10 * self.ship_yard_tech and self.creds > 15 * self.terraform_tech and self.creds > 5 * self.ship_size_tech + 10:
             stat_to_upgrade = random.randint(1, 7)
+            print('stat_to_upgrade', stat_to_upgrade)
             if stat_to_upgrade == 1 and self.attack_tech < 3:  # offense
                 self.attack_tech += 1
                 self.creds -= 10 * self.attack_tech
