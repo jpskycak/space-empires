@@ -16,7 +16,7 @@ class Unit:
         self.can_move = can_move
         self.attack_tech = 0
         self.defense_tech = 0
-        self.movement_tech = 0
+        self.movement_tech = [1, 1, 1]
         self.ship_yard_tech = 0
 
     def move(self):
@@ -25,24 +25,25 @@ class Unit:
         direction = random.randint(0, 3)
         if self.can_move:
             #print(direction)
-            for _ in range(0, self.movement_tech + 1):
-                if direction == UP:
-                    if self.y > 0:
-                        self.y -= 1
-                    elif self.y <= 0:
-                        self.y += 1
-                elif direction == DOWN:
-                    if self.y < self.grid_size:
-                        self.y += 1
-                    elif self.y >= self.grid_size:
-                        self.y -= 1
-                elif direction == RIGHT:
-                    if self.x < self.grid_size:
-                        self.x += 1
-                    elif self.x >= self.grid_size:
-                        self.x -= 1
-                elif direction == LEFT:
-                    if self.x > 0:
-                        self.x -= 1
-                    elif self.x <= 0:
-                        self.x += 1
+            for i in range(0, len(self.movement_tech)):
+                for _ in range(0, self.movement_tech[i]):
+                    if direction == UP:
+                        if self.y > 0:
+                            self.y -= 1
+                        elif self.y <= 0:
+                            self.y += 1
+                    elif direction == DOWN:
+                        if self.y < self.grid_size:
+                            self.y += 1
+                        elif self.y >= self.grid_size:
+                            self.y -= 1
+                    elif direction == RIGHT:
+                        if self.x < self.grid_size:
+                            self.x += 1
+                        elif self.x >= self.grid_size:
+                            self.x -= 1
+                    elif direction == LEFT:
+                        if self.x > 0:
+                            self.x -= 1
+                        elif self.x <= 0:
+                            self.x += 1
