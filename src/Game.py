@@ -248,21 +248,21 @@ class Game:
         for player in self.board.players:
             print('Player', player.player_number, ': Status:', player.status)
             print('')
-            print('Player Ships')
+            print('     Player Ships')
             for ship in player.ships:
-                print('    ', ship.name, ':', 'Ship ID:',
+                print('         ', ship.name, ':', 'Ship ID:',
                       ship.ID, ':', [ship.x, ship.y])
 
             print('')
-            print('Player Colonies')
+            print('     Player Colonies')
             for colony in player.colonies:
-                print('    ', colony.name, ':', 'Colony ID:',
+                print('         ', colony.name, ':', 'Colony ID:',
                       colony.ID, ':', [colony.x, colony.y])
 
-            print('')
+            print('     ')
             print('Player Ship Yards')
             for ship_yard in player.ship_yards:
-                print('    ', 'Ship Yard ID:', ship_yard.ID,
+                print('         ', 'Ship Yard ID:', ship_yard.ID,
                       ':', [ship_yard.x, ship_yard.y])
             print('')
             print('')
