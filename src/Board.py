@@ -28,6 +28,7 @@ class Board:
 
     # check stuffs
     def check_colonization(self):
+        print('check colonization')
         for player in self.players:
 
             for ship in player.ships:
@@ -37,7 +38,7 @@ class Board:
                     for planet in self.planets:
 
                         if ship.x == planet.x and ship.y == planet.y and not planet.is_colonized:
-
+                            print('it do be colonized')
                             if ship.terraform_tech >= 4 - planet.tier:  # if the colony ship can colonize the planet
                                 print('Player', player.player_number,
                                       'just colonized a tier', planet.tier,
@@ -58,6 +59,7 @@ class Board:
 
     # create <instert thing here> stuffs
     def create_planets_and_asteroids(self):
+        print('create planets and asteroids')
         self.planets = []
         self.asteroids = []
         for player_position in self.player_home_bases:  # create home base
