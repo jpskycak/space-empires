@@ -260,7 +260,7 @@ class Game:
                       colony.ID, ':', [colony.x, colony.y])
 
             print('     ')
-            print('Player Ship Yards')
+            print('     Player Ship Yards')
             for ship_yard in player.ship_yards:
                 print('         ', 'Ship Yard ID:', ship_yard.ID,
                       ':', [ship_yard.x, ship_yard.y])
