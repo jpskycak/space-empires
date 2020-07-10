@@ -251,7 +251,16 @@ class Game:
                 print('    ', ship.name, ':', 'Ship ID:',
                       ship.ID, ':', [ship.x, ship.y])
 
+            for colony in player.colonies:
+                print('    ', colony.name, ':', 'Colony ID:',
+                      colony.ID, ':', [colony.x, colony.y])
+
+            for ship_yard in player.ship_yard:
+                print('    ', 'Ship Yard ID:', ship_yard.ID,
+                      ':', [ship_yard.x, ship_yard.y])
+
     # helper functions
+
     def dice_roll(self, start, end):
         dice_1 = random.randint(start, end)
         dice_2 = random.randint(start, end - 1)
