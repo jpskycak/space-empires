@@ -20,11 +20,11 @@ class Unit:
         self.ship_yard_tech = 0
 
     def move(self):
-        print('moving')
+        #print('moving')
         # 0 is up   1 is right    2 is down   3 is left
         direction = random.randint(0, 3)
         if self.can_move:
-            print(direction)
+            #print(direction)
             for _ in range(0, self.movement_tech + 1):
                 if direction == UP:
                     if self.y > 0:
