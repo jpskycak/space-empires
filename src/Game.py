@@ -90,6 +90,7 @@ class Game:
                 return True
 
     def complete_turn(self, turn):
+        print('--------------------------------------------------')
         print('Turn', turn)
         self.check_if_player_has_won()
         self.move_phase()
@@ -118,7 +119,6 @@ class Game:
                 player.build_fleet(player.starting_position)
 
         print('Every Player got their daily allowence of', 20, 'creds.')
-        print('-------------------------------------------')
 
     # combat functions
     def combat(self):
@@ -247,17 +247,25 @@ class Game:
     def state_obsolete(self):  # obsolete but can be used for debugging
         for player in self.board.players:
             print('Player', player.player_number, ': Status:', player.status)
+            print('')
+            print('Player Ships')
             for ship in player.ships:
                 print('    ', ship.name, ':', 'Ship ID:',
                       ship.ID, ':', [ship.x, ship.y])
 
+            print('')
+            print('Player Colonies')
             for colony in player.colonies:
                 print('    ', colony.name, ':', 'Colony ID:',
                       colony.ID, ':', [colony.x, colony.y])
 
+            print('')
+            print('Player Ship Yards')
             for ship_yard in player.ship_yard:
                 print('    ', 'Ship Yard ID:', ship_yard.ID,
                       ':', [ship_yard.x, ship_yard.y])
+            print('')
+            print('')
 
     # helper functions
 
