@@ -1,5 +1,5 @@
 import random
-from Unit import Unit
+from Unit.Unit import Unit
 from Unit.Scout import Scout
 from Unit.Destroyer import Destroyer
 from Unit.Cruiser import Cruiser
@@ -20,7 +20,8 @@ class Board:
     def __init__(self, grid_size):
         self.grid_size = grid_size
         self.players = []
-        self.player_home_bases = [[1, 1], [self.grid_size - 1, self.grid_size - 1]]
+        self.player_home_bases = [
+            [1, 1], [self.grid_size - 1, self.grid_size - 1]]
 
         for position in self.player_home_bases:
             self.create_planet(position)
@@ -42,7 +43,8 @@ class Board:
                                       'just colonized a tier', planet.tier,
                                       'planet at co-ords:',
                                       (planet.x, planet.y))
-                                self.create_colony(player, planet, planet.position)
+                                self.create_colony(
+                                    player, planet, planet.position)
                                 index = player.ships.index(ship)
                                 player.ships.remove(player.ships[index])
 
@@ -153,10 +155,10 @@ class Board:
 
                     if ship.x == x and ship.y == y:
 
-                        if ship.name != Colony_Ship or ship.name != Decoy or ship.name != Miner: #if it can fight
+                        if ship.name != Colony_Ship or ship.name != Decoy or ship.name != Miner:  # if it can fight
                             player_and_ships_arr[1].append(ship)
 
-                        else: #if not then die
+                        else:  # if not then die
                             player.ships.remove(ship)
 
             # print('player and ships', player_and_ships_arr) #player and ships
@@ -165,8 +167,6 @@ class Board:
             # print('player', player_and_ships_arr[0]) #player
             # print('ships', player_and_ships_arr[1]) #arr of ships
 
-            
-            
             if len(player_and_ships_arr) > 0:
                 temp.append((x, y))
                 temp.append(count)
@@ -193,16 +193,17 @@ class Board:
                     if player_1 != player_2:
 
                         if len(player_1.ships) > len(player_2.ships):
-                            
+
                             for i in range(len(player_1.ships), len(player_2.ships), -1):
                                 player_1.ships.pop()
 
-                        elif len(player_1.ships) < len(player_2.ships):               
+                        elif len(player_1.ships) < len(player_2.ships):
 
                             for i in range(len(player_2.ships), len(player_1.ships), -1):
                                 player_2.ships.pop()
 
         return data
+
 
 class Planet:
     def __init__(

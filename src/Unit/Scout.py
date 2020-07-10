@@ -1,4 +1,4 @@
-from Unit import Unit
+from Unit.Unit import Unit
 
 
 class Scout(Unit):
