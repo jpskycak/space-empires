@@ -118,6 +118,8 @@ class Player(Board):
                 print('Player', self.player_number,
                       "upgraded their max building size from",
                       self.ship_size_tech - 1, 'to', self.ship_size_tech)
+            else:
+                break
 
     def maintenance(self):
         for ship in self.ships:
