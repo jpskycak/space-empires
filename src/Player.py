@@ -127,7 +127,20 @@ class Player(Board):
 
     def upgrade_movement_tech(self):
         self.movement_tech_upgrade_number += 1
-        
+        if self.movement_tech_upgrade_number == 1:
+            self.movement_tech[2] == 2
+
+        if self.movement_tech_upgrade_number == 2:
+            self.movement_tech[1] == 2
+
+        if self.movement_tech_upgrade_number == 3:
+            self.movement_tech[0] == 2
+
+        if self.movement_tech_upgrade_number == 4:
+            self.movement_tech[2] == 3
+
+        if self.movement_tech_upgrade_number == 5:
+            self.movement_tech[1] == 3
 
     def maintenance(self):
         for ship in self.ships:
