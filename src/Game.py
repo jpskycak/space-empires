@@ -3,7 +3,7 @@ import random
 #from matplotlib.ticker import MultipleLocator
 from board import Board
 from player import Player
-from unit import Unit
+from unit.unit import Unit
 from unit.scout import Scout
 from unit.destroyer import Destroyer
 from unit.cruiser import Cruiser
@@ -12,7 +12,7 @@ from unit.battleship import Battleship
 from unit.dreadnaught import Dreadnaught
 from unit.colony_ship import Colony_Ship
 from unit.colony import Colony
-from unit.ship_Yard import Ship_Yard
+from unit.ship_yard import Ship_Yard
 from unit.base import Base
 from unit.miner import Miner
 from unit.decoy import Decoy
