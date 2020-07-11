@@ -1,4 +1,4 @@
-from Unit.Unit import Unit
+from unit import Unit
 
 
 class Dreadnaught(Unit):
