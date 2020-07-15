@@ -20,13 +20,13 @@ from unit.carrier import Carrier
 class RandomPlayer(Player):
     def __init__(self, position, grid_size, player_number, player_color):
         super().__init__(position, grid_size, player_number, player_color)
+        self.type = 'Random Player'
         self.creds = 42
         self.death_count = 0  # if winCount = amount of units self.lose = true
         # starts out with 3 scouts and 3 colony ships later it would be 3 miners
         self.ships = []
         self.colonies = [Colony(1, position, grid_size)]
         self.starting_position = position
-        self.build_fleet()
         self.attack_tech = 0
         self.defense_tech = 0
         self.movement_tech = [1, 1, 1]

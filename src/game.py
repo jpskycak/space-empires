@@ -40,12 +40,15 @@ class Game:
         players = []
         for i in range(0, 4):
             type_of_player = random.randint(1, 2)  # dumb or random
+            print('type_of_player', type_of_player)
             if type_of_player == 1:
                 players.append(DumbPlayer(
                     starting_positions[i], self.grid_size, i + 1, colors[i]))
             if type_of_player == 2:
                 players.append(RandomPlayer(
                     starting_positions[i], self.grid_size, i + 1, colors[i]))
+                print(players[i])
+                players[i].build_fleet()
 
         return players
 
@@ -54,8 +57,10 @@ class Game:
         self.player_has_not_won = True
         while self.player_has_not_won:
             self.player_has_not_won = self.check_if_player_has_won()
-            print(self.player_has_not_won)
-            if not self.player_has_not_won:
+            for player in self.board.players:
+                if player.status == 'Deceased':
+                    self.board.players.remove(player)
+            if len(self.board.players) <= 1:
                 break
 
             self.complete_turn(turn)
@@ -125,7 +130,7 @@ class Game:
             if turn % 2 == 0:
                 player.upgrade()
             else:
-                player.build_fleet(player.starting_position)
+                player.build_fleet()
 
         print('Every Player got their daily allowence of', 20, 'creds.')
 
@@ -254,24 +259,42 @@ class Game:
 
     # misc functions
     def state_obsolete(self):  # obsolete but can be used for debugging
-        for player in self.board.players:
-            print('Player', player.player_number, ': Status:', player.status)
+        if print_planets_and_asteroids:
+            print('Asteroids')
             print('')
-            print('     Player Ships')
+
+            for asteroid in self.board.asteroids:
+                print('     position:', asteroid.position)
+
+            print('')
+            print('Planets')
+            print('')
+
+            for planet in self.board.planets:
+                print('     Tier:', planet.tier, '| Position:', planet.position, '| Colonized:', planet.is_colonized)
+
+        print('')
+        print('Players')
+        print('')
+
+        for player in self.board.players:
+            print('     Player:', player.player_number, '| Type:', player.type, '| Status:', player.status)
+            print('')
+            print('          Player Ships')
             for ship in player.ships:
-                print('         ', ship.name, ':', 'Ship ID:',
+                print('              ', ship.name, ':', 'Ship ID:',
                       ship.ID, ':', [ship.x, ship.y])
 
             print('')
-            print('     Player Colonies')
+            print('          Player Colonies')
             for colony in player.colonies:
-                print('         ', colony.name, ':', 'Colony ID:',
+                print('              ', colony.name, ':', 'Colony ID:',
                       colony.ID, ':', [colony.x, colony.y])
 
             print('     ')
-            print('     Player Ship Yards')
+            print('          Player Ship Yards')
             for ship_yard in player.ship_yards:
-                print('         ', 'Ship Yard ID:', ship_yard.ID,
+                print('              ', 'Ship Yard ID:', ship_yard.ID,
                       ':', [ship_yard.x, ship_yard.y])
             print('')
             print('')

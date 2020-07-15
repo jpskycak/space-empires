@@ -1,3 +1,4 @@
+import random
 from players.player import Player
 from board import Board
 from unit.unit import Unit
@@ -18,7 +19,8 @@ from unit.carrier import Carrier
 
 class DumbPlayer(Player):
     def __init__(self, position, grid_size, player_number, player_color):
-        super().__init__(grid_size)
+        super().__init__(position, grid_size, player_number, player_color)
+        self.type = 'Dumb Player'
         self.creds = 0
         self.status = 'Playing'
         self.death_count = 0  # if winCount = amount of units self.lose = true
@@ -43,7 +45,7 @@ class DumbPlayer(Player):
         ]
         self.colonies = [Colony(1, position, grid_size)]
         self.starting_position = position
-        self.build_fleet(position)
+        self.build_fleet()
         self.attack_tech = 0
         self.defense_tech = 0
         self.movement_tech = [1, 1, 1]
@@ -53,8 +55,10 @@ class DumbPlayer(Player):
         self.fighting_class_tech = 0
         self.movement_tech_upgrade_number = 0
 
-    def build_fleet(self, position):
+    def build_fleet(self):
         print('building a fleet')
+        ship_yard = self.find_random_ship_yard()
+        position = ship_yard.position
         while self.creds >= 6:
             print(self.creds)
             ship_class = 1

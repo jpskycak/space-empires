@@ -55,7 +55,7 @@ class Player(Board):
         ship_yard = self.find_random_ship_yard()
         position = ship_yard.position
         self.find_amount_of_hull_size_building_capiblity(position)
-        while self.creds >= 9:
+        while self.creds >= 6:
             print(self.creds)
             ship_class = self.determine_availible_ship_classes(self.creds)
             if ship_class == None:
@@ -74,7 +74,7 @@ class Player(Board):
                           ship.name)
 
     def find_random_ship_yard(self):
-        return self.ship_yards[random.randint(0, len(self.ship_yards))]
+        return self.ship_yards[random.randint(0, len(self.ship_yards) - 1)]
 
     def find_amount_of_hull_size_building_capiblity(self, position):
         total_ship_yards_at_position = 0
