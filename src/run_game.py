@@ -1,4 +1,4 @@
-from Game import Game
+from game import Game
 
 game = Game(10)
 game.initialize_game()

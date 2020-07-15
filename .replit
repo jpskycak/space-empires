@@ -1,2 +1,2 @@
 language = "bash"
-run = "python src/Run_Game.py"
+run = "python src/run_game.py"
