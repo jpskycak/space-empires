@@ -258,7 +258,7 @@ class Game:
             ship_2.status = 'Deceased'
 
     # misc functions
-    def state_obsolete(self):  # obsolete but can be used for debugging
+    def state_obsolete(self, print_planets_and_asteroids = False):  # obsolete but can be used for debugging
         if print_planets_and_asteroids:
             print('Asteroids')
             print('')
