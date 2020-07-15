@@ -258,7 +258,8 @@ class Game:
             ship_2.status = 'Deceased'
 
     # misc functions
-    def state_obsolete(self, print_planets_and_asteroids = False):  # obsolete but can be used for debugging
+    # obsolete but can be used for debugging
+    def state_obsolete(self, print_planets_and_asteroids=False):
         if print_planets_and_asteroids:
             print('Asteroids')
             print('')
@@ -271,14 +272,16 @@ class Game:
             print('')
 
             for planet in self.board.planets:
-                print('     Tier:', planet.tier, '| Position:', planet.position, '| Colonized:', planet.is_colonized)
+                print('     Tier:', planet.tier, '| Position:',
+                      planet.position, '| Colonized:', planet.is_colonized)
 
         print('')
         print('Players')
         print('')
 
         for player in self.board.players:
-            print('     Player:', player.player_number, '| Type:', player.type, '| Status:', player.status)
+            print('     Player:', player.player_number, '| Type:',
+                  player.type, '| Status:', player.status)
             print('')
             print('          Player Ships')
             for ship in player.ships:
