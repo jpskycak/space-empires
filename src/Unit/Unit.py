@@ -48,5 +48,8 @@ class Unit:
                         elif self.x <= 0:
                             self.x += 1
 
-        if self.can_move and dumb_player:
-            
+        if self.can_move and dumb_player: #so dumb player only moves right
+            for i in range(0, len(self.movement_tech)):
+                for _ in range(0, self.movement_tech[i]):
+                    if self.x < self.grid_size:
+                        self.x += 1

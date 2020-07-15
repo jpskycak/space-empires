@@ -1,4 +1,5 @@
 from player import Player
+import random
 import sys
 sys.path.append('src')
 from board import Board
@@ -18,8 +19,8 @@ from unit.decoy import Decoy
 from unit.carrier import Carrier
 
 
-class DumnPlayer(Player):
-     def __init__(self, position, grid_size, player_number, player_color):
+class DumbPlayer(Player):
+    def __init__(self, position, grid_size, player_number, player_color):
         super().__init__(grid_size)
         self.creds = 0
         self.status = 'Playing'
@@ -161,48 +162,11 @@ class DumnPlayer(Player):
 
     # helper functions
     def determine_availible_ship_classes(self, creds):
-        if self.creds > 30 and self.ship_size_tech >= 6:
-            return random.randint(1, 7)
-        elif self.creds < 30 and self.creds >= 25 and self.ship_size_tech >= 5:
-            return random.randint(1, 6)
-        elif self.creds < 25 and self.creds >= 20 and self.ship_size_tech >= 4:
-            return random.randint(1, 5)
-        elif self.creds < 20 and self.creds >= 15 and self.ship_size_tech >= 3:
-            return random.randint(1, 4)
-        elif self.creds < 15 and self.creds >= 12 and self.ship_size_tech >= 2:
-            return random.randint(1, 3)
-        elif self.creds < 12 and self.creds >= 9 and self.ship_size_tech >= 1:
-            return random.randint(1, 2)
-        elif self.creds < 9 and self.creds >= 6 and self.ship_size_tech >= 0:
+        if self.creds >= 6 and self.ship_size_tech >= 0:
             return 1
         else:
             return None
 
     def create_ship(self, ship_class, ID, position):
-        if ship_class == 1:
-            scout_colony_ship_decoy_or_miner = random.randint(1, 4)
-            if scout_colony_ship_decoy_or_miner == 1:
-                return Scout(ID, position, self.grid_size, True)
-            if scout_colony_ship_decoy_or_miner == 2:
-                return Colony_Ship(ID, position, self.grid_size, True)
-            if scout_colony_ship_decoy_or_miner == 3:
-                return Decoy(ID, position, self.grid_size, True)
-            if scout_colony_ship_decoy_or_miner == 4:
-                return Miner(ID, position, self.grid_size, True)
-        elif ship_class == 2:
-            return Destroyer(ID, position, self.grid_size, True)
-        elif ship_class == 3:
-            return Cruiser(ID, position, self.grid_size, True)
-        elif ship_class == 4:
-            return BattleCruiser(ID, position, self.grid_size, True)
-        elif ship_class == 5:
-            return Battleship(ID, position, self.grid_size, True)
-        elif ship_class == 6:
-            return Dreadnaught(ID, position, self.grid_size, True)
-        elif ship_class == 7:
-            return Carrier(ID, position, self.grid_size, True)
-        elif ship_class == 8:
-            return Colony_Ship(ID, position, self.grid_size, True)
-        else:
-            return Scout(ID, position, self.grid_size, True)
+        return Scout(ID, position, self.grid_size, True)
 

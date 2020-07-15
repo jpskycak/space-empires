@@ -2,7 +2,9 @@ import random
 #import matplotlib.pyplot as plt
 #from matplotlib.ticker import MultipleLocator
 from board import Board
-from player import Player
+from players.player import Player
+from players.dumb_player import DumbPlayer
+from players.random_player import RandomPlayer
 from unit.unit import Unit
 from unit.scout import Scout
 from unit.destroyer import Destroyer
@@ -32,13 +34,20 @@ class Game:
         self.board.create_planets_and_asteroids()
 
     def create_players(self):
-        player_1 = Player([1, 1], self.grid_size, 1, 'Blue')
-        player_2 = Player(
-            [self.grid_size - 1, self.grid_size - 1], self.grid_size, 2, 'Red')
-        print('oi')
-        player_3 = Player([1, self.grid_size - 1], self.grid_size, 3, 'Purple')
-        player_4 = Player([self.grid_size - 1, 1], self.grid_size, 4, 'Green')
-        return [player_1, player_2, player_3, player_4]
+        starting_positions = [[1, 1], [self.grid_size - 1, self.grid_size - 1],
+                              [1, self.grid_size - 1], [self.grid_size - 1, 1]]
+        colors = ['Blue', 'Red', 'Purple', 'Green']
+        players = []
+        for i in range(0, 4):
+            type_of_player = random.randint(1, 2)#dumb or random
+            if type_of_player == 1:
+                players.append(DumbPlayer(
+                    starting_positions[i], self.grid_size, i + 1, colors[i]))
+            if type_of_player == 2:
+                players.append(RandomPlayer(
+                    starting_positions[i], self.grid_size, i + 1, colors[i]))
+
+        return players
 
     def play(self):
         turn = 1
