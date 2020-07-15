@@ -1,7 +1,4 @@
-from player import Player
-import random
-import sys
-sys.path.append('src')
+from players.player import Player
 from board import Board
 from unit.unit import Unit
 from unit.scout import Scout

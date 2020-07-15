@@ -39,7 +39,7 @@ class Game:
         colors = ['Blue', 'Red', 'Purple', 'Green']
         players = []
         for i in range(0, 4):
-            type_of_player = random.randint(1, 2)#dumb or random
+            type_of_player = random.randint(1, 2)  # dumb or random
             if type_of_player == 1:
                 players.append(DumbPlayer(
                     starting_positions[i], self.grid_size, i + 1, colors[i]))

@@ -1,5 +1,3 @@
-import sys
-sys.path.append('src')
 import random
 from board import Board
 from unit.unit import Unit
