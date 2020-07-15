@@ -1,4 +1,6 @@
-import random
+from player import Player
+import sys
+sys.path.append('src')
 from board import Board
 from unit.unit import Unit
 from unit.scout import Scout
@@ -16,8 +18,8 @@ from unit.decoy import Decoy
 from unit.carrier import Carrier
 
 
-class Player(Board):
-    def __init__(self, position, grid_size, player_number, player_color):
+class DumnPlayer(Player):
+     def __init__(self, position, grid_size, player_number, player_color):
         super().__init__(grid_size)
         self.creds = 0
         self.status = 'Playing'
@@ -29,9 +31,11 @@ class Player(Board):
             Scout(1, position, self.grid_size, True),
             Scout(2, position, self.grid_size, True),
             Scout(3, position, self.grid_size, True),
-            Colony_Ship(4, position, self.grid_size, True),
-            Colony_Ship(5, position, self.grid_size, True),
-            Colony_Ship(6, position, self.grid_size, True)
+            Scout(4, position, self.grid_size, True),
+            Scout(5, position, self.grid_size, True),
+            Scout(6, position, self.grid_size, True),
+            Scout(7, position, self.grid_size, True),
+            Scout(8, position, self.grid_size, True),
         ]
         self.ship_yards = [
             Ship_Yard(1, position, self.grid_size, False),
@@ -53,9 +57,9 @@ class Player(Board):
 
     def build_fleet(self, position):
         print('building a fleet')
-        while self.creds >= 9:
+        while self.creds >= 6:
             print(self.creds)
-            ship_class = self.determine_availible_ship_classes(self.creds)
+            ship_class = 1
             if ship_class == None:
                 break
             else:
@@ -201,3 +205,4 @@ class Player(Board):
             return Colony_Ship(ID, position, self.grid_size, True)
         else:
             return Scout(ID, position, self.grid_size, True)
+

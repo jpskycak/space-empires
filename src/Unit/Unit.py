@@ -19,11 +19,11 @@ class Unit:
         self.movement_tech = [1, 1, 1]
         self.ship_yard_tech = 0
 
-    def move(self):
+    def move(self, dumb_player = False):
         # print('moving')
         # 0 is up   1 is right    2 is down   3 is left
         direction = random.randint(0, 3)
-        if self.can_move:
+        if self.can_move and not dumb_player:
             # print(direction)
             for i in range(0, len(self.movement_tech)):
                 for _ in range(0, self.movement_tech[i]):
@@ -47,3 +47,6 @@ class Unit:
                             self.x -= 1
                         elif self.x <= 0:
                             self.x += 1
+
+        if self.can_move and dumb_player:
+            
