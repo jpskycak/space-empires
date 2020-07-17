@@ -55,6 +55,8 @@ class DumbPlayer(Player):
         self.fighting_class_tech = 0
         self.movement_tech_upgrade_number = 0
 
+    
+
     def build_fleet(self):
         print('building a fleet')
         ship_yard = self.find_random_ship_yard()
@@ -76,7 +78,7 @@ class DumbPlayer(Player):
                     self.creds -= ship.cost
                     print('Player', self.player_number, 'just bought a',
                           ship.name)
-
+    
     def upgrade(self):  # actual function should be in here because you can only upgrade new ships not ones in the field
         print('upgrading')
         while self.creds > 10 * self.attack_tech and self.creds > 10 * self.defense_tech and self.creds > 5 * self.fighting_class_tech + 10 and self.creds > 10 * self.movement_tech_upgrade_number + 10 and self.creds > 10 * self.ship_yard_tech and self.creds > 15 * self.terraform_tech and self.creds > 5 * self.ship_size_tech + 10:
@@ -160,6 +162,18 @@ class DumbPlayer(Player):
                     self.ships.remove(ship)
                     print('Player', self.player_number,
                           "couldn't maintain their", ship.name)
+
+    def move(self):
+        # 0 is up   1 is right    2 is down   3 is left
+        for ship in self.ships:
+            direction = random.randint(0, 3)
+            if ship.can_move:
+                for i in range(0, len(self.movement_tech)):
+                    for _ in range(0, self.movement_tech[i]):
+                        if ship.x < self.grid_size:
+                            ship.x += 1
+                        elif ship.x >= self.grid_size:
+                            ship.x -= 1
 
     # helper functions
     def determine_availible_ship_classes(self, creds):
