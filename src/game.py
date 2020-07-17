@@ -29,7 +29,7 @@ class Game:
         self.players_dead = 0
         self.board = Board(grid_size)
         self.max_turns = max_turns
-        self.logging = Logging(self.board)
+        self.log = Logging(self.board)
 
     # main functions
     def initialize_game(self):
@@ -59,7 +59,7 @@ class Game:
         turn = 1
         self.player_has_not_won = True
         while self.player_has_not_won and turn <= self.max_turns:
-            self.logging.log_info()
+            self.log.log_info()
             self.player_has_not_won = self.check_if_player_has_won()
             for player in self.board.players:
                 if player.status == 'Deceased':
