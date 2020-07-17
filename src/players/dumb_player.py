@@ -170,4 +170,3 @@ class DumbPlayer(Player):
 
     def create_ship(self, ship_class, ID, position):
         return Scout(ID, position, self.grid_size, True)
-

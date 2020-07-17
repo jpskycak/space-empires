@@ -2,6 +2,7 @@ import random
 #import matplotlib.pyplot as plt
 #from matplotlib.ticker import MultipleLocator
 from board import Board
+from logging import Logging
 from players.player import Player
 from players.dumb_player import DumbPlayer
 from players.random_player import RandomPlayer
@@ -22,11 +23,13 @@ from unit.carrier import Carrier
 
 
 class Game:
-    def __init__(self, grid_size):
+    def __init__(self, grid_size, max_turns):
         self.grid_size = grid_size  # ex [5,5]
         self.game_won = False
         self.players_dead = 0
         self.board = Board(grid_size)
+        self.max_turns = max_turns
+        self.logging = Logging(self.board)
 
     # main functions
     def initialize_game(self):
@@ -39,7 +42,7 @@ class Game:
         colors = ['Blue', 'Red', 'Purple', 'Green']
         players = []
         for i in range(0, 4):
-            type_of_player = random.randint(1, 2)  # dumb or random
+            type_of_player = 1# <--- testing the dumb player #random.randint(1, 2)  # dumb or random
             print('type_of_player', type_of_player)
             if type_of_player == 1:
                 players.append(DumbPlayer(
@@ -55,7 +58,8 @@ class Game:
     def play(self):
         turn = 1
         self.player_has_not_won = True
-        while self.player_has_not_won:
+        while self.player_has_not_won and turn <= self.max_turns:
+            self.logging.log_info()
             self.player_has_not_won = self.check_if_player_has_won()
             for player in self.board.players:
                 if player.status == 'Deceased':
