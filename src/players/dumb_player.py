@@ -57,6 +57,8 @@ class DumbPlayer(Player):
         self.fighting_class_tech = 0
         self.movement_tech_upgrade_number = 0
 
+    
+
     def build_fleet(self):
         print('building a fleet')
         ship_yard = self.find_random_ship_yard()
@@ -114,6 +116,18 @@ class DumbPlayer(Player):
                     self.ships.remove(ship)
                     print('Player', self.player_number,
                           "couldn't maintain their", ship.name)
+
+    def move(self):
+        # 0 is up   1 is right    2 is down   3 is left
+        for ship in self.ships:
+            direction = random.randint(0, 3)
+            if ship.can_move:
+                for i in range(0, len(self.movement_tech)):
+                    for _ in range(0, self.movement_tech[i]):
+                        if ship.x < self.grid_size:
+                            ship.x += 1
+                        elif ship.x >= self.grid_size:
+                            ship.x -= 1
 
     # helper functions
     def determine_availible_ship_classes(self, creds):
