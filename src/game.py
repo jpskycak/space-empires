@@ -42,7 +42,7 @@ class Game:
                               [1, self.grid_size - 1], [self.grid_size - 1, 1]]
         colors = ['Blue', 'Red', 'Purple', 'Green']
         players = []
-        for i in range(0, 4):
+        for i in range(0, 2):
             type_of_player = 1# <--- testing the dumb player #random.randint(1, 2)  # dumb or random
             print('type_of_player', type_of_player)
             if type_of_player == 1:
@@ -118,10 +118,9 @@ class Game:
 
     def move_phase(self):
         for player in self.board.players:
-            player.check_colonization()
-            for ship in player.ships:
-                for _ in range(0, 3):  # 3 rounds of movements
-                    ship.move()
+            player.check_colonization(self.board)
+            for _ in range(0, 3):  # 3 rounds of movements
+                player.move()
 
         self.state_obsolete()
 
