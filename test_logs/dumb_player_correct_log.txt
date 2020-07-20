@@ -1,0 +1,72 @@
+Turn: 1
+Player:1Status:Playing
+Scout:Ship ID:1: [1,1] 
+Scout:Ship ID:2: [1,1] 
+Scout:Ship ID:3: [1,1] 
+Scout:Ship ID:4: [1,1] 
+Scout:Ship ID:5: [1,1] 
+Scout:Ship ID:6: [1,1] 
+Scout:Ship ID:7: [1,1] 
+Scout:Ship ID:8: [1,1] 
+
+Player:2Status:Playing
+Scout:Ship ID:1: [4,4] 
+Scout:Ship ID:2: [4,4] 
+Scout:Ship ID:3: [4,4] 
+Scout:Ship ID:4: [4,4] 
+Scout:Ship ID:5: [4,4] 
+Scout:Ship ID:6: [4,4] 
+Scout:Ship ID:7: [4,4] 
+Scout:Ship ID:8: [4,4] 
+
+Turn: 2
+Player:1Status:Playing
+Scout:Ship ID:2: [4,1] 
+Scout:Ship ID:4: [4,1] 
+Scout:Ship ID:6: [4,1] 
+Scout:Ship ID:8: [4,1] 
+Scout:Ship ID:5: [1,1] 
+Scout:Ship ID:6: [1,1] 
+Scout:Ship ID:7: [1,1] 
+
+Player:2Status:Playing
+Scout:Ship ID:2: [5,4] 
+Scout:Ship ID:4: [5,4] 
+Scout:Ship ID:6: [5,4] 
+Scout:Ship ID:8: [5,4] 
+Scout:Ship ID:5: [4,4] 
+Scout:Ship ID:6: [4,4] 
+Scout:Ship ID:7: [4,4] 
+
+Turn: 3
+Player:1Status:Playing
+Scout:Ship ID:2: [5,1] 
+Scout:Ship ID:4: [5,1] 
+Scout:Ship ID:8: [5,1] 
+Scout:Ship ID:6: [4,1] 
+
+Player:2Status:Playing
+Scout:Ship ID:2: [4,4] 
+Scout:Ship ID:4: [4,4] 
+Scout:Ship ID:8: [4,4] 
+Scout:Ship ID:6: [5,4] 
+
+Turn: 4
+Player:1Status:Playing
+Scout:Ship ID:2: [4,1] 
+Scout:Ship ID:4: [4,1] 
+Scout:Ship ID:8: [4,1] 
+Scout:Ship ID:6: [5,1] 
+Scout:Ship ID:5: [1,1] 
+Scout:Ship ID:6: [1,1] 
+Scout:Ship ID:7: [1,1] 
+
+Player:2Status:Playing
+Scout:Ship ID:2: [5,4] 
+Scout:Ship ID:4: [5,4] 
+Scout:Ship ID:8: [5,4] 
+Scout:Ship ID:6: [4,4] 
+Scout:Ship ID:5: [4,4] 
+Scout:Ship ID:6: [4,4] 
+Scout:Ship ID:7: [4,4] 
+

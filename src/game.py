@@ -24,7 +24,7 @@ from unit.carrier import Carrier
 
 class Game:
     def __init__(self, grid_size, max_turns):
-        self.grid_size = grid_size  # ex [5,5]
+        self.grid_size = grid_size - 1  # ex [5,5]
         self.game_won = False
         self.players_dead = 0
         self.board = Board(grid_size)
@@ -38,8 +38,7 @@ class Game:
         self.log.get_next_active_file('logs')
 
     def create_players(self):
-        starting_positions = [[1, 1], [self.grid_size - 1, self.grid_size - 1],
-                              [1, self.grid_size - 1], [self.grid_size - 1, 1]]
+        starting_positions = [[self.grid_size // 2, 0], [self.grid_size // 2, self.grid_size], [0, self.grid_size // 2], [self.grid_size, self.grid_size // 2]] #players now start at the axis' and not the corners
         colors = ['Blue', 'Red', 'Purple', 'Green']
         players = []
         for i in range(0, 2):
@@ -60,7 +59,7 @@ class Game:
         turn = 1
         self.player_has_not_won = True
         while self.player_has_not_won and turn <= self.max_turns:
-            self.log.log_info()
+            #self.log.log_info(turn) moved to 
             self.player_has_not_won = self.check_if_player_has_won()
             for player in self.board.players:
                 if player.status == 'Deceased':
@@ -112,14 +111,15 @@ class Game:
         print('--------------------------------------------------')
         print('Turn', turn)
         self.check_if_player_has_won()
-        self.move_phase()
+        self.move_phase(turn)
         self.combat_phase()
         self.economic_phase(turn)
 
-    def move_phase(self):
+    def move_phase(self, turn):
         for player in self.board.players:
             player.check_colonization(self.board)
-            for _ in range(0, 3):  # 3 rounds of movements
+            for round_number in range(0, 3):  # 3 rounds of movements
+                self.log.log_info(turn, round_number)
                 player.move()
 
         self.state_obsolete()

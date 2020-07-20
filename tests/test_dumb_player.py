@@ -1,28 +1,14 @@
-from logging import Logging
 import sys
 sys.path.append('src')
+from logging import Logging
 
 
 log = Logging()
-example = Logging
 
-log.get_current_active_file('space-empires/logs')
+log.get_current_active_file('space-empires/logs') #get current file
 
-contents = log.read_info()
+log.get_correct_example(open('space-empires/test_logs/dumb_player_correct_log.txt', 'r')) #ingest correct test
 
-correct_example.get_current_active_file(
-    'space-empires/test_logs', 'test_dumb_player')
-
-test = correct_example.read_info()
-
-# print lines that are different from the correct example
-with log.active_file as text, correct_example.active_file as exc:
-    exclusions = [line.rstrip('\n') for line in exc]
-    for line in text:
-        if not any(exclusion in line for exclusion in exclusions):
-            print line
-
-assert contents == test, "The dumb player isn't as dumb as you think"
-
+log.compare_test_and_example() #should give assert error if they aren't the same and give the line the test and the correct example are different
 
 print('Dumb Player Works!!!')
