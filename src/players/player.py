@@ -50,6 +50,9 @@ class Player:
         self.fighting_class_tech = 0
         self.movement_tech_upgrade_number = 0
 
+    def find_random_ship_yard(self):
+        return self.ship_yards[random.randint(0, len(self.ship_yards) - 1)]
+
     def find_amount_of_hull_size_building_capiblity(self, position):
         total_ship_yards_at_position = 0
         for ship_yard in self.ship_yards:
