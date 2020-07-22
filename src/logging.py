@@ -3,7 +3,7 @@ import sys
 sys.path.append('src')
 
 
-class Logging:
+class Logger:
     def __init__(self, board = None):  # the passing of Board gives me players and their ships
         self.board = board
 

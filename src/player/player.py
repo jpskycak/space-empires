@@ -89,32 +89,35 @@ class Player:
                     print('Player', self.player_number,
                           "couldn't maintain their", ship.name)
 
-    
+    def screen_ships(self, ships_at_x_y, board):
+        data = []
+        player_ships_count = [[player, 0] for player in board.players]
 
-    
+        for ship in ships_at_x_y:
+            player_ships_count[ship.player.player_number - 1][1] += 1
 
-    def screen_ship_combat(self, data):
-        for position in data:
-            players = []
+        for player_1, _ in player_ships_count:
+            player_1_ships = [ship for ship in ships_at_x_y if ship.player == player_1]
 
-            for player in position[1][1]:
-                players.append(players)
+            for player_2, _ in player_ships_count:
+                player_2_ships = [ship for ship in ships_at_x_y if ship.player == player_2]
 
-            for player_1 in player:
+                if player_1 != player_2:
 
-                for player_2 in player:
+                    if len(player_1_ships) < len(player_2_ships):
+                        
+                        while len(player_2_ships) > len(player_1_ships):
+                            player_2_ships.pop(-1)
 
-                    if player_1 != player_2:
+                    if len(player_2_ships) < len(player_1_ships):
 
-                        if len(player_1.ships) > len(player_2.ships):
+                        while len(player_1_ships) > len(player_2_ships):
+                            player_1_ships.pop(-1)
 
-                            for i in range(len(player_1.ships), len(player_2.ships), -1):
-                                player_1.ships.pop()
 
-                        elif len(player_1.ships) < len(player_2.ships):
 
-                            for i in range(len(player_2.ships), len(player_1.ships), -1):
-                                player_2.ships.pop()
+                        
+                        
 
         return data
 

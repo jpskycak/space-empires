@@ -20,7 +20,8 @@ class Board:
     def __init__(self, grid_size):
         self.grid_size = grid_size
         self.players = []
-        self.player_home_bases = [[1, 1], [self.grid_size - 1, self.grid_size - 1]]
+        self.player_home_bases = [
+            [1, 1], [self.grid_size - 1, self.grid_size - 1]]
 
     # create <instert thing here> stuffs
     def create_planets_and_asteroids(self):
@@ -53,7 +54,8 @@ class Board:
 
     def create_colony(self, player, planet, position):
         planet.is_colonized = True
-        player.colonies.append(Colony(self, len(player.colonies) + 1, position, self.grid_size))
+        player.colonies.append(
+            Colony(self, len(player.colonies) + 1, position, self.grid_size))
 
     # combat stuffs
     def list_of_ships_at_x_y(self, players, x, y):
@@ -93,15 +95,17 @@ class Board:
             # if len(ships_arr) > 0:
             #     print('ships', player_and_ships_arr) #arr of ships
 
+            for player in self.players:
+                ships_arr = player.screen_ships(ships_arr, self)
+
             if len(ships_arr) > 0:
                 temp.append((x, y))
                 temp.append(count)
                 temp.append(ships_arr)
                 all_data.append(temp)
 
-
         #print('all_data', all_data)
-        #ex --> ((0,0), (3, [ship_1, ship_2, ship_1], (1,0), (3, ([player_1, (ship_1)], [player_2, (ship_1, ship_2)]
+        # ex --> ((0,0), (3, [ship_1, ship_2, ship_1], (1,0), (3, ([player_1, (ship_1)], [player_2, (ship_1, ship_2)]
         return all_data
 
     def find_order_of_ships(self, ships):
@@ -138,9 +142,7 @@ class Board:
 
 
 class Planet:
-    def __init__(
-            self, position, tier
-    ):  # tier 1 uninhabitable at all like a small moon, tier 2 is barren, like mars, but only habitable by terraform 2 colony ships tier 3 is like earth, fully habatible by any colony ship
+    def __init__(self, position, tier):  # tier 1 uninhabitable at all like a small moon, tier 2 is barren, like mars, but only habitable by terraform 2 colony ships tier 3 is like earth, fully habatible by any colony ship
         self.position = position
         self.x = position[0]
         self.y = position[1]
@@ -151,9 +153,7 @@ class Planet:
 
 
 class Asteroid:
-    def __init__(
-            self, position, size, tier
-    ):  # tier 1 uninhabitable at all like a small moon, tier 2 is barren, like mars, but only habitable by terraform 2 colony ships tier 3 is like earth, fully habatible by any colony ship
+    def __init__(self, position, size, tier):  # tier 1 uninhabitable at all like a small moon, tier 2 is barren, like mars, but only habitable by terraform 2 colony ships tier 3 is like earth, fully habatible by any colony ship
         self.position = position
         self.x = position[0]
         self.y = position[1]

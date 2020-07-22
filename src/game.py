@@ -2,10 +2,10 @@ import random
 #import matplotlib.pyplot as plt
 #from matplotlib.ticker import MultipleLocator
 from board import Board
-from logging import Logging
-from players.player import Player
-from players.dumb_player import DumbPlayer
-from players.random_player import RandomPlayer
+from logging import Logger
+from player.player import Player
+from player.dumb_player import DumbPlayer
+from player.random_player import RandomPlayer
 from unit.unit import Unit
 from unit.scout import Scout
 from unit.destroyer import Destroyer
@@ -29,7 +29,7 @@ class Game:
         self.players_dead = 0
         self.board = Board(grid_size)
         self.max_turns = max_turns
-        self.log = Logging(self.board)
+        self.log = Logger(self.board)
 
     # main functions
     def initialize_game(self):
@@ -38,11 +38,13 @@ class Game:
         self.log.get_next_active_file('logs')
 
     def create_players(self):
-        starting_positions = [[self.grid_size // 2, 0], [self.grid_size // 2, self.grid_size], [0, self.grid_size // 2], [self.grid_size, self.grid_size // 2]] #players now start at the axis' and not the corners
+        starting_positions = [[self.grid_size // 2, 0], [self.grid_size // 2, self.grid_size], [0, self.grid_size // 2], [
+            self.grid_size, self.grid_size // 2]]  # players now start at the axis' and not the corners
         colors = ['Blue', 'Red', 'Purple', 'Green']
         players = []
         for i in range(0, 2):
-            type_of_player = 1# <--- testing the dumb player #random.randint(1, 2)  # dumb or random
+            # <--- testing the dumb player #random.randint(1, 2)  # dumb or random
+            type_of_player = 1
             print('type_of_player', type_of_player)
             if type_of_player == 1:
                 players.append(DumbPlayer(
@@ -59,7 +61,7 @@ class Game:
         turn = 1
         self.player_has_not_won = True
         while self.player_has_not_won and turn <= self.max_turns:
-            #self.log.log_info(turn) moved to 
+            # self.log.log_info(turn) moved to
             self.player_has_not_won = self.check_if_player_has_won()
             for player in self.board.players:
                 if player.status == 'Deceased':
@@ -81,8 +83,6 @@ class Game:
             if player.status == 'Playing':
                 self.game_won = True
                 print('Player', player.player_number, 'WINS!')
-
-        exit()
 
     def check_if_player_has_won(self):
         for player in self.board.players:
@@ -111,40 +111,17 @@ class Game:
         print('--------------------------------------------------')
         print('Turn', turn)
         self.check_if_player_has_won()
-        self.move_phase(turn)
-        self.combat_phase()
-        self.economic_phase(turn)
-
-    def move_phase(self, turn):
-        for player in self.board.players:
-            player.check_colonization(self.board)
-            for round_number in range(0, 3):  # 3 rounds of movements
-                self.log.log_info(turn, round_number)
-                player.move()
-
-        self.state_obsolete()
-
-    def combat_phase(self):
-        self.combat()
-
-    def economic_phase(self, turn):
-        for player in self.board.players:
-            player.maintenance()
-            player.creds += 20
-            if turn % 2 == 0:
-                player.upgrade()
-            else:
-                player.build_fleet()
-
-        print('Every Player got their daily allowence of', 20, 'creds.')
+        self.complete_move_phase(turn)
+        self.complete_combat_phase()
+        self.complete_economic_phase(turn)
 
     # combat functions
-    def combat(self):
+    def complete_combat_phase(self):
         print('fighting (combat)')
-        possible_fights_var = self.possible_fights()
+        possible_fights = self.possible_fights()
         players_and_ships = []
         # print('num_of_possible_fights', num_of_possible_fights)
-        for position in possible_fights_var:
+        for position in possible_fights:
             print(position)
             if len(position[0][2]
                    [1]) > 1:  # if 2 or more players are in current position
@@ -164,21 +141,38 @@ class Game:
                 # ex. [[player1, [ship1, ship2]], [player2, [ship1]]]
                 order = self.board.find_order_of_ships(players_and_ships)
 
-                self.get_attackers_and_defenders_to_fight(order)
+                self.complete_all_combats(order)
 
-    def get_attackers_and_defenders_to_fight(self, order):
+    def complete_move_phase(self, turn):
+        for player in self.board.players:
+            player.check_colonization(self.board)
+            for round_number in range(0, 3):  # 3 rounds of movements
+                self.log.log_info(turn, round_number)
+                player.move()
+
+        self.state_obsolete()
+
+    def complete_economic_phase(self, turn):
+        for player in self.board.players:
+            player.maintenance()
+            player.creds += 20
+            if turn % 2 == 0:
+                player.upgrade()
+            else:
+                player.build_fleet()
+
+        print('Every Player got their daily allowence of', 20, 'creds.')
+
+    def complete_all_combats(self, order):
 
         for player in order:  # get attacking player
             random_attacking_ship = random.randint(0, len(player[1]))
             # get attacking ship
             attacking_ship = player[1][random_attacking_ship]
-            attacking_player = player[0]
 
             while random.randint(0, len(order)) == order.index(player):
                 random_for_defending_player = random.randint(
                     0, len(order))  # get defending player
-                #
-                defending_player = order[random_for_defending_player][0]
 
             random_for_defending_ship = random.randint(
                 0, len(order[random_for_defending_player][1]))  # get defending
@@ -186,43 +180,42 @@ class Game:
             defending_ship = order[random_for_defending_player][1][
                 random_for_defending_ship]
 
-            self.ship_duel(attacking_player, defending_player, attacking_ship,
-                           defending_ship)  # make 'em fight
+            self.ship_duel(attacking_ship, defending_ship)  # make 'em fight
 
-    def ship_duel(self, player_1, player_2, ship_1, ship_2):
+    def ship_duel(self, ship_1, ship_2):
         print('FIGHT')
         if ship_1.status != 'Deceased' and ship_2.status != 'Deceased':
 
             if ship_1.fighting_class > ship_2.fighting_class:
-                print("Player", player_1.player_number, "'s", ship_1.name,
-                      ship_1.ID, "vs Player", player_2.player_number, "'s",
-                      ship_2.name, ship_2.ID)
-                self.hit_or_miss(player_1, player_2, ship_1, ship_2, 1)
+                print("Player", ship_1.player.player_number, "'s", ship_1.name, ship_1.ID,
+                      "vs Player", ship_2.player.player_number, "'s", ship_2.name, ship_2.ID)
+                self.hit_or_miss(ship_1.player, ship_2.player,
+                                 ship_1, ship_2, 1)
             else:
-                print("Player", player_1.player_number, "'s", ship_1.name,
-                      ship_1.ID, "vs Player", player_2.player_number, "'s",
-                      ship_2.name, ship_2.ID)
-                self.hit_or_miss(player_1, player_2, ship_1, ship_2, 2)
+                print("Player", ship_1.player.player_number, "'s", ship_1.name, ship_1.ID,
+                      "vs Player", ship_2.player.player_number, "'s", ship_2.name, ship_2.ID)
+                self.hit_or_miss(ship_1.player, ship_2.player,
+                                 ship_1, ship_2, 2)
 
             if ship_1.status == 'Deceased':
-                print("Player", player_1.player_number,
+                print("Player", ship_1.player.player_number,
                       "'s unit was destroyed at co-ords", [ship_1.x, ship_1.y])
                 found_creds = random.randint(1, 10)
-                player_1.creds -= found_creds
-                player_2.creds += found_creds
-                print('Player', player_2.player_number, 'found', found_creds,
+                ship_1.player.creds -= found_creds
+                ship_2.player.creds += found_creds
+                print('Player', ship_2.player.player_number, 'found', found_creds,
                       'creds at co-ords', [ship_1.x, ship_1.y])
                 print('-------------------------------------------')
                 self.state_obsolete()
 
             elif ship_2.status == 'Deceased':
-                print("Player", player_2.player_number,
+                print("Player", ship_2.player.player_number,
                       "'s unit was destroyed at co-ords", [ship_2.x, ship_2.y])
                 found_creds = random.randint(1, 10)
-                player_1.creds += found_creds
-                player_2.creds -= found_creds
-                print('Player', player_1.player_number, 'found', found_creds,
-                      'creds at co-ords', [ship_2.x, ship_2.y])
+                ship_1.player.creds += found_creds
+                ship_2.player.creds -= found_creds
+                print('Player', ship_1.player.player_number, 'found',
+                      found_creds, 'creds at co-ords', [ship_2.x, ship_2.y])
                 print('-------------------------------------------')
                 self.state_obsolete()
 
@@ -322,12 +315,8 @@ class Game:
 
         for i in range(0, self.grid_size + 1):
             for j in range(0, self.grid_size + 1):
-                if len(
-                        self.board.list_of_ships_at_x_y(
-                            self.board.players, i, j)) > 0:
-                    positions_of_ships.append(
-                        self.board.list_of_ships_at_x_y(
-                            self.board.players, i, j))  # ex below
-        # tuples so no change #(((1,1), (3, ([player_1, (ship_1, ship_2)], [player_2, (ship_1)]))), ((2,3), (2, ([player_1, (ship_1, ship_2)])))
+                if len(self.board.list_of_ships_at_x_y(self.board.players, i, j)) > 0:
+                    positions_of_ships.append([(i,j), self.board.list_of_ships_at_x_y(self.board.players, i, j)])  # ex below
+        # tuples so no change #(((1,1), (3, [ship_1, ship_2, ship_1])), ((2,3), (2, [ship_1, ship_2])))
         print('positions_of_ships', positions_of_ships)
         return positions_of_ships

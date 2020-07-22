@@ -1,8 +1,8 @@
 from game import Game
-from logging import Logging
+from logging import Logger
 
 game = Game(5, 4)
 print('---------------------------------------------')
-logs = Logging(game.board)
+logs = Logger(game.board)
 game.initialize_game()
 game.play()
