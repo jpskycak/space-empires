@@ -19,12 +19,36 @@ class Unit:
         self.defense_tech = 0
         self.movement_tech = [1, 1, 1]
         self.ship_yard_tech = 0
+        self.centre = [(self.grid_size) // 2, (self.grid_size) // 2]
+
+    def move_to_centre(self):
+        if self.can_move:
+            for i in range(0, len(self.movement_tech)):
+
+                for _ in range(0, self.movement_tech[i]):
+
+                    if self.x != self.centre[0]:
+
+                        if self.x < self.centre[0]:
+                            self.x += 1
+                        elif self.x > self.centre[0]:
+                            self.x -= 1
+
+                    elif self.y != self.centre[1]:
+
+                        if self.y < self.centre[1]:
+                            self.y += 1
+                        elif self.y > self.centre[1]:
+                            self.y -= 1
+
 
     def dumb_move(self):
         # 0 is up   1 is right    2 is down   3 is left
         if self.can_move:
             for i in range(0, len(self.movement_tech)):
+
                 for _ in range(0, self.movement_tech[i]):
+
                     if self.x < self.grid_size - 1:
                         self.x += 1
                     elif self.x >= self.grid_size - 1:
@@ -35,24 +59,34 @@ class Unit:
         # 0 is up   1 is right    2 is down   3 is left
         direction = random.randint(0, 3)
         if self.can_move:
+
             for i in range(0, len(self.movement_tech)):
+
                 for _ in range(0, self.movement_tech[i]):
+
                     if direction == UP:
+
                         if self.y > 0:
                             self.y -= 1
                         elif self.y <= 0:
                             self.y += 1
+
                     elif direction == DOWN:
+                        
                         if self.y < self.grid_size - 1:
                             self.y += 1
                         elif self.y >= self.grid_size - 1:
                             self.y -= 1
+
                     elif direction == RIGHT:
+
                         if self.x < self.grid_size - 1:
                             self.x += 1
                         elif self.x >= self.grid_size - 1:
                             self.x -= 1
+
                     elif direction == LEFT:
+
                         if self.x > 0:
                             self.x -= 1
                         elif self.x <= 0:

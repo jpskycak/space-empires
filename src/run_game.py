@@ -6,3 +6,4 @@ print('---------------------------------------------')
 logs = Logger(game.board)
 game.initialize_game()
 game.play()
+ 

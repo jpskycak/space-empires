@@ -22,9 +22,9 @@ class Logger:
         print(os.getcwd())  # what directory ur in (for debugging)
         self.active_file = open(self.file_name, 'w+')
 
-    def log_info(self, turn, movement_phase, log_colonies=False, log_ship_yards=False):
+    def log_info(self, turn, log_colonies=False, log_ship_yards=False):
         print(os.getcwd())  # what directory ur in (for debugging)
-        turn_string = 'Turn: ' + str(turn) + '\n' + 'Movement Phase: ' + str(movement_phase) + '\n'
+        turn_string = 'Turn: ' + str(turn) + '\n'
         self.active_file.write(turn_string)
         for player in self.board.players:
             player_string = 'Player: ' + str(player.player_number) + '\nStatus: ' + str(player.status) + '\n'

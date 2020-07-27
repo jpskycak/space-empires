@@ -1,27 +1,25 @@
+from player.player import Player
+from board import Board
+from unit.unit import Unit
+from unit.scout import Scout
+from unit.destroyer import Destroyer
+from unit.cruiser import Cruiser
+from unit.battle_cruiser import BattleCruiser
+from unit.battleship import Battleship
+from unit.dreadnaught import Dreadnaught
+from unit.colony_ship import Colony_Ship
+from unit.colony import Colony
+from unit.ship_yard import Ship_Yard
+from unit.base import Base
+from unit.miner import Miner
+from unit.decoy import Decoy
+from unit.carrier import Carrier
 import random
 import sys
 sys.path.append('src')
-from unit.carrier import Carrier
-from unit.decoy import Decoy
-from unit.miner import Miner
-from unit.base import Base
-from unit.ship_yard import Ship_Yard
-from unit.colony import Colony
-from unit.colony_ship import Colony_Ship
-from unit.dreadnaught import Dreadnaught
-from unit.battleship import Battleship
-from unit.battle_cruiser import BattleCruiser
-from unit.cruiser import Cruiser
-from unit.destroyer import Destroyer
-from unit.scout import Scout
-from unit.unit import Unit
-from board import Board
-from player.player import Player
 
 
-
-
-class DumbPlayer(Player):
+class CombatPlayer(Player):
     def __init__(self, position, grid_size, player_number, player_color):
         super().__init__(position, grid_size, player_number, player_color)
         self.type = 'Dumb Player'
@@ -35,11 +33,8 @@ class DumbPlayer(Player):
             Scout(self, 1, position, self.grid_size, True),
             Scout(self, 2, position, self.grid_size, True),
             Scout(self, 3, position, self.grid_size, True),
-            Scout(self, 4, position, self.grid_size, True),
-            Scout(self, 5, position, self.grid_size, True),
-            Scout(self, 6, position, self.grid_size, True),
-            Scout(self, 7, position, self.grid_size, True),
-            Scout(self, 8, position, self.grid_size, True),
+            Cruiser(self, 4, position, self.grid_size, True),
+            Cruiser(self, 5, position, self.grid_size, True),
         ]
         self.ship_yards = [
             Ship_Yard(self, 1, position, self.grid_size, False),
@@ -166,15 +161,25 @@ class DumbPlayer(Player):
 
     def move(self):
         for ship in self.ships:
-            ship.dumb_move()
+            ship.move_to_centre()
 
     # helper functions
     def determine_availible_ship_classes(self, creds):
-        if self.creds >= 6 and self.ship_size_tech >= 0:
+        if self.creds >= 12 and self.ship_size_tech >= 2:
+            return random.randint(1, 2)
+
+        elif self.creds < 12 and self.creds >= 6 and self.ship_size_tech >= 0:
             return 1
-            
+
         else:
             return None
 
     def create_ship(self, ship_class, ID, position):
-        return Scout(self, ID, position, self.grid_size, True)
+        if ship_class == 1:
+            return Scout(self, ID, position, self.grid_size, True)
+
+        elif ship_class == 2:
+            return Cruiser(self, ID, position, self.grid_size, True)
+
+        else:
+            return Scout(self, ID, position, self.grid_size, True)

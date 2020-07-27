@@ -77,6 +77,7 @@ class Player:
             self.movement_tech[1] == 3
 
     def maintenance(self):
+        print('Maintenance')
         for ship in self.ships:
             if not isinstance(ship, Base) and not isinstance(ship, Colony) and not isinstance(ship, Colony_Ship) and not isinstance(ship, Decoy):
                 cost = ship.defense_tech + ship.defense + ship.armor
@@ -114,12 +115,32 @@ class Player:
                         while len(player_1_ships) > len(player_2_ships):
                             player_1_ships.pop(-1)
 
-
-
-                        
-                        
-
         return data
+
+    def find_order_of_ships(self, ships):
+        print('fighting (find order)')
+        order = []
+
+        for ship_1 in ships:  # ship
+
+            for ship_2 in ships:  # ship
+
+                if ship_1.fighting_class > ship_2.fighting_class:
+                    order.append(ship_1)
+
+                elif ship_2.fighting_class > ship_1.fighting_class:
+                    order.append(ship_2)
+
+                else:
+
+                    if ship_1.attack > ship_2.attack:
+                        order.append(ship_1)
+
+                    elif ship_2.attack > ship_1.attack:
+                        order.append(ship_2)
+
+        print('order', order)
+        return order
 
     # check stuffs
     def check_colonization(self, board):
@@ -154,45 +175,64 @@ class Player:
     def determine_availible_ship_classes(self, creds):
         if self.creds > 30 and self.ship_size_tech >= 6:
             return random.randint(1, 7)
+
         elif self.creds < 30 and self.creds >= 25 and self.ship_size_tech >= 5:
             return random.randint(1, 6)
+
         elif self.creds < 25 and self.creds >= 20 and self.ship_size_tech >= 4:
             return random.randint(1, 5)
+
         elif self.creds < 20 and self.creds >= 15 and self.ship_size_tech >= 3:
             return random.randint(1, 4)
+
         elif self.creds < 15 and self.creds >= 12 and self.ship_size_tech >= 2:
             return random.randint(1, 3)
+
         elif self.creds < 12 and self.creds >= 9 and self.ship_size_tech >= 1:
             return random.randint(1, 2)
+
         elif self.creds < 9 and self.creds >= 6 and self.ship_size_tech >= 0:
             return 1
+
         else:
             return None
 
     def create_ship(self, ship_class, ID, position):
         if ship_class == 1:
             scout_colony_ship_decoy_or_miner = random.randint(1, 4)
+
             if scout_colony_ship_decoy_or_miner == 1:
                 return Scout(self, ID, position, self.grid_size, True)
+
             if scout_colony_ship_decoy_or_miner == 2:
                 return Colony_Ship(self, ID, position, self.grid_size, True)
+
             if scout_colony_ship_decoy_or_miner == 3:
                 return Decoy(self, ID, position, self.grid_size, True)
+
             if scout_colony_ship_decoy_or_miner == 4:
                 return Miner(self, ID, position, self.grid_size, True)
+
         elif ship_class == 2:
             return Destroyer(self, ID, position, self.grid_size, True)
+
         elif ship_class == 3:
             return Cruiser(self, ID, position, self.grid_size, True)
+
         elif ship_class == 4:
             return BattleCruiser(self, ID, position, self.grid_size, True)
+
         elif ship_class == 5:
             return Battleship(self, ID, position, self.grid_size, True)
+
         elif ship_class == 6:
             return Dreadnaught(self, ID, position, self.grid_size, True)
+
         elif ship_class == 7:
             return Carrier(self, ID, position, self.grid_size, True)
+
         elif ship_class == 8:
             return Colony_Ship(self, ID, position, self.grid_size, True)
+
         else:
             return Scout(self, ID, position, self.grid_size, True)

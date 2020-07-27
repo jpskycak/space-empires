@@ -59,86 +59,40 @@ class Board:
 
     # combat stuffs
     def list_of_ships_at_x_y(self, players, x, y):
-        count = 0
         all_data = []
         temp = []
         ships_arr = []
-
+        print('x, y', x, y)
+        ships_arr = []
         for player in players:  # array of ships
-            player_counted = False
-            count = 0
-            ships_arr = []
-
+            
             for ship in player.ships:
+                
+                if ship.x == x and ship.y == y:
+        
+                    if ship.name != Colony_Ship or ship.name != Decoy or ship.name != Miner:  # if it can fight
+                        print('yes 1')
+                        ships_arr.append(ship)
 
-                if ship.x == x and ship.y == y and not player_counted:
-                    count += 1
-                    player_counted = True
+                    else:  # if not then die
+                        player.ships.remove(ship)
 
-            #print('count', count)
+        print('ships', ships_arr)
 
-            if count > 1:  # if more than 1 ship in current position
-                #print('player and ships', ships_arr)
+            #for player in self.players:
+                #print('yes 1.5')
+                #ships_arr = player.screen_ships(ships_arr, self)
 
-                for ship in player.ships:  # ship
+        if len(ships_arr) > 0:
+            print('yes 2')
+            temp.append((x, y))
+            temp.append(len(ships_arr))
+            temp.append(ships_arr)
+            all_data.append(temp)
 
-                    if ship.x == x and ship.y == y:
-
-                        if ship.name != Colony_Ship or ship.name != Decoy or ship.name != Miner:  # if it can fight
-                            ships_arr.append(ship)
-
-                        else:  # if not then die
-                            player.ships.remove(ship)
-
-            # print('player and ships', ships_arr)
-
-            # if len(ships_arr) > 0:
-            #     print('ships', player_and_ships_arr) #arr of ships
-
-            for player in self.players:
-                ships_arr = player.screen_ships(ships_arr, self)
-
-            if len(ships_arr) > 0:
-                temp.append((x, y))
-                temp.append(count)
-                temp.append(ships_arr)
-                all_data.append(temp)
-
-        #print('all_data', all_data)
+        print('all_data', all_data)
         # ex --> ((0,0), (3, [ship_1, ship_2, ship_1], (1,0), (3, ([player_1, (ship_1)], [player_2, (ship_1, ship_2)]
         return all_data
-
-    def find_order_of_ships(self, ships):
-        print('fighting (find order)')
-        order = []
-
-        for player_1 in ships:  # array of ships
-
-            for player_2 in ships:  # array of ships
-
-                #print('player1', player_1)
-                #print('player2', player_2)
-
-                for ship_1 in player_1.ships:  # ship
-
-                    for ship_2 in player_2.ships:  # ship
-
-                        if ship_1.fighting_class > ship_2.fighting_class:
-                            order.append(ship_1)
-
-                        elif ship_2.fighting_class > ship_1.fighting_class:
-                            order.append(ship_2)
-
-                        else:
-
-                            if ship_1.attack > ship_2.attack:
-                                order.append(ship_1)
-
-                            elif ship_2.attack > ship_1.attack:
-                                order.append(ship_2)
-
-        print('order', order)
-        return order
 
 
 class Planet:
