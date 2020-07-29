@@ -26,8 +26,6 @@ class CombatPlayer(Player):
         self.creds = 0
         self.status = 'Playing'
         self.death_count = 0  # if winCount = amount of units self.lose = true
-        self.player_number = player_number
-        self.player_color = player_color
         # starts out with 3 scouts and 3 colony ships later it would be 3 miners
         self.ships = [
             Scout(self, 1, position, self.grid_size, True),
