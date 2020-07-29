@@ -35,10 +35,10 @@ ATTACKING ORDER | PLAYER |        SHIP        | HEALTH  |
 Attack 1
 
 Attacker: Player 1: Scout Ship 1
-Defender: Player 2: Scout Ship 2
+Defender: Player 2: Scout Ship 1
 Hit Threshold: 1
-Dice Roll: ___
-Hit or Miss: ___ <-- label as "Hit" or "Miss"
+Dice Roll: 1
+Hit or Miss: Hit <-- label as "Hit" or "Miss"
 
 Remaining ships: (in the table, only list the ships which remain alive)
 
@@ -47,25 +47,72 @@ ATTACKING ORDER | PLAYER |        SHIP        | HEALTH  |
        1        |    1   |         1          |    1    |
        2        |    1   |         2          |    1    |
        3        |    1   |         3          |    1    |
-       4        |    2   |         1          |    1    |
-       5        |    2   |         2          |    1    |
-       6        |    2   |         3          |    1    |
+       4        |    2   |         2          |    1    |
+       5        |    2   |         3          |    1    |
 
 Attack 2
 
-Attacker: ___
-Defender: ___
-Hit Threshold: ___
-Dice Roll: ___
-Hit or Miss: ___ <-- label as "Hit" or "Miss"
+Attacker: Player 2: Scout Ship 2
+Defender: Player 1: Scout Ship 1
+Hit Threshold: 1
+Dice Roll: 2
+Hit or Miss: Miss <-- label as "Hit" or "Miss"
+
+Remaining ships: (in the table, only list the ships which remain alive)
+
+******NOTE there will be 5 misses every time until the dice roll is 1 then 5 more misses and so on********
+
+Attack 7
+
+Attacker: Player 1: Scout Ship 1
+Defender: Player 2: Scout Ship 2
+Hit Threshold: 1
+Dice Roll: 1
+Hit or Miss: Hit <-- label as "Hit" or "Miss"
 
 Remaining ships: (in the table, only list the ships which remain alive)
 
 ATTACKING ORDER | PLAYER |        SHIP        | HEALTH  |
 ---------------------------------------------------------
-       1        |    _   |         _          |    _    |
-       2        |    _   |         _          |    _    |
-       3        |    _   |         _          |    _    |
-...
+       1        |    1   |         1          |    1    |
+       2        |    1   |         2          |    1    |
+       3        |    1   |         3          |    1    |
+       5        |    2   |         3          |    1    |
 
-... (continue until combat is complete)
+Attack 13
+
+Attacker: Player 2: Scout Ship 3
+Defender: Player 1: Scout Ship 1
+Hit Threshold: 1
+Dice Roll: 1
+Hit or Miss: Hit <-- label as "Hit" or "Miss"
+
+Remaining ships: (in the table, only list the ships which remain alive)
+
+ATTACKING ORDER | PLAYER |        SHIP        | HEALTH  |
+---------------------------------------------------------
+       2        |    1   |         2          |    1    |
+       3        |    1   |         3          |    1    |
+       5        |    2   |         3          |    1    |
+
+Attack 19
+
+Attacker: Player 1: Scout Ship 2
+Defender: Player 2: Scout Ship 3
+Hit Threshold: 1
+Dice Roll: 1
+Hit or Miss: Hit <-- label as "Hit" or "Miss"
+
+Remaining ships: (in the table, only list the ships which remain alive)
+
+ATTACKING ORDER | PLAYER |        SHIP        | HEALTH  |
+---------------------------------------------------------
+       2        |    1   |         2          |    1    |
+       3        |    1   |         3          |    1    |
+
+Player 1 Wins!!!!!!!!!!!!!!!!!!
+Player 1 Wins!!!!!!!!!!!!!!!!!!
+Player 1 Wins!!!!!!!!!!!!!!!!!!
+Player 1 Wins!!!!!!!!!!!!!!!!!!
+Player 1 Wins!!!!!!!!!!!!!!!!!!
+"ez dub" - Player 1
