@@ -35,11 +35,9 @@ class DumbPlayer(Player):
             Scout(self, 1, position, self.grid_size, True),
             Scout(self, 2, position, self.grid_size, True),
             Scout(self, 3, position, self.grid_size, True),
-            Scout(self, 4, position, self.grid_size, True),
-            Scout(self, 5, position, self.grid_size, True),
-            Scout(self, 6, position, self.grid_size, True),
-            Scout(self, 7, position, self.grid_size, True),
-            Scout(self, 8, position, self.grid_size, True),
+            Colony_Ship(self, 4, position, self.grid_size, True),
+            Colony_Ship(self, 5, position, self.grid_size, True),
+            Colony_Ship(self, 6, position, self.grid_size, True)
         ]
         self.ship_yards = [
             Ship_Yard(self, 1, position, self.grid_size, False),

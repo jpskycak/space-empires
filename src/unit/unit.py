@@ -30,15 +30,22 @@ class Unit:
                     if self.x != self.centre[0]:
 
                         if self.x < self.centre[0]:
+                            print(self.player.player_number, self.ID, 'move right')
                             self.x += 1
                         elif self.x > self.centre[0]:
+                            print(self.player.player_number,
+                                  self.ID, 'move left')
                             self.x -= 1
 
                     elif self.y != self.centre[1]:
 
                         if self.y < self.centre[1]:
+                            print(self.player.player_number,
+                                  self.ID, 'move down')
                             self.y += 1
                         elif self.y > self.centre[1]:
+                            print(self.player.player_number,
+                                  self.ID, 'move up')
                             self.y -= 1
 
 

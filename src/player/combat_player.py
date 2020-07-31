@@ -31,8 +31,9 @@ class CombatPlayer(Player):
             Scout(self, 1, position, self.grid_size, True),
             Scout(self, 2, position, self.grid_size, True),
             Scout(self, 3, position, self.grid_size, True),
-            Cruiser(self, 4, position, self.grid_size, True),
-            Cruiser(self, 5, position, self.grid_size, True),
+            Colony_Ship(self, 4, position, self.grid_size, True),
+            Colony_Ship(self, 5, position, self.grid_size, True),
+            Colony_Ship(self, 6, position, self.grid_size, True)
         ]
         self.ship_yards = [
             Ship_Yard(self, 1, position, self.grid_size, False),
@@ -42,7 +43,6 @@ class CombatPlayer(Player):
         ]
         self.colonies = [Colony(self, 1, position, grid_size)]
         self.starting_position = position
-        self.build_fleet()
         self.attack_tech = 0
         self.defense_tech = 0
         self.movement_tech = [1, 1, 1]
@@ -106,7 +106,7 @@ class CombatPlayer(Player):
             else:
                 break
 
-    def build_fleet(self):
+    def build_fleet(self, turn):
         print('building a fleet')
         ship_yard = self.find_random_ship_yard()
         position = ship_yard.position

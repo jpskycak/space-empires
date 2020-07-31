@@ -159,7 +159,10 @@ class Game:
             if turn % 2 == 0:
                 player.upgrade()
             else:
-                player.build_fleet()
+                if isinstance(player) == CombatPlayer:
+                    player.build_fleet(turn)
+                else:
+                    player.build_fleet()
 
         print('Every Player got their daily allowence of', 20, 'creds.')
 
