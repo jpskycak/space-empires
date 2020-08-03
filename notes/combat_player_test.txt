@@ -50,23 +50,13 @@ ATTACKING ORDER | PLAYER |        SHIP        | HEALTH  |
        4        |    2   |         2          |    1    |
        5        |    2   |         3          |    1    |
 
+
+
 Attack 2
-
-Attacker: Player 2: Scout Ship 2
-Defender: Player 1: Scout Ship 1
-Hit Threshold: 1
-Dice Roll: 2
-Hit or Miss: Miss <-- label as "Hit" or "Miss"
-
-Remaining ships: (in the table, only list the ships which remain alive)
-
-******NOTE there will be 5 misses every time until the dice roll is 1 then 5 more misses and so on********
-
-Attack 7
 
 Attacker: Player 1: Scout Ship 1
 Defender: Player 2: Scout Ship 2
-Hit Threshold: 1
+Hit Threshold: 3
 Dice Roll: 1
 Hit or Miss: Hit <-- label as "Hit" or "Miss"
 
@@ -77,13 +67,13 @@ ATTACKING ORDER | PLAYER |        SHIP        | HEALTH  |
        1        |    1   |         1          |    1    |
        2        |    1   |         2          |    1    |
        3        |    1   |         3          |    1    |
-       5        |    2   |         3          |    1    |
+       4        |    2   |         3          |    1    |
 
-Attack 13
+Attack 3
 
 Attacker: Player 2: Scout Ship 3
 Defender: Player 1: Scout Ship 1
-Hit Threshold: 1
+Hit Threshold: 3
 Dice Roll: 1
 Hit or Miss: Hit <-- label as "Hit" or "Miss"
 
@@ -91,24 +81,23 @@ Remaining ships: (in the table, only list the ships which remain alive)
 
 ATTACKING ORDER | PLAYER |        SHIP        | HEALTH  |
 ---------------------------------------------------------
+       1        |    1   |         1          |    1    |
        2        |    1   |         2          |    1    |
        3        |    1   |         3          |    1    |
-       5        |    2   |         3          |    1    |
 
-Attack 19
+ECONOMIC PHASE
 
-Attacker: Player 1: Scout Ship 2
-Defender: Player 2: Scout Ship 3
-Hit Threshold: 1
-Dice Roll: 1
-Hit or Miss: Hit <-- label as "Hit" or "Miss"
+Player 1, Player 2 both got 20 creds from Home Base
+
+Both Players got 2 Destroyers
 
 Remaining ships: (in the table, only list the ships which remain alive)
 
 ATTACKING ORDER | PLAYER |        SHIP        | HEALTH  |
 ---------------------------------------------------------
-       2        |    1   |         2          |    1    |
-       3        |    1   |         3          |    1    |
+       5        |    1   |         1          |    1    |
+       6        |    1   |         2          |    1    |
+       7        |    1   |         3          |    1    |
 
 Player 1 Wins!!!!!!!!!!!!!!!!!!
 Player 1 Wins!!!!!!!!!!!!!!!!!!
