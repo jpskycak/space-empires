@@ -1,9 +1,9 @@
 import sys
 sys.path.append('src')
-from logging import Logging
+from logging import Logger
 
 
-log = Logging()
+log = Logger()
 
 log.get_current_active_file('space-empires/logs') #get current file
 
