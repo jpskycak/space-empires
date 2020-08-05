@@ -9,10 +9,11 @@ class CombatEngine:
 
     def complete_all_combats(self, order):
         print('order 69', order)
-        attacking_ship = order[0]
-        defending_ship = order[random.randint(1, len(order))]
+        if order != []:
+            attacking_ship = order[0]
+            defending_ship = order[random.randint(1, len(order))]
 
-        self.ship_duel(attacking_ship, defending_ship)  # make 'em fight
+            self.ship_duel(attacking_ship, defending_ship)  # make 'em fight
 
     def ship_duel(self, ship_1, ship_2):
         print('FIGHT')

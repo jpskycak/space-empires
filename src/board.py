@@ -70,7 +70,7 @@ class Board:
                 
                 if ship.x == x and ship.y == y:
         
-                    if ship.name != Colony_Ship or ship.name != Decoy or ship.name != Miner:  # if it can fight
+                    if isinstance(ship, Colony_Ship) or isinstance(ship, Decoy) or isinstance(ship, Miner):  # if it can fight
                         print('yes 1')
                         ships_arr.append(ship)
 

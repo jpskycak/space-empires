@@ -8,7 +8,7 @@ class Logger:
         self.board = board
 
     def get_current_active_file(self, path, name = None):
-        new_log_number = sum([len(files) for r, d, files in os.walk(path)]) - 1
+        new_log_number = sum([len(files) for r, d, files in os.walk(path)])
         if name == None:
             self.file_name = path + '/log_' + str(new_log_number) + '.txt'
         else:

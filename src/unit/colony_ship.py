@@ -14,3 +14,5 @@ class Colony_Ship(Unit):
         self.armor = 0
         self.cost = 8
         self.fighting_class = 0
+        self.terraform_tech = 0
+        

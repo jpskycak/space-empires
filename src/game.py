@@ -2,7 +2,7 @@ import random
 #import matplotlib.pyplot as plt
 #from matplotlib.ticker import MultipleLocator
 from board import Board
-from logging import Logger
+from logger import Logger
 from player.player import Player
 from player.dumb_player import DumbPlayer
 from player.random_player import RandomPlayer
@@ -159,7 +159,7 @@ class Game:
             if turn % 2 == 0:
                 player.upgrade()
             else:
-                if isinstance(player) == CombatPlayer:
+                if isinstance(player, CombatPlayer):
                     player.build_fleet(turn)
                 else:
                     player.build_fleet()

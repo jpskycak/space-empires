@@ -1,6 +1,6 @@
 import sys
 sys.path.append('src')
-from logging import Logger
+from logger import Logger
 
 
 log = Logger()

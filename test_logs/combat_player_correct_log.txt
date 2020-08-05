@@ -2,63 +2,47 @@ Turn: 1
 Player:1Status:Playing
 Scout:Ship ID:1: [2,0] 
 Scout:Ship ID:2: [2,0] 
-Scout:Ship ID:3: [2,0] 
+Scout:Ship ID:3: [2,0]
+Colony Ship Ship ID: 4 Position: [2,0] 
+Colony Ship Ship ID: 5 Position: [2,0] 
+Colony Ship Ship ID: 6 Position: [2,0] 
 
 
 Player:2Status:Playing
 Scout:Ship ID:1: [2,4] 
 Scout:Ship ID:2: [4,4] 
-Scout:Ship ID:3: [4,4] 
+Scout:Ship ID:3: [4,4]
+Colony Ship Ship ID: 4 Position: [2,4] 
+Colony Ship Ship ID: 5 Position: [2,4] 
+Colony Ship Ship ID: 6 Position: [2,4] 
 
 
 Turn: 2
 Player:1Status:Playing
-Scout:Ship ID:2: [4,1] 
-Scout:Ship ID:4: [4,1] 
-Scout:Ship ID:6: [4,1] 
-Scout:Ship ID:8: [4,1] 
-Scout:Ship ID:5: [1,1] 
-Scout:Ship ID:6: [1,1] 
-Scout:Ship ID:7: [1,1] 
+Scout:Ship ID:1: [2,2] 
+Scout:Ship ID:2: [2,2] 
+Scout:Ship ID:3: [2,2]
+Destroyer:Ship ID:4: [2,2]
+
 
 Player:2Status:Playing
-Scout:Ship ID:2: [5,4] 
-Scout:Ship ID:4: [5,4] 
-Scout:Ship ID:6: [5,4] 
-Scout:Ship ID:8: [5,4] 
-Scout:Ship ID:5: [4,4] 
-Scout:Ship ID:6: [4,4] 
-Scout:Ship ID:7: [4,4] 
+Destroyer:Ship ID:4: [2,2]
+Destroyer:Ship ID:3: [2,2]
 
 Turn: 3
 Player:1Status:Playing
-Scout:Ship ID:2: [5,1] 
-Scout:Ship ID:4: [5,1] 
-Scout:Ship ID:8: [5,1] 
-Scout:Ship ID:6: [4,1] 
+Scout:Ship ID:1: [2,2] 
+Scout:Ship ID:2: [2,2] 
+Scout:Ship ID:3: [2,2]
+Destroyer:Ship ID:4: [2,2] 
+Scout:Ship ID:4: [2,2]
+Scout:Ship ID:5: [2,2] 
+Scout:Ship ID:6: [2,2] 
+Scout:Ship ID:7: [2,2] 
+Scout:Ship ID:8: [2,2] 
 
 Player:2Status:Playing
-Scout:Ship ID:2: [4,4] 
-Scout:Ship ID:4: [4,4] 
-Scout:Ship ID:8: [4,4] 
-Scout:Ship ID:6: [5,4] 
-
-Turn: 4
-Player:1Status:Playing
-Scout:Ship ID:2: [4,1] 
-Scout:Ship ID:4: [4,1] 
-Scout:Ship ID:8: [4,1] 
-Scout:Ship ID:6: [5,1] 
-Scout:Ship ID:5: [1,1] 
-Scout:Ship ID:6: [1,1] 
-Scout:Ship ID:7: [1,1] 
-
-Player:2Status:Playing
-Scout:Ship ID:2: [5,4] 
-Scout:Ship ID:4: [5,4] 
-Scout:Ship ID:8: [5,4] 
-Scout:Ship ID:6: [4,4] 
-Scout:Ship ID:5: [4,4] 
-Scout:Ship ID:6: [4,4] 
-Scout:Ship ID:7: [4,4] 
+Scout:Ship ID:6: [2,2]  
+Scout:Ship ID:7: [2,2]
+Scout:Ship ID:8: [2,2] 
 

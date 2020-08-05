@@ -106,26 +106,28 @@ class CombatPlayer(Player):
             else:
                 break
 
-    def build_fleet(self, turn):
+    def build_fleet(self, turn = 0):
         print('building a fleet')
         ship_yard = self.find_random_ship_yard()
         position = ship_yard.position
-        while self.creds >= 6:
+        if turn % 2 == 0:
             ship_class = 1
-            if ship_class == None:
-                break
-            else:
-                print('ship_class', ship_class)
+        else:
+            ship_class = 2
+        ship_ID = len(self.ships) + 1
+        ship = self.create_ship(ship_class, ship_ID, position)
+        while self.creds >= ship.cost:
+            print('ship_class', ship_class)
 
-                ship_ID = len(self.ships) + 1
+            ship_ID = len(self.ships) + 1
 
-                ship = self.create_ship(ship_class, ship_ID, position)
-                print('ship name', ship.name)
-                if ship.cost <= self.creds:
-                    self.ships.append(ship)
-                    self.creds -= ship.cost
-                    print('Player', self.player_number, 'just bought a',
-                          ship.name)
+            ship = self.create_ship(ship_class, ship_ID, position)
+            print('ship name', ship.name)
+            if ship.cost <= self.creds:
+                self.ships.append(ship)
+                self.creds -= ship.cost
+                print('Player', self.player_number, 'just bought a',
+                        ship.name)
 
     def upgrade_movement_tech(self):
         self.movement_tech_upgrade_number += 1
@@ -177,7 +179,7 @@ class CombatPlayer(Player):
             return Scout(self, ID, position, self.grid_size, True)
 
         elif ship_class == 2:
-            return Cruiser(self, ID, position, self.grid_size, True)
+            return Destroyer(self, ID, position, self.grid_size, True)
 
         else:
             return Scout(self, ID, position, self.grid_size, True)
