@@ -22,7 +22,7 @@ sys.path.append('src')
 class CombatPlayer(Player):
     def __init__(self, position, grid_size, player_number, player_color):
         super().__init__(position, grid_size, player_number, player_color)
-        self.type = 'Dumb Player'
+        self.type = 'Combat Player'
         self.creds = 0
         self.status = 'Playing'
         self.death_count = 0  # if winCount = amount of units self.lose = true

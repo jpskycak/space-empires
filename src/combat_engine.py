@@ -1,19 +1,26 @@
 import random
 from board import Board
 
+
 class CombatEngine:
     def __init__(self, board, game, grid_size):
         self.board = board
         self.game = game
         self.grid_size = grid_size
 
-    def complete_all_combats(self, order):
-        print('order 69', order)
-        if order != []:
-            attacking_ship = order[0]
-            defending_ship = order[random.randint(1, len(order))]
-
-            self.ship_duel(attacking_ship, defending_ship)  # make 'em fight
+    def complete_all_combats(self, ships):
+        while len(ships) > 1:
+            print('order 69', ships)
+            attacking_ship = ships[0]
+            random_defending_ship = random.randint(1, len(ships)) - 1
+            print('random_defending_ship', random_defending_ship)
+            defending_ship = ships[random_defending_ship]
+            ship_who_won = self.ship_duel(
+                attacking_ship, defending_ship)  # make 'em fight
+            if ship_who_won == 1:
+                ships.remove(defending_ship)
+            else:
+                ships.remove(attacking_ship)
 
     def ship_duel(self, ship_1, ship_2):
         print('FIGHT')
@@ -50,7 +57,7 @@ class CombatEngine:
                 print('-------------------------------------------')
                 self.game.state_obsolete()
 
-    #helping combat function
+    # helping combat function
     def hit_or_miss(self, ship_1, ship_2, first_to_shoot):
         print('fighting (hit or miss)')
 
@@ -64,18 +71,21 @@ class CombatEngine:
                 self.attack(ship_2, ship_1)  # player 2 attacks player 1
                 self.attack(ship_1, ship_2)  # player 1 claps back at player 2
 
-        if ship_1.armor < 0:  #
-            ship_1.status = 'Deceased'  # change statuses
+        if ship_2.armor < 0:  #
+            ship_2.status = 'Deceased'  # change statuses
+            ship_2.player.ships.remove(ship_2)
+            return 1
+
+        elif ship_1.armor < 0:  # of dead ships
+            ship_1.status = 'Deceased'
+            ship_1.player.ships.remove(ship_1)
             return 2
 
-        elif ship_2.armor < 0:  # of dead ships
-            ship_2.status = 'Deceased'
-            return 1
-    
     def attack(self, ship_1, ship_2):
         player_1 = ship_1.player
         player_2 = ship_2.player
-        hit_threshold = (ship_1.attack + player_1.attack_tech) - (ship_2.defense + player_2.defense_tech)
+        hit_threshold = (ship_1.attack + player_1.attack_tech) - \
+                         (ship_2.defense + player_2.defense_tech)
         die_roll = random.randint(1, 6)
 
         if die_roll == 1 or die_roll <= hit_threshold:
@@ -92,15 +102,16 @@ class CombatEngine:
                     ship_1.ID)
 
     def possible_fights(self):
-        positions_of_ships = []
+        positions_of_ships = {}
 
         for i in range(0, self.grid_size + 1):
 
             for j in range(0, self.grid_size + 1):
+                self.board.ordered_list_of_ships_at_x_y(i, j)
 
-                if len(self.board.list_of_ships_at_x_y(self.board.players, i, j)) > 0:
+                if len(self.board.ships_dict[(i, j)]) > 0:
+                    positions_of_ships[(i, j)] = self.board.ships_dict[(i, j)]
 
-                    positions_of_ships.append(self.board.list_of_ships_at_x_y(self.board.players, i, j))  # ex below
-        # tuples so no change #(((1,1), (3, [ship_1, ship_2, ship_1])), ((2,3), (2, [ship_1, ship_2])))
         print('positions_of_ships', positions_of_ships)
+
         return positions_of_ships

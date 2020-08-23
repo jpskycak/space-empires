@@ -39,7 +39,7 @@ class Game:
     def initialize_game(self):
         self.board.players = self.create_players()
         self.board.create_planets_and_asteroids()
-        self.log.get_next_active_file('logs')
+        self.log.get_current_active_file('logs')
 
     def create_players(self):
         starting_positions = [[self.grid_size // 2, 0], [self.grid_size // 2, self.grid_size], [0, self.grid_size // 2], [
@@ -130,19 +130,10 @@ class Game:
         possible_fights = self.combat_engine.possible_fights()
         ships = []
         print('possible_fights', possible_fights)
-        for position in possible_fights:
-            print('position[0][2]', position[0][2])
-            if len(position[0][2]) > 1:  # if 2 or more players are in current position
+        for _, ships in possible_fights.items():
+            if len(ships) > 1:  # if 2 or more players are in current position
 
-                # iterating through the ships
-                for ship in position[0][2]:  # iterating through the players ships
-                        ships.append(ship)
-
-                print('ships', ships)
-                # ex. [[player1, [ship1, ship2]], [player2, [ship1]]]\
-                order = self.player.find_order_of_ships(ships)
-
-                self.combat_engine.complete_all_combats(order)
+                self.combat_engine.complete_all_combats(ships)
 
     def complete_move_phase(self, turn):
         for player in self.board.players:

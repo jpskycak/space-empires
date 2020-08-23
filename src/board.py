@@ -22,6 +22,7 @@ class Board:
         self.players = []
         self.player_home_bases = [
             [1, 1], [self.grid_size - 1, self.grid_size - 1]]
+        self.ships_dict = {}
 
     # create <instert thing here> stuffs
     def create_planets_and_asteroids(self):
@@ -58,41 +59,54 @@ class Board:
             Colony(self, len(player.colonies) + 1, position, self.grid_size))
 
     # combat stuffs
-    def list_of_ships_at_x_y(self, players, x, y):
-        all_data = []
-        temp = []
+    def ordered_list_of_ships_at_x_y(self, x, y):
         ships_arr = []
-        print('x, y', x, y)
-        ships_arr = []
-        for player in players:  # array of ships
-            
+
+        for player in self.players:  # array of ships
+
             for ship in player.ships:
-                
+
                 if ship.x == x and ship.y == y:
-        
-                    if isinstance(ship, Colony_Ship) or isinstance(ship, Decoy) or isinstance(ship, Miner):  # if it can fight
+
+                    # if it can fight
+                    if not isinstance(ship, Colony_Ship) and not isinstance(ship, Decoy) and not isinstance(ship, Miner) and not isinstance(ship, Colony):
                         print('yes 1')
                         ships_arr.append(ship)
 
                     else:  # if not then die
                         player.ships.remove(ship)
 
-        print('ships', ships_arr)
+        ordered_ships_arr = self.simple_sort(ships_arr)
+        print('ordered_ships_arr', ordered_ships_arr)
+        self.ships_dict[(x, y)] = ordered_ships_arr
 
-            #for player in self.players:
-                #print('yes 1.5')
-                #ships_arr = player.screen_ships(ships_arr, self)
 
-        if len(ships_arr) > 0:
-            print('yes 2')
-            temp.append((x, y))
-            temp.append(len(ships_arr))
-            temp.append(ships_arr)
-            all_data.append(temp)
+    def simple_sort(self, arr):  # merge sort
+        newArr = []
+        while len(arr) > 0:
+            newArr.append(self.minimumValue(arr))
+            arr.remove(self.minimumValue(arr))
 
-        print('all_data', all_data)
-        # ex --> ((0,0), (3, [ship_1, ship_2, ship_1], (1,0), (3, ([player_1, (ship_1)], [player_2, (ship_1, ship_2)]
-        return all_data
+        return newArr
+
+    def minimumValue(self, arr):
+        minimumVal = arr[0]
+
+        if len(arr) >= 3:
+
+            for i in range(1, len(arr)):
+
+                if arr[i].fighting_class < minimumVal.fighting_class:
+
+                    minimumVal = arr[i]
+
+        elif len(arr) == 2:
+
+            if arr[1].fighting_class < minimumVal.fighting_class:
+
+                minimumVal = arr[1]
+
+        return minimumVal
 
 
 class Planet:
@@ -115,3 +129,6 @@ class Asteroid:
         self.tier = random.randint(0, 5)  # type of ore
         self.size = size  # scalar for tier
         # ex a tier 5 size 3 asteroird gives 15 creds while a tier 3 size 2 asteroid give 6 creds
+
+
+

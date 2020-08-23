@@ -1,4 +1,5 @@
 import os
+import difflib
 import sys
 sys.path.append('src')
 
@@ -7,20 +8,28 @@ class Logger:
     def __init__(self, board = None):  # the passing of Board gives me players and their ships
         self.board = board
 
-    def get_current_active_file(self, path, name = None):
+    def get_next_active_file(self, path, name=None):
+        print(os.getcwd())
         new_log_number = sum([len(files) for r, d, files in os.walk(path)])
         if name == None:
-            self.file_name = path + '/log_' + str(new_log_number) + '.txt'
+            self.active_file_name = path + '/log_' + \
+                str(new_log_number) + '.txt'
         else:
-            self.file_name = path + name + '.txt'
-        self.active_file = open(self.file_name, 'w+')
+            self.active_file_name = path + name + '.txt'
+        self.active_file = open(self.active_file_name, 'w+')
 
-    def get_next_active_file(self, path):
-        # get number of files in the logs folder
-        new_log_number = sum([len(files) for r, d, files in os.walk(path)])
-        self.file_name = path + '/log_' + str(new_log_number) + '.txt'
-        print(os.getcwd())  # what directory ur in (for debugging)
-        self.active_file = open(self.file_name, 'w+')
+    def get_current_active_file(self, path, name=None):
+        print(os.getcwd())
+        new_log_number = sum([len(files) for r, d, files in os.walk(path)]) - 1
+        if name == None:
+            self.active_file_name = path + '/log_' + str(new_log_number) + '.txt'
+        else:
+            self.active_file_name = path + name + '.txt'
+        self.active_file = open(self.active_file_name, 'w+')
+
+    def get_correct_example_file(self, correct_example_file_path):
+        self.correct_example_file_path = correct_example_file_path
+        self.correct_file = open(self.correct_example_file_path, 'w+')
 
     def log_info(self, turn, log_colonies=False, log_ship_yards=False):
         print(os.getcwd())  # what directory ur in (for debugging)
@@ -46,15 +55,17 @@ class Logger:
             self.active_file.write('\n')
 
     def read_info(self):
-        self.active_file = open(self.file_name, 'r')  #get file
-        self.contents = self.active_file.read()
+        self.active_file = open(self.active_file_name, 'r')  #get file
         return self.active_file.read() # return contents of file
 
-    def get_correct_example(self, correct_example_file):
-        self.correct_example = correct_example_file
-
     def compare_test_and_example(self):
-        with self.active_file as text, self.correct_example.active_file as exc:
+        print('hello1')
+        with self.active_file as text, self.correct_file as exc:
+            print('hello2')
             exclusions = [line.rstrip('\n') for line in exc]
+            print('hello2.5', text)
             for line in text:
-                assert not any(exclusion in line for exclusion in exclusions), 'There is a difference in the current log, the line is \n {}'.format(line)
+                print(line)
+                print('hello3', not any(exclusion in line for exclusion in exclusions))
+                assert not any(
+                    exclusion in line for exclusion in exclusions), 'There is a difference in the current log, the line is \n {}'.format(line)

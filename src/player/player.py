@@ -117,31 +117,6 @@ class Player:
 
         return data
 
-    def find_order_of_ships(self, ships):
-        print('fighting (find order)')
-        order = []
-
-        for ship_1 in ships:  # ship
-
-            for ship_2 in ships:  # ship
-
-                if ship_1.fighting_class > ship_2.fighting_class:
-                    order.append(ship_1)
-
-                elif ship_2.fighting_class > ship_1.fighting_class:
-                    order.append(ship_2)
-
-                else:
-
-                    if ship_1.attack > ship_2.attack:
-                        order.append(ship_1)
-
-                    elif ship_2.attack > ship_1.attack:
-                        order.append(ship_2)
-
-        print('order', order)
-        return order
-
     # check stuffs
     def check_colonization(self, board):
         print('check colonization')
