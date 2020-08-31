@@ -72,12 +72,6 @@ class CombatEngine:
             ship_1.status = 'Deceased'
             return 2
 
-    def get_die_roll(self):
-        if self.dice_roll_index == 5: self.dice_roll_index = 0
-        else: self.dice_roll_index += 1
-        
-        return self.rolls[self.dice_roll_index]
-
     def attack(self, ship_1, ship_2):
         player_1 = ship_1.player
         player_2 = ship_2.player

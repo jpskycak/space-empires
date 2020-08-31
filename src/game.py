@@ -47,7 +47,6 @@ class Game:
         colors = ['Blue', 'Red', 'Purple', 'Green']
         players = []
         for i in range(0, 2):
-            # <--- testing the dumb player #random.randint(1, 2)  # dumb or random
             type_of_player = 3
             print('type_of_player', type_of_player)
             if type_of_player == 1:
@@ -201,13 +200,3 @@ class Game:
                       ':', [ship_yard.x, ship_yard.y])
             print('')
             print('')
-
-    # helper functions
-
-    def dice_roll(self, start, end):
-        dice_1 = random.randint(start, end)
-        dice_2 = random.randint(start, end - 1)
-        if dice_1 > dice_2:
-            return True
-        elif dice_1 < dice_2:
-            return False

@@ -17,12 +17,18 @@ from unit.carrier import Carrier
 
 class Board:
     # grid_size is grid size and player_positions is the array of the home bases of players
-    def __init__(self, grid_size):
+    def __init__(self, grid_size, asc_or_dsc):
         self.grid_size = grid_size
         self.players = []
         self.player_home_bases = [
             [1, 1], [self.grid_size - 1, self.grid_size - 1]]
         self.ships_dict = {}
+        self.misc_dict = {}
+        self.dice_roll_index = 0
+        if asc_or_dsc == 'asc':
+            self.rolls = [1, 2, 3, 4, 5, 6]
+        elif asc_or_dsc == 'dsc':
+            self.rolls = [6, 5, 4, 3, 2, 1]
 
     # create <instert thing here> stuffs
     def create_planets_and_asteroids(self):
@@ -35,13 +41,15 @@ class Board:
         for i in range(0, self.grid_size + 1):
 
             for j in range(0, self.grid_size + 1):
-                # 1,2 is a planet and 3,4,5,6,7,8 are asteroids
-                planet_or_asteroid = random.randint(1, 8)
+                # 1,2 is a planet and 3,4,5,6 are asteroids
+                planet_or_asteroid = self.get_die_roll()
 
                 if planet_or_asteroid <= 2:
+                    self.misc_dict[(i, j)] = self.create_planet([i, j])
                     self.planets.append(self.create_planet([i, j]))
 
                 elif planet_or_asteroid > 2:
+                    self.misc_dict[(i, j)] = self.create_asteroid([i, j])
                     self.asteroids.append(self.create_asteroid([i, j]))
 
     def create_planet(self, position):
@@ -50,13 +58,12 @@ class Board:
 
     def create_asteroid(self, position):
         size = random.randint(1, 3)
-        tier = random.randint(1, 5)
+        tier = random.randint(1, 3)
         return Asteroid(position, size, tier)
 
     def create_colony(self, player, planet, position):
         planet.is_colonized = True
-        player.colonies.append(
-            Colony(self, len(player.colonies) + 1, position, self.grid_size))
+        player.colonies.append(Colony(self, len(player.colonies) + 1, position, self.grid_size))
 
     # combat stuffs
     def ordered_list_of_ships_at_x_y(self, x, y):
@@ -108,13 +115,20 @@ class Board:
 
         return minimumVal
 
+    def get_die_roll(self):
+        if self.dice_roll_index == 5:
+            self.dice_roll_index = 0
+        else:
+            self.dice_roll_index += 1
+
+        return self.rolls[self.dice_roll_index]
+
 
 class Planet:
     def __init__(self, position, tier):  # tier 1 uninhabitable at all like a small moon, tier 2 is barren, like mars, but only habitable by terraform 2 colony ships tier 3 is like earth, fully habatible by any colony ship
         self.position = position
         self.x = position[0]
         self.y = position[1]
-        # self.size = size #max number of ship yards
         self.tier = tier  # habitiblity
         self.is_colonized = False
         self.ship_yards_at_planet = []
@@ -125,8 +139,7 @@ class Asteroid:
         self.position = position
         self.x = position[0]
         self.y = position[1]
-        # self.size = size #max number of ship yards
-        self.tier = random.randint(0, 5)  # type of ore
+        self.tier = tier  # type of ore
         self.size = size  # scalar for tier
         # ex a tier 5 size 3 asteroird gives 15 creds while a tier 3 size 2 asteroid give 6 creds
 
