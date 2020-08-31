@@ -1,6 +1,7 @@
 import os
 import difflib
 import sys
+import filecmp
 sys.path.append('src')
 
 
@@ -9,8 +10,8 @@ class Logger:
         self.board = board
 
     def get_next_active_file(self, path, name=None):
-        print(os.getcwd())
-        new_log_number = sum([len(files) for r, d, files in os.walk(path)])
+        #print(os.getcwd())  # what directory ur in (for debugging)
+        new_log_number = sum([len(files) for r, d, files in os.walk(path)]) + 1
         if name == None:
             self.active_file_name = path + '/log_' + \
                 str(new_log_number) + '.txt'
@@ -19,20 +20,20 @@ class Logger:
         self.active_file = open(self.active_file_name, 'w+')
 
     def get_current_active_file(self, path, name=None):
-        print(os.getcwd())
-        new_log_number = sum([len(files) for r, d, files in os.walk(path)]) - 1
+        #print(os.getcwd())  # what directory ur in (for debugging)
+        new_log_number = sum([len(files) for r, d, files in os.walk(path)])
         if name == None:
             self.active_file_name = path + '/log_' + str(new_log_number) + '.txt'
         else:
             self.active_file_name = path + name + '.txt'
-        self.active_file = open(self.active_file_name, 'w+')
+        self.active_file = open(self.active_file_name, 'r')
 
     def get_correct_example_file(self, correct_example_file_path):
         self.correct_example_file_path = correct_example_file_path
-        self.correct_file = open(self.correct_example_file_path, 'w+')
+        self.correct_file = open(self.correct_example_file_path, 'r')
 
     def log_info(self, turn, log_colonies=False, log_ship_yards=False):
-        print(os.getcwd())  # what directory ur in (for debugging)
+        #print(os.getcwd())  # what directory ur in (for debugging)
         turn_string = 'Turn: ' + str(turn) + '\n'
         self.active_file.write(turn_string)
         for player in self.board.players:
@@ -54,18 +55,9 @@ class Logger:
 
             self.active_file.write('\n')
 
-    def read_info(self):
+    def read_info(self): # To print stuff out
         self.active_file = open(self.active_file_name, 'r')  #get file
         return self.active_file.read() # return contents of file
 
-    def compare_test_and_example(self):
-        print('hello1')
-        with self.active_file as text, self.correct_file as exc:
-            print('hello2')
-            exclusions = [line.rstrip('\n') for line in exc]
-            print('hello2.5', text)
-            for line in text:
-                print(line)
-                print('hello3', not any(exclusion in line for exclusion in exclusions))
-                assert not any(
-                    exclusion in line for exclusion in exclusions), 'There is a difference in the current log, the line is \n {}'.format(line)
+    def compare_test_and_example(self): # I couldn't find anyway to do this other than using filecmp
+        return filecmp.cmp(self.active_file_name, self.correct_example_file_path, shallow=False)

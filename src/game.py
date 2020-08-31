@@ -39,7 +39,7 @@ class Game:
     def initialize_game(self):
         self.board.players = self.create_players()
         self.board.create_planets_and_asteroids()
-        self.log.get_current_active_file('logs')
+        self.log.get_next_active_file('logs')
 
     def create_players(self):
         starting_positions = [[self.grid_size // 2, 0], [self.grid_size // 2, self.grid_size], [0, self.grid_size // 2], [
