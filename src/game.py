@@ -29,10 +29,10 @@ class Game:
         self.grid_size = grid_size - 1  # ex [5,5]
         self.game_won = False
         self.players_dead = 0
-        self.board = Board(grid_size)
+        self.board = Board(grid_size, 'asc')
         self.max_turns = max_turns
         self.player = Player((0,0), self.grid_size, '0', 'black')
-        self.combat_engine = CombatEngine(self.board, self, self.grid_size)
+        self.combat_engine = CombatEngine(self.board, self, self.grid_size, 'asc')
         self.log = Logger(self.board)
 
     # main functions
