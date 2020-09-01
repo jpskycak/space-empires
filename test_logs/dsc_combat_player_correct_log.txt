@@ -1,0 +1,72 @@
+Turn: 1
+Player: 1
+Status: Playing
+Scout Ship ID: 1 Position: [2,0] 
+Scout Ship ID: 2 Position: [2,0] 
+Scout Ship ID: 3 Position: [2,0] 
+Colony Ship Ship ID: 4 Position: [2,0] 
+Colony Ship Ship ID: 5 Position: [2,0] 
+Colony Ship Ship ID: 6 Position: [2,0] 
+
+Player: 2
+Status: Playing
+Scout Ship ID: 1 Position: [2,4] 
+Scout Ship ID: 2 Position: [2,4] 
+Scout Ship ID: 3 Position: [2,4] 
+Colony Ship Ship ID: 4 Position: [2,4] 
+Colony Ship Ship ID: 5 Position: [2,4] 
+Colony Ship Ship ID: 6 Position: [2,4] 
+
+Turn: 2
+Player: 1
+Status: Playing
+Scout Ship ID: 2 Position: [2,2] 
+Scout Ship ID: 3 Position: [2,2] 
+Colony Ship Ship ID: 5 Position: [2,2] 
+Destroyer Ship ID: 4 Position: [2,0] 
+Destroyer Ship ID: 5 Position: [2,0] 
+
+Player: 2
+Status: Playing
+Scout Ship ID: 1 Position: [2,2] 
+Scout Ship ID: 3 Position: [2,2] 
+Colony Ship Ship ID: 5 Position: [2,2] 
+Destroyer Ship ID: 4 Position: [2,4] 
+Destroyer Ship ID: 5 Position: [2,4] 
+
+Turn: 3
+Player: 1
+Status: Playing
+Scout Ship ID: 2 Position: [2,2] 
+Scout Ship ID: 3 Position: [2,2] 
+Destroyer Ship ID: 4 Position: [2,2] 
+Destroyer Ship ID: 5 Position: [2,2] 
+
+Player: 2
+Status: Playing
+Scout Ship ID: 1 Position: [2,2] 
+Scout Ship ID: 3 Position: [2,2] 
+Destroyer Ship ID: 4 Position: [2,2] 
+Destroyer Ship ID: 5 Position: [2,2] 
+
+Turn: 4
+Player: 1
+Status: Playing
+Scout Ship ID: 2 Position: [2,2] 
+Scout Ship ID: 3 Position: [2,2] 
+Destroyer Ship ID: 4 Position: [2,2] 
+Destroyer Ship ID: 5 Position: [2,2] 
+Destroyer Ship ID: 5 Position: [2,0] 
+Destroyer Ship ID: 6 Position: [2,0] 
+
+Player: 2
+Status: Playing
+Scout Ship ID: 1 Position: [2,2] 
+Scout Ship ID: 3 Position: [2,2] 
+Destroyer Ship ID: 4 Position: [2,2] 
+Destroyer Ship ID: 5 Position: [2,2] 
+Destroyer Ship ID: 5 Position: [2,4] 
+Destroyer Ship ID: 6 Position: [2,4] 
+Destroyer Ship ID: 7 Position: [2,4] 
+Destroyer Ship ID: 8 Position: [2,4] 
+
