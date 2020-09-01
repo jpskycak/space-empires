@@ -25,14 +25,15 @@ from unit.carrier import Carrier
 
 
 class Game:
-    def __init__(self, grid_size, max_turns):
+    def __init__(self, grid_size, max_turns, asc_or_dsc):
         self.grid_size = grid_size - 1  # ex [5,5]
         self.game_won = False
         self.players_dead = 0
-        self.board = Board(grid_size, 'asc')
+        self.board = Board(grid_size, asc_or_dsc)
         self.max_turns = max_turns
-        self.player = Player((0,0), self.grid_size, '0', 'black')
-        self.combat_engine = CombatEngine(self.board, self, self.grid_size, 'asc')
+        self.player = Player((0, 0), self.grid_size, '0', 'black')
+        self.combat_engine = CombatEngine(
+            self.board, self, self.grid_size, asc_or_dsc)
         self.log = Logger(self.board)
 
     # main functions
