@@ -49,6 +49,7 @@ class Player:
         self.ship_size_tech = 0
         self.fighting_class_tech = 0
         self.movement_tech_upgrade_number = 0
+        self.ship_to_build = 2
 
     def find_random_ship_yard(self):
         return self.ship_yards[random.randint(0, len(self.ship_yards) - 1)]
@@ -59,59 +60,60 @@ class Player:
             if ship_yard.position == position:
                 total_ship_yards_at_position += self.ship_yard_tech
 
+    def build_fleet(self, turn = 0):
+        print('building a fleet')
+        position = self.find_random_ship_yard().position
+        ship_class = self.determine_availible_ship_classes()
+        while self.can_build_ships():
+            ship_ID = len(self.ships) + 1
+            ship = self.create_ship(ship_class, ship_ID, position)
+            if ship.cost <= self.creds:
+                self.ships.append(ship)
+                self.creds -= ship.cost
+                print('Player', self.player_number, 'just bought a', ship.name)
+
+    def can_build_ships(self):
+        if self.ship_to_build == 2 and self.creds >= 12: return True
+        elif self.ship_to_build == 1 and self.creds >= 6: return True
+        else: return False
+
     def upgrade_movement_tech(self):
         self.movement_tech_upgrade_number += 1
         if self.movement_tech_upgrade_number == 1:
             self.movement_tech[2] == 2
-
-        if self.movement_tech_upgrade_number == 2:
+        elif self.movement_tech_upgrade_number == 2:
             self.movement_tech[1] == 2
-
-        if self.movement_tech_upgrade_number == 3:
+        elif self.movement_tech_upgrade_number == 3:
             self.movement_tech[0] == 2
-
-        if self.movement_tech_upgrade_number == 4:
+        elif self.movement_tech_upgrade_number == 4:
             self.movement_tech[2] == 3
-
-        if self.movement_tech_upgrade_number == 5:
+        elif self.movement_tech_upgrade_number == 5:
             self.movement_tech[1] == 3
+        print('Player', self.player_number, "upgraded their max movement speed from", self.movement_tech_upgrade_number - 1, 'to', self.movement_tech_upgrade_number)
 
     def maintenance(self):
-        print('Maintenance')
         for ship in self.ships:
             if not isinstance(ship, Base) and not isinstance(ship, Colony) and not isinstance(ship, Colony_Ship) and not isinstance(ship, Decoy):
                 cost = ship.defense_tech + ship.defense + ship.armor
-
-                if self.creds >= cost:
-                    self.creds -= cost
-
+                if self.creds >= cost: self.creds -= cost
                 else:
                     self.ships.remove(ship)
-                    print('Player', self.player_number,
-                          "couldn't maintain their", ship.name)
+                    print('Player', self.player_number, "couldn't maintain their", ship.name)
 
     def screen_ships(self, ships_at_x_y, board):
         data = []
         player_ships_count = [[player, 0] for player in board.players]
-
         for ship in ships_at_x_y:
             player_ships_count[ship.player.player_number - 1][1] += 1
-
         for player_1, _ in player_ships_count:
             player_1_ships = [ship for ship in ships_at_x_y if ship.player == player_1]
-
             for player_2, _ in player_ships_count:
                 player_2_ships = [ship for ship in ships_at_x_y if ship.player == player_2]
-
                 if player_1 != player_2:
-
-                    if len(player_1_ships) < len(player_2_ships):
-                        
+                    if len(player_1_ships) < len(player_2_ships):    
                         while len(player_2_ships) > len(player_1_ships):
                             player_2_ships.pop(-1)
-
                     if len(player_2_ships) < len(player_1_ships):
-
                         while len(player_1_ships) > len(player_2_ships):
                             player_1_ships.pop(-1)
 
@@ -121,93 +123,40 @@ class Player:
     def check_colonization(self, board):
         print('check colonization')
         for ship in self.ships:
-
             if isinstance(ship, Colony_Ship):
-
                 for planet in board.planets:
-
                     if ship.x == planet.x and ship.y == planet.y and not planet.is_colonized:
                         print('it do be colonized')
                         if ship.terraform_tech >= 4 - planet.tier:  # if the colony ship can colonize the planet
-                            print('Player', self.player_number,
-                                    'just colonized a tier', planet.tier,
-                                    'planet at co-ords:',
-                                    (planet.x, planet.y))
-                            board.create_colony(
-                                self, planet, planet.position)
-                            index = self.ships.index(ship)
-                            self.ships.remove(self.ships[index])
-
+                            print('Player', self.player_number, 'just colonized a tier', planet.tier, 'planet at co-ords:', (planet.x, planet.y))
+                            board.create_colony(self, planet, planet.position)
+                            self.ships.remove(ship)
                         else:
-                            print('Player', self.player_number,
-                                    "can't colonize a tier", planet.tier,
-                                    'planet at co-ords:',
-                                    (planet.x, planet.y),
-                                    'because their terraform tech is',
-                                    ship.terraform_tech)
+                            print('Player', self.player_number, "can't colonize a tier", planet.tier, 'planet at co-ords:', (planet.x, planet.y), 'because their terraform tech is', ship.terraform_tech)
 
     # helper functions
-    def determine_availible_ship_classes(self, creds):
-        if self.creds > 30 and self.ship_size_tech >= 6:
-            return random.randint(1, 7)
-
-        elif self.creds < 30 and self.creds >= 25 and self.ship_size_tech >= 5:
-            return random.randint(1, 6)
-
-        elif self.creds < 25 and self.creds >= 20 and self.ship_size_tech >= 4:
-            return random.randint(1, 5)
-
-        elif self.creds < 20 and self.creds >= 15 and self.ship_size_tech >= 3:
-            return random.randint(1, 4)
-
-        elif self.creds < 15 and self.creds >= 12 and self.ship_size_tech >= 2:
-            return random.randint(1, 3)
-
-        elif self.creds < 12 and self.creds >= 9 and self.ship_size_tech >= 1:
-            return random.randint(1, 2)
-
-        elif self.creds < 9 and self.creds >= 6 and self.ship_size_tech >= 0:
-            return 1
-
-        else:
-            return None
+    def determine_availible_ship_classes(self):
+        if self.creds > 30 and self.ship_size_tech >= 6: return random.randint(1, 7)
+        elif self.creds < 30 and self.creds >= 25 and self.ship_size_tech >= 5: return random.randint(1, 6)
+        elif self.creds < 25 and self.creds >= 20 and self.ship_size_tech >= 4: return random.randint(1, 5)
+        elif self.creds < 20 and self.creds >= 15 and self.ship_size_tech >= 3: return random.randint(1, 4)
+        elif self.creds < 15 and self.creds >= 12 and self.ship_size_tech >= 2: return random.randint(1, 3)
+        elif self.creds < 12 and self.creds >= 9 and self.ship_size_tech >= 1: return random.randint(1, 2)
+        elif self.creds < 9 and self.creds >= 6 and self.ship_size_tech >= 0: return 1
+        else: return None
 
     def create_ship(self, ship_class, ID, position):
         if ship_class == 1:
             scout_colony_ship_decoy_or_miner = random.randint(1, 4)
-
-            if scout_colony_ship_decoy_or_miner == 1:
-                return Scout(self, ID, position, self.grid_size, True)
-
-            if scout_colony_ship_decoy_or_miner == 2:
-                return Colony_Ship(self, ID, position, self.grid_size, True)
-
-            if scout_colony_ship_decoy_or_miner == 3:
-                return Decoy(self, ID, position, self.grid_size, True)
-
-            if scout_colony_ship_decoy_or_miner == 4:
-                return Miner(self, ID, position, self.grid_size, True)
-
-        elif ship_class == 2:
-            return Destroyer(self, ID, position, self.grid_size, True)
-
-        elif ship_class == 3:
-            return Cruiser(self, ID, position, self.grid_size, True)
-
-        elif ship_class == 4:
-            return BattleCruiser(self, ID, position, self.grid_size, True)
-
-        elif ship_class == 5:
-            return Battleship(self, ID, position, self.grid_size, True)
-
-        elif ship_class == 6:
-            return Dreadnaught(self, ID, position, self.grid_size, True)
-
-        elif ship_class == 7:
-            return Carrier(self, ID, position, self.grid_size, True)
-
-        elif ship_class == 8:
-            return Colony_Ship(self, ID, position, self.grid_size, True)
-
-        else:
-            return Scout(self, ID, position, self.grid_size, True)
+            if scout_colony_ship_decoy_or_miner == 1: return Scout(self, ID, position, self.grid_size, True)
+            if scout_colony_ship_decoy_or_miner == 2: return Colony_Ship(self, ID, position, self.grid_size, True)
+            if scout_colony_ship_decoy_or_miner == 3: return Decoy(self, ID, position, self.grid_size, True)
+            if scout_colony_ship_decoy_or_miner == 4: return Miner(self, ID, position, self.grid_size, True)
+        elif ship_class == 2: return Destroyer(self, ID, position, self.grid_size, True)
+        elif ship_class == 3: return Cruiser(self, ID, position, self.grid_size, True)
+        elif ship_class == 4: return BattleCruiser(self, ID, position, self.grid_size, True)
+        elif ship_class == 5: return Battleship(self, ID, position, self.grid_size, True)
+        elif ship_class == 6: return Dreadnaught(self, ID, position, self.grid_size, True)
+        elif ship_class == 7: return Carrier(self, ID, position, self.grid_size, True)
+        elif ship_class == 8: return Colony_Ship(self, ID, position, self.grid_size, True)
+        else: return Scout(self, ID, position, self.grid_size, True)
