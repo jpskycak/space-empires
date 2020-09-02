@@ -45,7 +45,8 @@ class DumbPlayer(Player):
             Ship_Yard(self, 3, position, self.grid_size, False),
             Ship_Yard(self, 4, position, self.grid_size, False)
         ]
-        self.colonies = [Colony(self, 1, position, grid_size)]
+        self.home_base = Colony(self, 1, position, self.grid_size, home_base = True)
+        self.colonies = []
         self.starting_position = position
         self.build_fleet()
         self.attack_tech = 0

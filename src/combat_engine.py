@@ -15,24 +15,29 @@ class CombatEngine:
 
     def complete_all_combats(self, ships):
         while len(ships) > 1:
-            print('order 69', ships)
+            #print('order 69', ships)
             attacking_ship = ships[0]
-            defending_ship = self.get_next_enemy_ship(ships, attacking_ship)
-            print('defending_ship', defending_ship)
-            defending_ship = ships[defending_ship]
-            ship_who_won = self.setup_fight(attacking_ship, defending_ship)  # make 'em fight
-            if ship_who_won == 1:
-                ships.remove(defending_ship)
-            else:
-                ships.remove(attacking_ship)
+            defending_ship = self.get_next_enemy_ship(ships[0:], attacking_ship)
+            #print('attacking_ship', attacking_ship)
+            #print('defending_ship', defending_ship) 
+            if defending_ship == None:
+                ship_who_won = self.start_fight(attacking_ship, defending_ship)  # make 'em fight
+                if ship_who_won == 1:
+                    ships.remove(defending_ship)
+                else:
+                    ships.remove(attacking_ship)
         
     def get_next_enemy_ship(self, ships, attacking_ship):
         for ship in ships:
+            #print('ship.player', ship.player)
+            #print('attacking_ship.player', attacking_ship.player)
+            #print('ship.player = attacking_ship.player', ship.player != attacking_ship.player)
             if ship.player != attacking_ship.player:
+                #print('hello')
                 return ship
 
-    def setup_fight(self, ship_1, ship_2):
-        print('FIGHT')
+    def start_fight(self, ship_1, ship_2):
+        #print('FIGHT')
         if ship_1.status != 'Deceased' and ship_2.status != 'Deceased':
 
             if ship_1.fighting_class > ship_2.fighting_class:
@@ -52,7 +57,7 @@ class CombatEngine:
 
     # helping combat function
     def hit_or_miss(self, ship_1, ship_2, first_to_shoot):
-        print('fighting (hit or miss)')
+        #print('fighting (hit or miss)')
 
         while ship_1.armor > 0 and ship_2.armor > 0:  # if neither are dead
 
@@ -76,7 +81,7 @@ class CombatEngine:
         player_1 = ship_1.player
         player_2 = ship_2.player
         hit_threshold = (ship_1.attack + player_1.attack_tech) - (ship_2.defense + player_2.defense_tech)
-        die_roll = self.get_die_roll
+        die_roll = self.get_die_roll()
 
         if die_roll == 1 or die_roll <= hit_threshold:
             print('Player', player_1.player_number, 'Hit their shot, targeting Player', player_2.player_number, "'s unit", ship_2.name, ship_2.ID)
@@ -85,15 +90,34 @@ class CombatEngine:
         else:
             print('Player', player_2.player_number, 'Missed their shot, targeting Player', player_1.player_number, "'s unit", ship_1.name, ship_1.ID)
 
+    def get_die_roll(self):
+        if self.dice_roll_index == 5:
+            self.dice_roll_index = 0
+        else:
+            self.dice_roll_index += 1
+
+        return self.rolls[self.dice_roll_index]
+
     def possible_fights(self):
         positions_of_ships = {}
 
-        for i in range(0, self.grid_size + 1):
+        for x in range(0, self.grid_size + 1):
 
-            for j in range(0, self.grid_size + 1):
-                self.board.ordered_list_of_ships_at_x_y(i, j)
+            for y in range(0, self.grid_size + 1):
+                self.board.order_list_of_ships_at_x_y(x, y)
 
-                if len(self.board.ships_dict[(i, j)]) > 0:
-                    positions_of_ships[(i, j)] = self.board.ships_dict[(i, j)]
+                if self.is_a_possible_fight_at_x_y(x, y):
+                    positions_of_ships[(x, y)] = self.game.player.screen_ships(self.board.ships_dict[(x, y)], self.board)
 
         return positions_of_ships
+
+    def is_a_possible_fight_at_x_y(self, x, y):
+        if len(self.board.ships_dict[(x, y)]) >= 2:
+            ships = self.board.ships_dict[(x, y)]
+            player_1 = ships[0].player
+            for ship in ships[0:]:
+                #print('player_1, ship.player', player_1, ship.player)
+                if ship.player != player_1:
+                    return True
+                
+        return False

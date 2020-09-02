@@ -41,7 +41,8 @@ class CombatPlayer(Player):
             Ship_Yard(self, 3, position, self.grid_size, False),
             Ship_Yard(self, 4, position, self.grid_size, False)
         ]
-        self.colonies = [Colony(self, 1, position, grid_size)]
+        self.home_base = Colony(self, 1, position, self.grid_size, home_base = True)
+        self.colonies = []
         self.starting_position = position
         self.attack_tech = 0
         self.defense_tech = 0
@@ -54,7 +55,7 @@ class CombatPlayer(Player):
         self.ship_to_build = 2
 
     def upgrade(self, turn):  # actual function should be in here because you can only upgrade new ships not ones in the field
-        print('upgrading')
+        #print('upgrading')
         if turn == 1:
             if self.ship_size_tech < 6:  # biggest ship size that you can build
                 self.ship_size_tech += 1
@@ -63,7 +64,7 @@ class CombatPlayer(Player):
         else:
             while self.can_upgrade():
                 stat_to_upgrade = random.randint(1, 6)
-                print('stat_to_upgrade', stat_to_upgrade)
+                #print('stat_to_upgrade', stat_to_upgrade)
                 if stat_to_upgrade == 1 and self.attack_tech < 3:  # offense
                     self.attack_tech += 1
                     self.creds -= 10 * self.attack_tech
@@ -88,6 +89,9 @@ class CombatPlayer(Player):
                     print('Player', self.player_number, "upgraded their ablility to terraform from", self.terraform_tech - 1, 'to', self.terraform_tech)
                 else:
                     break
+
+    def can_upgrade(self):
+        return self.creds > 10 * self.attack_tech and self.creds > 10 * self.defense_tech and self.creds > 5 * self.fighting_class_tech + 10 and self.creds > 10 * self.movement_tech_upgrade_number + 10 and self.creds > 10 * self.ship_yard_tech and self.creds > 15 * self.terraform_tech
  
     def move(self):
         for ship in self.ships: ship.move_to_centre()

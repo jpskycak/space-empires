@@ -24,30 +24,21 @@ class Unit:
     def move_to_centre(self):
         if self.can_move:
             for i in range(0, len(self.movement_tech)):
-
                 for _ in range(0, self.movement_tech[i]):
-
                     if self.x != self.centre[0]:
-
                         if self.x < self.centre[0]:
                             print(self.player.player_number, self.ID, 'move right')
                             self.x += 1
                         elif self.x > self.centre[0]:
-                            print(self.player.player_number,
-                                  self.ID, 'move left')
+                            print(self.player.player_number, self.ID, 'move left')
                             self.x -= 1
-
                     elif self.y != self.centre[1]:
-
                         if self.y < self.centre[1]:
-                            print(self.player.player_number,
-                                  self.ID, 'move down')
+                            print(self.player.player_number, self.ID, 'move down')
                             self.y += 1
                         elif self.y > self.centre[1]:
-                            print(self.player.player_number,
-                                  self.ID, 'move up')
+                            print(self.player.player_number, self.ID, 'move up')
                             self.y -= 1
-
 
     def dumb_move(self):
         # 0 is up   1 is right    2 is down   3 is left

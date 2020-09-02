@@ -21,7 +21,7 @@ class Board:
         self.grid_size = grid_size
         self.players = []
         self.player_home_bases = [
-            [1, 1], [self.grid_size - 1, self.grid_size - 1]]
+            [self.grid_size // 2, 0], [self.grid_size // 2, self.grid_size]]
         self.ships_dict = {}
         self.misc_dict = {}
         self.dice_roll_index = 0
@@ -32,33 +32,30 @@ class Board:
 
     # create <instert thing here> stuffs
     def create_planets_and_asteroids(self):
-        print('create planets and asteroids')
+        #print('create planets and asteroids')
         self.planets = []
         self.asteroids = []
-        for player_position in self.player_home_bases:  # create home base
-            self.create_planet(player_position)
-
         for i in range(0, self.grid_size + 1):
 
             for j in range(0, self.grid_size + 1):
                 # 1,2 is a planet and 3,4,5,6 are asteroids
-                planet_or_asteroid = self.get_die_roll()
+                if not [i, j] == self.player_home_bases[0] or not [i, j] == self.player_home_bases[1]:
+                    planet_or_asteroid = self.get_die_roll()
 
-                if planet_or_asteroid <= 2:
-                    self.misc_dict[(i, j)] = self.create_planet([i, j])
-                    self.planets.append(self.create_planet([i, j]))
+                    if planet_or_asteroid <= 2:
+                        self.misc_dict[(i, j)] = self.create_planet([i, j])
+                        self.planets.append(self.create_planet([i, j]))
 
-                elif planet_or_asteroid > 2:
-                    self.misc_dict[(i, j)] = self.create_asteroid([i, j])
-                    self.asteroids.append(self.create_asteroid([i, j]))
+                    elif planet_or_asteroid > 2:
+                        self.misc_dict[(i, j)] = self.create_asteroid([i, j])
+                        self.asteroids.append(self.create_asteroid([i, j]))
 
-    def create_planet(self, position):
-        tier = random.randint(1, 3)
+    def create_planet(self, position, tier = random.randint(0, 2)):
         return Planet(position, tier)
 
     def create_asteroid(self, position):
-        size = random.randint(1, 3)
-        tier = random.randint(1, 3)
+        size = random.randint(0, 2)
+        tier = random.randint(0, 2)
         return Asteroid(position, size, tier)
 
     def create_colony(self, player, planet, position):
@@ -66,7 +63,7 @@ class Board:
         player.colonies.append(Colony(self, len(player.colonies) + 1, position, self.grid_size))
 
     # combat stuffs
-    def ordered_list_of_ships_at_x_y(self, x, y):
+    def order_list_of_ships_at_x_y(self, x, y):
         ships_arr = []
 
         for player in self.players:  # array of ships
@@ -77,14 +74,14 @@ class Board:
 
                     # if it can fight
                     if not isinstance(ship, Colony_Ship) and not isinstance(ship, Decoy) and not isinstance(ship, Miner) and not isinstance(ship, Colony):
-                        print('yes 1')
+                        #print('yes 1')
                         ships_arr.append(ship)
 
                     else:  # if not then die
                         player.ships.remove(ship)
 
         ordered_ships_arr = self.simple_sort(ships_arr)
-        print('ordered_ships_arr', ordered_ships_arr)
+        #print('ordered_ships_arr', ordered_ships_arr)
         self.ships_dict[(x, y)] = ordered_ships_arr
 
 

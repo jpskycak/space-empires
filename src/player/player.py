@@ -39,7 +39,8 @@ class Player:
             Ship_Yard(self, 3, position, self.grid_size, False),
             Ship_Yard(self, 4, position, self.grid_size, False)
         ]
-        self.colonies = [Colony(self, 1, position, self.grid_size)]
+        self.home_base = Colony(self, 1, position, self.grid_size, home_base = True)
+        self.colonies = []
         self.starting_position = position
         self.attack_tech = 0
         self.defense_tech = 0
@@ -76,6 +77,12 @@ class Player:
         if self.ship_to_build == 2 and self.creds >= 12: return True
         elif self.ship_to_build == 1 and self.creds >= 6: return True
         else: return False
+
+    def income(self):
+        income = 0
+        for colony in self.colonies: income += colony.income
+        income += self.home_base.income
+        return income
 
     def upgrade_movement_tech(self):
         self.movement_tech_upgrade_number += 1
@@ -127,7 +134,7 @@ class Player:
                 for planet in board.planets:
                     if ship.x == planet.x and ship.y == planet.y and not planet.is_colonized:
                         print('it do be colonized')
-                        if ship.terraform_tech >= 4 - planet.tier:  # if the colony ship can colonize the planet
+                        if ship.terraform_tech >= planet.tier - 1:  # if the colony ship can colonize the planet
                             print('Player', self.player_number, 'just colonized a tier', planet.tier, 'planet at co-ords:', (planet.x, planet.y))
                             board.create_colony(self, planet, planet.position)
                             self.ships.remove(ship)

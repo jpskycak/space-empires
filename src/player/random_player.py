@@ -38,7 +38,8 @@ class RandomPlayer(Player):
             Colony_Ship(5, position, self.grid_size, True),
             Colony_Ship(6, position, self.grid_size, True)
         ]
-        self.colonies = [Colony(1, position, grid_size)]
+        self.home_base = Colony(self, 1, position, self.grid_size, home_base = True)
+        self.colonies = []
         self.starting_position = position
         self.attack_tech = 0
         self.defense_tech = 0

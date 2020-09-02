@@ -26,7 +26,7 @@ from unit.carrier import Carrier
 
 class Game:
     def __init__(self, grid_size, max_turns, asc_or_dsc):
-        self.grid_size = grid_size - 1  # ex [5,5]
+        self.grid_size = grid_size  # ex [5,5]
         self.game_won = False
         self.players_dead = 0
         self.board = Board(grid_size, asc_or_dsc)
@@ -49,7 +49,7 @@ class Game:
         players = []
         for i in range(0, 2):
             type_of_player = 3
-            print('type_of_player', type_of_player)
+            #print('type_of_player', type_of_player)
             if type_of_player == 1:
                 players.append(DumbPlayer(
                     starting_positions[i], self.grid_size, i + 1, colors[i]))
@@ -95,41 +95,31 @@ class Game:
 
     def check_if_player_has_won(self):
         for player in self.board.players:
-            player.death_count = 0
-
-            for ship in player.ships:
-                if ship.status == 'Deceased':
-                    player.death_count += 1
-                    print(player.death_count)
-                    player.ships.remove(ship)
-
-            if player.death_count == len(player.ships):
-                print(player, 'is dead')
+            if player.home_base.status == 'Deceased':
                 player.status = 'Deceased'
-
-        self.players_dead = 0
-        for player in self.board.players:
-            if player.status == 'Deceased':
-                self.players_dead += 1
-            if self.players_dead == (len(self.board.players) - 1):
                 return False
             else:
                 return True
 
     def complete_turn(self, turn):
-        print('--------------------------------------------------')
         print('Turn', turn)
         self.check_if_player_has_won()
+        print('Move Phase')
         self.complete_move_phase(turn)
+        print('--------------------------------------------------')
         self.complete_combat_phase()
+        print('Combat Phase')
+        print('--------------------------------------------------')
+        print('Economic Phase')
         self.complete_economic_phase(turn)
+        print('--------------------------------------------------')
 
     # combat functions
     def complete_combat_phase(self):
-        print('fighting (combat)')
+        #print('fighting (combat)')
         possible_fights = self.combat_engine.possible_fights()
         ships = []
-        print('possible_fights', possible_fights)
+        #print('possible_fights', possible_fights)
         for _, ships in possible_fights.items():
             if len(ships) > 1:  # if 2 or more players are in current position
 
@@ -146,16 +136,14 @@ class Game:
     def complete_economic_phase(self, turn):
         for player in self.board.players:
             player.maintenance()
-            player.creds += 20
+            player.creds += player.income()
             if turn % 2 == 0:
-                player.upgrade()
+                player.upgrade(turn)
             else:
                 if isinstance(player, CombatPlayer):
                     player.build_fleet(turn)
                 else:
                     player.build_fleet()
-
-        print('Every Player got their daily allowence of', 20, 'creds.')
 
     # misc functions
     # obsolete but can be used for debugging
@@ -187,14 +175,19 @@ class Game:
             for ship in player.ships:
                 print('              ', ship.name, ':', 'Ship ID:',
                       ship.ID, ':', [ship.x, ship.y])
+            
+            if player.colonies != []:
+                print('')
+                print('          Player Colonies')
+                for colony in player.colonies:
+                    print('              ', colony.name, ':', 'Colony ID:',
+                        colony.ID, ':', [colony.x, colony.y])
 
             print('')
-            print('          Player Colonies')
-            for colony in player.colonies:
-                print('              ', colony.name, ':', 'Colony ID:',
-                      colony.ID, ':', [colony.x, colony.y])
+            print('          Player Home Base')
+            print('              ', player.home_base.name, ':', 'Colony ID:', player.home_base.ID, ':', [player.home_base.x, player.home_base.y])
 
-            print('     ')
+            print('')
             print('          Player Ship Yards')
             for ship_yard in player.ship_yards:
                 print('              ', 'Ship Yard ID:', ship_yard.ID,
