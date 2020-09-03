@@ -108,23 +108,26 @@ class Player:
                     print('Player', self.player_number, "couldn't maintain their", ship.name)
 
     def screen_ships(self, ships_at_x_y, board):
-        data = []
-        player_ships_count = [[player, 0] for player in board.players]
-        for ship in ships_at_x_y:
-            player_ships_count[ship.player.player_number - 1][1] += 1
-        for player_1, _ in player_ships_count:
-            player_1_ships = [ship for ship in ships_at_x_y if ship.player == player_1]
-            for player_2, _ in player_ships_count:
-                player_2_ships = [ship for ship in ships_at_x_y if ship.player == player_2]
-                if player_1 != player_2:
-                    if len(player_1_ships) < len(player_2_ships):    
-                        while len(player_2_ships) > len(player_1_ships):
-                            player_2_ships.pop(-1)
-                    if len(player_2_ships) < len(player_1_ships):
-                        while len(player_1_ships) > len(player_2_ships):
-                            player_1_ships.pop(-1)
+        print('ships_at_x_y', ships_at_x_y)
+        players = self.get_players_in_list(ships_at_x_y)
+        player_ships = [[ship for ship in ships_at_x_y if ship.player == player] for player in players]
+        for ships_1 in player_ships:
+            for ships_2 in player_ships[player_ships.index(ships_1):player_ships.index(ships_1) + 1]:
+                while len(ships_1) > len(ships_2):
+                    ships_1.pop(-1)
+        ships_arr = []
+        for ships in player_ships:
+            for ship in ships:
+                ships_arr.append(ship)
+        return board.simple_sort(ships_arr)
 
-        return data
+    def get_players_in_list(self, ships):
+        players = []
+        for ship in ships:
+            if ship.player not in players:
+                players.append(ship.player)
+
+        return players
 
     # check stuffs
     def check_colonization(self, board):

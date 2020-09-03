@@ -98,12 +98,13 @@ class Game:
         print('Economic Phase')
         self.complete_economic_phase(turn)
         print('--------------------------------------------------')
+        self.board.update_board()
 
     # combat functions
     def complete_combat_phase(self):
         #print('fighting (combat)')
         possible_fights = self.combat_engine.possible_fights()
-        #print('possible_fights', possible_fights)
+        print('possible_fights', possible_fights)
         for _, ships in possible_fights.items():
             self.combat_engine.complete_all_combats(ships)
 

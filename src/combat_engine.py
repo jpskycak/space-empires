@@ -12,9 +12,10 @@ class CombatEngine:
             self.rolls = [1, 2, 3, 4, 5, 6]
         elif asc_or_dsc == 'dsc':
             self.rolls = [6, 5, 4, 3, 2, 1]
+        print('asc_or_dsc', asc_or_dsc)
 
     def complete_all_combats(self, ships):
-        while len(ships) > 1:
+        while self.more_than_one_player_left_fighting(ships):
             #print('order 69', ships)
             attacking_ship = ships[0]
             defending_ship = self.get_next_enemy_ship(ships[0:], attacking_ship)
@@ -26,6 +27,17 @@ class CombatEngine:
                     ships.remove(defending_ship)
                 else:
                     ships.remove(attacking_ship)
+
+    def more_than_one_player_left_fighting(self, ships):
+        players = []
+        for ship in ships:
+            if ship.player not in players:
+                players.append(ship.player)
+        if len(players) == 1:
+            return False
+        else:
+            return True
+
         
     def get_next_enemy_ship(self, ships, attacking_ship):
         for ship in ships:
@@ -88,13 +100,15 @@ class CombatEngine:
         positions_of_ships = {}
         for x in range(0, self.grid_size + 1):
             for y in range(0, self.grid_size + 1):
-                self.board.order_list_of_ships_at_x_y(x, y)
                 if self.is_a_possible_fight_at_x_y(x, y):
                     positions_of_ships[(x, y)] = self.game.player.screen_ships(self.board.ships_dict[(x, y)], self.board)
+                    print('positions_of_ships[(x, y)]', positions_of_ships[(x, y)])
         return positions_of_ships
 
     def is_a_possible_fight_at_x_y(self, x, y):
-        if len(self.board.ships_dict[(x, y)]) >= 2:
+        self.board.update_board()
+        if (x, y) in self.board.ships_dict:
+            #print('self.board.ships_dict[(x, y)]', self.board.ships_dict[(x, y)])
             ships = self.board.ships_dict[(x, y)]
             player_1 = ships[0].player
             for ship in ships[0:]:

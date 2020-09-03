@@ -29,6 +29,18 @@ class Board:
             self.rolls = [1, 2, 3, 4, 5, 6]
         elif asc_or_dsc == 'dsc':
             self.rolls = [6, 5, 4, 3, 2, 1]
+        print('asc_or_dsc', asc_or_dsc)
+
+    def update_board(self):
+        for x in range(0, self.grid_size + 1):
+            for y in range(0, self.grid_size + 1):
+                ships_arr = []
+                for player in self.players:
+                    for ship in player.ships:
+                        if ship.x == x and ship.y == y:
+                            ships_arr.append(ship)
+                if len(ships_arr) > 0:
+                    self.ships_dict[(x, y)] = self.simple_sort(ships_arr)
 
     # create <instert thing here> stuffs
     def create_planets_and_asteroids(self):
@@ -58,18 +70,18 @@ class Board:
         player.colonies.append(Colony(self, len(player.colonies) + 1, position, self.grid_size))
 
     # combat stuffs
-    def order_list_of_ships_at_x_y(self, x, y):
+    def order_list_of_ships_at_x_y(self, dictionary, x, y):
         ships_arr = []
-        for player in self.players:  # array of ships
-            for ship in player.ships:
-                if ship.x == x and ship.y == y:  # if it can fight
+        for (dict_x, dict_y), ships in dictionary:  # array of ships
+            for ship in ships:
+                if dict_x == x and dict_y == y:  # if it can fight
                     if not isinstance(ship, Colony_Ship) and not isinstance(ship, Decoy) and not isinstance(ship, Miner) and not isinstance(ship, Colony):
                         ships_arr.append(ship)
                     else:  # if not then die
-                        player.ships.remove(ship)
+                        ship.player.ships.remove(ship)
         ordered_ships_arr = self.simple_sort(ships_arr)
         #print('ordered_ships_arr', ordered_ships_arr)
-        self.ships_dict[(x, y)] = ordered_ships_arr
+        return ordered_ships_arr
 
 
     def simple_sort(self, arr):  # merge sort
