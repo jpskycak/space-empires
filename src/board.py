@@ -36,27 +36,22 @@ class Board:
         self.planets = []
         self.asteroids = []
         for i in range(0, self.grid_size + 1):
-
             for j in range(0, self.grid_size + 1):
                 # 1,2 is a planet and 3,4,5,6 are asteroids
                 if not [i, j] == self.player_home_bases[0] or not [i, j] == self.player_home_bases[1]:
                     planet_or_asteroid = self.get_die_roll()
-
                     if planet_or_asteroid <= 2:
                         self.misc_dict[(i, j)] = self.create_planet([i, j])
                         self.planets.append(self.create_planet([i, j]))
-
                     elif planet_or_asteroid > 2:
-                        self.misc_dict[(i, j)] = self.create_asteroid([i, j])
+                        self.misc_dict[(i, j)] = self.create_asteroid([i, j]) 
                         self.asteroids.append(self.create_asteroid([i, j]))
 
-    def create_planet(self, position, tier = random.randint(0, 2)):
-        return Planet(position, tier)
+    def create_planet(self, position):
+        return Planet(position, random.randint(0, 2))
 
     def create_asteroid(self, position):
-        size = random.randint(0, 2)
-        tier = random.randint(0, 2)
-        return Asteroid(position, size, tier)
+        return Asteroid(position, random.randint(0, 2), random.randint(0, 2))
 
     def create_colony(self, player, planet, position):
         planet.is_colonized = True
@@ -65,51 +60,34 @@ class Board:
     # combat stuffs
     def order_list_of_ships_at_x_y(self, x, y):
         ships_arr = []
-
         for player in self.players:  # array of ships
-
             for ship in player.ships:
-
-                if ship.x == x and ship.y == y:
-
-                    # if it can fight
+                if ship.x == x and ship.y == y:  # if it can fight
                     if not isinstance(ship, Colony_Ship) and not isinstance(ship, Decoy) and not isinstance(ship, Miner) and not isinstance(ship, Colony):
-                        #print('yes 1')
                         ships_arr.append(ship)
-
                     else:  # if not then die
                         player.ships.remove(ship)
-
         ordered_ships_arr = self.simple_sort(ships_arr)
         #print('ordered_ships_arr', ordered_ships_arr)
         self.ships_dict[(x, y)] = ordered_ships_arr
 
 
     def simple_sort(self, arr):  # merge sort
-        newArr = []
+        sorted_arr = []
         while len(arr) > 0:
-            newArr.append(self.minimumValue(arr))
+            sorted_arr.append(self.minimumValue(arr))
             arr.remove(self.minimumValue(arr))
-
-        return newArr
+        return sorted_arr
 
     def minimumValue(self, arr):
         minimumVal = arr[0]
-
         if len(arr) >= 3:
-
             for i in range(1, len(arr)):
-
                 if arr[i].fighting_class < minimumVal.fighting_class:
-
                     minimumVal = arr[i]
-
         elif len(arr) == 2:
-
             if arr[1].fighting_class < minimumVal.fighting_class:
-
                 minimumVal = arr[1]
-
         return minimumVal
 
     def get_die_roll(self):
@@ -117,12 +95,11 @@ class Board:
             self.dice_roll_index = 0
         else:
             self.dice_roll_index += 1
-
         return self.rolls[self.dice_roll_index]
 
 
 class Planet:
-    def __init__(self, position, tier):  # tier 1 uninhabitable at all like a small moon, tier 2 is barren, like mars, but only habitable by terraform 2 colony ships tier 3 is like earth, fully habatible by any colony ship
+    def __init__(self, position, tier): 
         self.position = position
         self.x = position[0]
         self.y = position[1]
@@ -132,7 +109,7 @@ class Planet:
 
 
 class Asteroid:
-    def __init__(self, position, size, tier):  # tier 1 uninhabitable at all like a small moon, tier 2 is barren, like mars, but only habitable by terraform 2 colony ships tier 3 is like earth, fully habatible by any colony ship
+    def __init__(self, position, size, tier):  
         self.position = position
         self.x = position[0]
         self.y = position[1]

@@ -25,15 +25,14 @@ from unit.carrier import Carrier
 
 
 class Game:
-    def __init__(self, grid_size, max_turns, asc_or_dsc):
+    def __init__(self, grid_size, asc_or_dsc, max_turns = 1000):
         self.grid_size = grid_size  # ex [5,5]
         self.game_won = False
         self.players_dead = 0
         self.board = Board(grid_size, asc_or_dsc)
         self.max_turns = max_turns
         self.player = Player((0, 0), self.grid_size, '0', 'black')
-        self.combat_engine = CombatEngine(
-            self.board, self, self.grid_size, asc_or_dsc)
+        self.combat_engine = CombatEngine(self.board, self, self.grid_size, asc_or_dsc)
         self.log = Logger(self.board)
 
     # main functions
@@ -43,8 +42,7 @@ class Game:
         self.log.get_next_active_file('logs')
 
     def create_players(self):
-        starting_positions = [[self.grid_size // 2, 0], [self.grid_size // 2, self.grid_size], [0, self.grid_size // 2], [
-            self.grid_size, self.grid_size // 2]]  # players now start at the axis' and not the corners
+        starting_positions = [[self.grid_size // 2, 0], [self.grid_size // 2, self.grid_size], [0, self.grid_size // 2], [self.grid_size, self.grid_size // 2]]  # players now start at the axis' and not the corners
         colors = ['Blue', 'Red', 'Purple', 'Green']
         players = []
         for i in range(0, 2):
@@ -53,41 +51,28 @@ class Game:
             if type_of_player == 1:
                 players.append(DumbPlayer(
                     starting_positions[i], self.grid_size, i + 1, colors[i]))
-
             if type_of_player == 2:
                 players.append(RandomPlayer(
                     starting_positions[i], self.grid_size, i + 1, colors[i]))
-
             if type_of_player == 3:
                 players.append(CombatPlayer(
                     starting_positions[i], self.grid_size, i + 1, colors[i]))
-
-                players[i].build_fleet()
+            players[i].build_fleet()
 
         return players
 
     def play(self):
         turn = 1
         self.player_has_not_won = True
-        while self.player_has_not_won and turn <= self.max_turns:
+        while self.check_if_player_has_won() and turn <= self.max_turns:
             self.log.log_info(turn)
-            self.player_has_not_won = self.check_if_player_has_won()
-            for player in self.board.players:
-                if player.status == 'Deceased':
-                    self.board.players.remove(player)
-            if len(self.board.players) <= 1:
-                break
-
             self.complete_turn(turn)
-
             turn += 1
-
         if self.players_dead >= (len(self.board.players) - 1):
             self.player_has_won()
 
     def player_has_won(self):
         self.state_obsolete()
-
         for player in self.board.players:
             if player.status == 'Playing':
                 self.game_won = True
@@ -107,8 +92,8 @@ class Game:
         print('Move Phase')
         self.complete_move_phase(turn)
         print('--------------------------------------------------')
-        self.complete_combat_phase()
         print('Combat Phase')
+        self.complete_combat_phase()
         print('--------------------------------------------------')
         print('Economic Phase')
         self.complete_economic_phase(turn)
@@ -118,12 +103,9 @@ class Game:
     def complete_combat_phase(self):
         #print('fighting (combat)')
         possible_fights = self.combat_engine.possible_fights()
-        ships = []
         #print('possible_fights', possible_fights)
         for _, ships in possible_fights.items():
-            if len(ships) > 1:  # if 2 or more players are in current position
-
-                self.combat_engine.complete_all_combats(ships)
+            self.combat_engine.complete_all_combats(ships)
 
     def complete_move_phase(self, turn):
         for player in self.board.players:
@@ -135,15 +117,9 @@ class Game:
 
     def complete_economic_phase(self, turn):
         for player in self.board.players:
-            player.maintenance()
             player.creds += player.income()
-            if turn % 2 == 0:
-                player.upgrade(turn)
-            else:
-                if isinstance(player, CombatPlayer):
-                    player.build_fleet(turn)
-                else:
-                    player.build_fleet()
+            player.maintenance()
+            player.build_fleet(turn)
 
     # misc functions
     # obsolete but can be used for debugging

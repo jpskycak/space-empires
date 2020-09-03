@@ -39,18 +39,15 @@ class CombatEngine:
     def start_fight(self, ship_1, ship_2):
         #print('FIGHT')
         if ship_1.status != 'Deceased' and ship_2.status != 'Deceased':
-
             if ship_1.fighting_class > ship_2.fighting_class:
                 print("Player", ship_1.player.player_number, "'s", ship_1.name, ship_1.ID, "vs Player", ship_2.player.player_number, "'s", ship_2.name, ship_2.ID)
                 return self.hit_or_miss(ship_1, ship_2, 1)
             else:
                 print("Player", ship_1.player.player_number, "'s", ship_1.name, ship_1.ID, "vs Player", ship_2.player.player_number, "'s", ship_2.name, ship_2.ID)
                 return self.hit_or_miss(ship_1, ship_2, 2)
-
             if ship_1.status == 'Deceased':
                 print("Player", ship_1.player.player_number, "'s unit was destroyed at co-ords", [ship_1.x, ship_1.y])
                 print('-------------------------------------------')
-
             elif ship_2.status == 'Deceased':
                 print("Player", ship_2.player.player_number, "'s unit was destroyed at co-ords", [ship_2.x, ship_2.y])
                 print('-------------------------------------------')
@@ -58,21 +55,13 @@ class CombatEngine:
     # helping combat function
     def hit_or_miss(self, ship_1, ship_2, first_to_shoot):
         #print('fighting (hit or miss)')
-
-        while ship_1.armor > 0 and ship_2.armor > 0:  # if neither are dead
-
-            if first_to_shoot == 1:  # player 1 shoots first
-                self.attack(ship_1, ship_2)  # player 1 attacks player 2
-                self.attack(ship_2, ship_1)  # player 2 claps back at player 1
-
-            elif first_to_shoot == 2:  # player 2 shoots first
-                self.attack(ship_2, ship_1)  # player 2 attacks player 1
-                self.attack(ship_1, ship_2)  # player 1 claps back at player 2
-
+        if first_to_shoot == 1:  # player 1 shoots first
+            self.attack(ship_1, ship_2)  # player 1 attacks player 2
+        elif first_to_shoot == 2:  # player 2 shoots first
+            self.attack(ship_2, ship_1)  # player 2 attacks player 1
         if ship_2.armor <= 0:  # change statuses of dead ships
             ship_2.status = 'Deceased' 
             return 1
-
         elif ship_1.armor <= 0:
             ship_1.status = 'Deceased'
             return 2
@@ -82,11 +71,9 @@ class CombatEngine:
         player_2 = ship_2.player
         hit_threshold = (ship_1.attack + player_1.attack_tech) - (ship_2.defense + player_2.defense_tech)
         die_roll = self.get_die_roll()
-
         if die_roll == 1 or die_roll <= hit_threshold:
             print('Player', player_1.player_number, 'Hit their shot, targeting Player', player_2.player_number, "'s unit", ship_2.name, ship_2.ID)
             ship_2.armor -= 1  # player 2's ship loses some armor
-
         else:
             print('Player', player_2.player_number, 'Missed their shot, targeting Player', player_1.player_number, "'s unit", ship_1.name, ship_1.ID)
 
@@ -95,20 +82,15 @@ class CombatEngine:
             self.dice_roll_index = 0
         else:
             self.dice_roll_index += 1
-
         return self.rolls[self.dice_roll_index]
 
     def possible_fights(self):
         positions_of_ships = {}
-
         for x in range(0, self.grid_size + 1):
-
             for y in range(0, self.grid_size + 1):
                 self.board.order_list_of_ships_at_x_y(x, y)
-
                 if self.is_a_possible_fight_at_x_y(x, y):
                     positions_of_ships[(x, y)] = self.game.player.screen_ships(self.board.ships_dict[(x, y)], self.board)
-
         return positions_of_ships
 
     def is_a_possible_fight_at_x_y(self, x, y):
