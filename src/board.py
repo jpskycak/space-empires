@@ -87,20 +87,20 @@ class Board:
     def simple_sort(self, arr):  # merge sort
         sorted_arr = []
         while len(arr) > 0:
-            sorted_arr.append(self.minimumValue(arr))
-            arr.remove(self.minimumValue(arr))
+            sorted_arr.append(self.max_value(arr))
+            arr.remove(self.max_value(arr))
         return sorted_arr
 
-    def minimumValue(self, arr):
-        minimumVal = arr[0]
+    def max_value(self, arr):
+        max_value = arr[0]
         if len(arr) >= 3:
             for i in range(1, len(arr)):
-                if arr[i].fighting_class < minimumVal.fighting_class:
-                    minimumVal = arr[i]
+                if arr[i].fighting_class > max_value.fighting_class:
+                    max_value = arr[i]
         elif len(arr) == 2:
-            if arr[1].fighting_class < minimumVal.fighting_class:
-                minimumVal = arr[1]
-        return minimumVal
+            if arr[1].fighting_class > max_value.fighting_class:
+                max_value = arr[1]
+        return max_value
 
     def get_die_roll(self):
         if self.dice_roll_index == 5:

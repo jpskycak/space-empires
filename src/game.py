@@ -91,12 +91,15 @@ class Game:
         self.check_if_player_has_won()
         print('Move Phase')
         self.complete_move_phase(turn)
+        self.state_obsolete()
         print('--------------------------------------------------')
         print('Combat Phase')
         self.complete_combat_phase()
+        self.state_obsolete()
         print('--------------------------------------------------')
         print('Economic Phase')
         self.complete_economic_phase(turn)
+        self.state_obsolete()
         print('--------------------------------------------------')
         self.board.update_board()
 
@@ -104,8 +107,9 @@ class Game:
     def complete_combat_phase(self):
         #print('fighting (combat)')
         possible_fights = self.combat_engine.possible_fights()
-        print('possible_fights', possible_fights)
+        #print('possible_fights', possible_fights)
         for _, ships in possible_fights.items():
+            #print('ships', [ship.name for ship in ships])
             self.combat_engine.complete_all_combats(ships)
 
     def complete_move_phase(self, turn):
@@ -113,8 +117,6 @@ class Game:
             player.check_colonization(self.board)
             for _ in range(0, 3):  # 3 rounds of movements
                 player.move()
-
-        self.state_obsolete()
 
     def complete_economic_phase(self, turn):
         for player in self.board.players:

@@ -100,9 +100,8 @@ class CombatPlayer(Player):
     def determine_availible_ship_classes(self):
         if self.ship_to_build == 2 and self.creds >= 6: self.ship_to_build = 1
         elif self.ship_to_build == 1 and self.creds >= 12: self.ship_to_build = 2
-        else: return None
         return self.ship_to_build
 
     def create_ship(self, ship_class, ID, position):
         if ship_class == 1: return Scout(self, ID, position, self.grid_size, True)
-        elif ship_class == 2: return Destroyer(self, ID, position, self.grid_size, True)
+        if ship_class == 2: return Destroyer(self, ID, position, self.grid_size, True)
