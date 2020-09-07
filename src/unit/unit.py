@@ -53,39 +53,50 @@ class Unit:
                         self.x -= 1
 
     def random_move(self):
-        # print('moving')
         # 0 is up   1 is right    2 is down   3 is left
         direction = random.randint(0, 3)
         if self.can_move:
-
             for i in range(0, len(self.movement_tech)):
-
                 for _ in range(0, self.movement_tech[i]):
-
                     if direction == UP:
-
                         if self.y > 0:
                             self.y -= 1
                         elif self.y <= 0:
                             self.y += 1
-
                     elif direction == DOWN:
-                        
                         if self.y < self.grid_size - 1:
                             self.y += 1
                         elif self.y >= self.grid_size - 1:
                             self.y -= 1
-
                     elif direction == RIGHT:
-
                         if self.x < self.grid_size - 1:
                             self.x += 1
                         elif self.x >= self.grid_size - 1:
                             self.x -= 1
-
                     elif direction == LEFT:
-
                         if self.x > 0:
                             self.x -= 1
                         elif self.x <= 0:
                             self.x += 1
+
+    def move_to_nearest_planet(self, misc_dict, planet_class):
+        for position, space_object in misc_dict.items():
+            if isinstance(space_object, planet_class):
+                if space_object.is_claimed != True:
+                    space_object.is_claimed = True
+                    for i in range(0, len(self.movement_tech)):
+                        for _ in range(0, self.movement_tech[i]):
+                            if self.x != position[0]:
+                                if self.x < position[0]:
+                                    print(self.player.player_number, self.ID, 'move right')
+                                    self.x += 1
+                                elif self.x > position[0]:
+                                    print(self.player.player_number, self.ID, 'move left')
+                                    self.x -= 1
+                            elif self.y != position[1]:
+                                if self.y < position[1]:
+                                    print(self.player.player_number, self.ID, 'move down')
+                                    self.y += 1
+                                elif self.y > position[1]:
+                                    print(self.player.player_number, self.ID, 'move up')
+                                    self.y -= 1

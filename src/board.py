@@ -1,18 +1,9 @@
 import random
-from unit.unit import Unit
-from unit.scout import Scout
-from unit.destroyer import Destroyer
-from unit.cruiser import Cruiser
-from unit.battle_cruiser import BattleCruiser
-from unit.battleship import Battleship
-from unit.dreadnaught import Dreadnaught
 from unit.colony_ship import Colony_Ship
 from unit.colony import Colony
-from unit.ship_yard import Ship_Yard
 from unit.base import Base
 from unit.miner import Miner
 from unit.decoy import Decoy
-from unit.carrier import Carrier
 
 
 class Board:
@@ -118,6 +109,7 @@ class Planet:
         self.tier = tier  # habitiblity
         self.is_colonized = False
         self.ship_yards_at_planet = []
+        self.is_claimed = False # for colony ships finding nearest planet
 
 
 class Asteroid:

@@ -17,7 +17,7 @@ from unit.carrier import Carrier
 
 
 class Player:
-    def __init__(self, position, grid_size, player_number, player_color):
+    def __init__(self, position, grid_size, player_number, player_color, board):
         self.creds = 0
         self.status = 'Playing'
         self.death_count = 0  # if winCount = amount of units self.lose = true
@@ -51,6 +51,7 @@ class Player:
         self.fighting_class_tech = 0
         self.movement_tech_upgrade_number = 0
         self.ship_to_build = 2
+        self.board = board
 
     def find_random_ship_yard(self):
         return self.ship_yards[random.randint(0, len(self.ship_yards) - 1)]
@@ -64,19 +65,20 @@ class Player:
     def build_fleet(self, turn = 0):
         print('building a fleet')
         position = self.find_random_ship_yard().position
-        ship_class = self.determine_availible_ship_classes()
         while self.can_build_ships():
+            self.ship_to_build = self.determine_availible_ship_classes()
             ship_ID = len(self.ships) + 1
-            ship = self.create_ship(ship_class, ship_ID, position)
+            ship = self.create_ship(self.ship_to_build, ship_ID, position)
             if ship.cost <= self.creds:
                 self.ships.append(ship)
                 self.creds -= ship.cost
                 print('Player', self.player_number, 'just bought a', ship.name)
-
+    
     def can_build_ships(self):
-        if self.ship_to_build == 2 and self.creds >= 12: return True
-        elif self.ship_to_build == 1 and self.creds >= 6: return True
-        else: return False
+        if self.creds >= 6:
+            return True
+        else:
+            return False
 
     def income(self):
         income = 0

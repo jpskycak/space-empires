@@ -31,7 +31,7 @@ class Game:
         self.players_dead = 0
         self.board = Board(grid_size, asc_or_dsc)
         self.max_turns = max_turns
-        self.player = Player((0, 0), self.grid_size, '0', 'black')
+        self.player = Player((0, 0), self.grid_size, '0', 'black', self.board)
         self.combat_engine = CombatEngine(self.board, self, self.grid_size, asc_or_dsc)
         self.log = Logger(self.board)
 
@@ -56,13 +56,14 @@ class Game:
                     starting_positions[i], self.grid_size, i + 1, colors[i]))
             if type_of_player == 3:
                 players.append(CombatPlayer(
-                    starting_positions[i], self.grid_size, i + 1, colors[i]))
+                    starting_positions[i], self.grid_size, i + 1, colors[i], self.board))
             players[i].build_fleet()
 
         return players
 
     def play(self):
         turn = 1
+        self.state_obsolete()
         self.player_has_not_won = True
         while self.check_if_player_has_won() and turn <= self.max_turns:
             self.log.log_info(turn)
@@ -99,6 +100,8 @@ class Game:
         print('--------------------------------------------------')
         print('Economic Phase')
         self.complete_economic_phase(turn)
+        for player in self.board.players:
+            print('Player', player.player_number, 'Has', player.creds, 'creds extra after the economic phase.')
         self.state_obsolete()
         print('--------------------------------------------------')
         self.board.update_board()

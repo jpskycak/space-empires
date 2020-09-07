@@ -1,5 +1,6 @@
 from player.player import Player
 from board import Board
+from board import Planet
 from unit.unit import Unit
 from unit.scout import Scout
 from unit.destroyer import Destroyer
@@ -20,8 +21,8 @@ sys.path.append('src')
 
 
 class CombatPlayer(Player):
-    def __init__(self, position, grid_size, player_number, player_color):
-        super().__init__(position, grid_size, player_number, player_color)
+    def __init__(self, position, grid_size, player_number, player_color, board):
+        super().__init__(position, grid_size, player_number, player_color, board)
         self.type = 'Combat Player'
         self.creds = 0
         self.status = 'Playing'
@@ -53,6 +54,7 @@ class CombatPlayer(Player):
         self.fighting_class_tech = 0
         self.movement_tech_upgrade_number = 0
         self.ship_to_build = 2
+        self.board = board
 
     def upgrade(self, turn):  # actual function should be in here because you can only upgrade new ships not ones in the field
         #print('upgrading')
@@ -94,13 +96,20 @@ class CombatPlayer(Player):
         return self.creds > 10 * self.attack_tech and self.creds > 10 * self.defense_tech and self.creds > 5 * self.fighting_class_tech + 10 and self.creds > 10 * self.movement_tech_upgrade_number + 10 and self.creds > 10 * self.ship_yard_tech and self.creds > 15 * self.terraform_tech
  
     def move(self):
-        for ship in self.ships: ship.move_to_centre()
+        for ship in self.ships:
+            #if not isinstance(ship, Base) and not isinstance(ship, Colony) and not isinstance(ship, Colony_Ship) and not isinstance(ship, Decoy):
+            ship.move_to_centre()
+            #elif isinstance(ship, Colony_Ship):
+                #ship.move_to_nearest_planet(self.board.misc_dict, Planet) # this is for laters
 
-    # helper functions
+    def can_build_ships(self):
+        if self.ship_to_build == 2 and self.creds >= 12: return True
+        elif self.ship_to_build == 1 and self.creds >= 6: return True
+        else: return False
+
     def determine_availible_ship_classes(self):
-        if self.ship_to_build == 2 and self.creds >= 6: self.ship_to_build = 1
-        elif self.ship_to_build == 1 and self.creds >= 12: self.ship_to_build = 2
-        return self.ship_to_build
+        if self.ship_to_build == 2: return 1
+        elif self.ship_to_build == 1: return 2
 
     def create_ship(self, ship_class, ID, position):
         if ship_class == 1: return Scout(self, ID, position, self.grid_size, True)
