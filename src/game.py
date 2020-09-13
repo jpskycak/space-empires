@@ -66,12 +66,12 @@ class Game:
         self.state_obsolete()
         self.player_has_not_won = True
         while self.check_if_player_has_won() and turn <= self.max_turns:
-            self.log.log_info(turn)
             self.complete_turn(turn)
+            self.log.log_info(turn)
             turn += 1
         if self.players_dead >= (len(self.board.players) - 1):
             self.player_has_won()
-
+            
     def player_has_won(self):
         self.state_obsolete()
         for player in self.board.players:

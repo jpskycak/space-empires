@@ -110,9 +110,10 @@ class Player:
                     print('Player', self.player_number, "couldn't maintain their", ship.name)
 
     def screen_ships(self, ships_at_x_y, board):
-        #print('ships_at_x_y', ships_at_x_y)
+        print('ships_at_x_y', ships_at_x_y)
         players = self.get_players_in_list(ships_at_x_y)
-        player_ships = [[ship for ship in ships_at_x_y if ship.player == player] for player in players]
+        player_ships = [[ship for ship in ships_at_x_y] for player in players]
+        print('player_ships', player_ships)
         for ships_1 in player_ships:
             for ships_2 in player_ships[player_ships.index(ships_1):player_ships.index(ships_1) + 1]:
                 while len(ships_1) > len(ships_2):

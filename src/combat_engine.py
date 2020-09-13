@@ -1,6 +1,9 @@
 import random
 from board import Board
-
+from unit.decoy import Decoy
+from unit.colony_ship import Colony_Ship
+from unit.colony import Colony
+from unit.miner import Miner
 
 class CombatEngine:
     def __init__(self, board, game, grid_size, asc_or_dsc):
@@ -15,23 +18,27 @@ class CombatEngine:
         print('asc_or_dsc', asc_or_dsc)
 
     def complete_all_combats(self, ships):
-        while self.more_than_one_player_left_fighting(ships):
-            #print('order 69', ships)
-            attacking_ship = ships[0]
-            defending_ship = self.get_next_enemy_ship(ships[0:], attacking_ship)
-            #print('attacking_ship', attacking_ship)
-            #print('defending_ship', defending_ship) 
-            if defending_ship != None:
+        print('\nships', ships)
+        fixed_ships = [ship for ship in ships if not isinstance(ship, Colony) and not isinstance(ship, Colony_Ship) and not isinstance(ship, Decoy) and not isinstance(ship, Miner)]
+        while self.more_than_one_player_left_fighting(fixed_ships):
+            print('\norder 69', fixed_ships)
+            attacking_ship = fixed_ships[0]
+            defending_ship = self.get_next_enemy_ship(fixed_ships[0:], attacking_ship)
+            print('attacking_ship', attacking_ship)
+            print('defending_ship', defending_ship) 
+            if defending_ship != None and attacking_ship != None:
                 ship_who_won = self.start_fight(attacking_ship, defending_ship)  # make 'em fight
-                self.remove_loser_ship(ships, attacking_ship, defending_ship, ship_who_won)
+                self.remove_loser_ship(fixed_ships, attacking_ship, defending_ship, ship_who_won)
                 
     def remove_loser_ship(self, ships, attacking_ship, defending_ship, ship_who_won):
         if ship_who_won == 1:
-            defending_ship.status = 'Deceased'
+            print(defending_ship in ships)
+            print(defending_ship in defending_ship.player.ships)
             defending_ship.player.ships.remove(defending_ship)
             ships.remove(defending_ship)
-        else:
-            attacking_ship.status = 'Deceased'
+        else: 
+            print(attacking_ship in ships)
+            print(attacking_ship in attacking_ship.player.ships)
             attacking_ship.player.ships.remove(attacking_ship)
             ships.remove(attacking_ship)
 
@@ -107,8 +114,9 @@ class CombatEngine:
         for x in range(0, self.grid_size + 1):
             for y in range(0, self.grid_size + 1):
                 if self.is_a_possible_fight_at_x_y(x, y):
+                    #print('self.board.ships_dict[(x, y)]', self.board.ships_dict[(x, y)])
                     positions_of_ships[(x, y)] = self.game.player.screen_ships(self.board.ships_dict[(x, y)], self.board)
-                    #print('positions_of_ships[(x, y)]', positions_of_ships[(x, y)])
+                    print('positions_of_ships[(x, y)]', positions_of_ships[(x, y)])
         return positions_of_ships
 
     def is_a_possible_fight_at_x_y(self, x, y):

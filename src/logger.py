@@ -40,7 +40,7 @@ class Logger:
             player_string = 'Player: ' + str(player.player_number) + '\nStatus: ' + str(player.status) + '\n'
             self.active_file.write(player_string)
             for ship in player.ships:
-                ship_string = str(ship.name) + ' Ship ID: ' + str(ship.ID) + ' Position: [' + str(ship.x) + ',' + str(ship.y) + '] \n'
+                ship_string = str(ship.name) + ': Position: [' + str(ship.x) + ',' + str(ship.y) + '] \n'
                 self.active_file.write(ship_string)
 
             if log_colonies:
