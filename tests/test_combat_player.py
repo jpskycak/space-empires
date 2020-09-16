@@ -14,7 +14,7 @@ log_1 = Logger()
 log_1.get_current_active_file('logs')  # get current file
 
 log_1.get_correct_example_file(
-    'test_logs/asc_combat_player_correct_log.txt')  # ingest correct test
+    'test_logs/asc_combat_player_log.txt')  # ingest correct test
 print('')
 if log_1.compare_test_and_example():  # should give assert error if they aren't the same and give the line the test and the correct example are different
     print('Ascending Die Combat Player Works!!!')
@@ -32,7 +32,7 @@ log_2 = Logger()
 log_2.get_current_active_file('logs')  # get current file
 
 log_2.get_correct_example_file(
-    'test_logs/dsc_combat_player_correct_log.txt')  # ingest correct test
+    'test_logs/dsc_combat_player_log.txt')  # ingest correct test
 print('')
 if log_2.compare_test_and_example():  # should give assert error if they aren't the same and give the line the test and the correct example are different
     print('Descending Die Combat Player Works!!!')

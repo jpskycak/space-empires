@@ -1,0 +1,30 @@
+Turn: 1
+Player: 1
+Status: Playing
+Scout: Position: [2,2] 
+Scout: Position: [2,2] 
+Scout: Position: [2,2] 
+Colony Ship: Position: [2,2] 
+Colony Ship: Position: [2,2] 
+Colony Ship: Position: [2,2] 
+
+Player: 2
+Status: Playing
+Colony Ship: Position: [2,2] 
+Colony Ship: Position: [2,2] 
+Colony Ship: Position: [2,2] 
+Destroyer: Position: [2,5] 
+
+Turn: 2
+Player: 1
+Status: Playing
+Scout: Position: [2,2] 
+Colony Ship: Position: [2,2] 
+Colony Ship: Position: [2,2] 
+Colony Ship: Position: [2,2] 
+
+Player: 2
+Status: Playing
+Colony Ship: Position: [2,2] 
+Colony Ship: Position: [2,2] 
+Colony Ship: Position: [2,2] 

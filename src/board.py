@@ -41,7 +41,7 @@ class Board:
         for i in range(0, self.grid_size + 1):
             for j in range(0, self.grid_size + 1):
                 # 1,2 is a planet and 3,4,5,6 are asteroids
-                if not [i, j] == self.player_home_bases[0] or not [i, j] == self.player_home_bases[1]:
+                if [i, j] != self.player_home_bases[0] and [i, j] != self.player_home_bases[1]:
                     planet_or_asteroid = self.get_die_roll()
                     if planet_or_asteroid <= 2:
                         self.misc_dict[(i, j)] = self.create_planet([i, j])

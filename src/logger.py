@@ -19,7 +19,7 @@ class Logger:
             self.active_file_name = path + name + '.txt'
         self.active_file = open(self.active_file_name, 'w+')
 
-    def get_current_active_file(self, path, name=None):
+    def get_current_active_file(self, path, name=None, ):
         #print(os.getcwd())  # what directory ur in (for debugging)
         new_log_number = sum([len(files) for r, d, files in os.walk(path)])
         if name == None:
@@ -60,4 +60,10 @@ class Logger:
         return self.active_file.read() # return contents of file
 
     def compare_test_and_example(self): # I couldn't find anyway to do this other than using filecmp
-        return filecmp.cmp(self.active_file_name, self.correct_example_file_path, shallow=False)
+        active_file = self.active_file.readlines()
+        correct_file = self.correct_file.readlines()
+        for active, correct in zip(active_file, correct_file):
+            if active != correct:
+                return False
+        return True
+        #return filecmp.cmp(self.active_file_name, self.correct_example_file_path, shallow=False)

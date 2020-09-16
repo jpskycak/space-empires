@@ -70,6 +70,7 @@ class Player:
             ship_ID = len(self.ships) + 1
             ship = self.create_ship(self.ship_to_build, ship_ID, position)
             self.ship_to_build = self.change_ship_to_build()
+            print('cp', self.creds)
             if ship.cost <= self.creds:
                 self.ships.append(ship)
                 self.creds -= ship.cost
