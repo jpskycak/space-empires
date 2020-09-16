@@ -12,13 +12,8 @@ Destroyer Ship: Position: [2,4]
 Turn: 2
 Player: 1
 Status: Playing
-Scout Ship: Position: [2,2] 
-Destroyer Ship: Position: [2,0]
-Scout Ship: Position: [2,0] 
-Destroyer Ship: Position: [2,0]
 
 Player: 2
 Status: Playing
-Scout Ship: Position: [2,4] 
 Destroyer Ship: Position: [2,4]
 

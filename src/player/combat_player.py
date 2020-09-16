@@ -61,7 +61,7 @@ class CombatPlayer(Player):
         if turn == 1:
             if self.ship_size_tech < 6:  # biggest ship size that you can build
                 self.ship_size_tech += 1
-                self.creds -= 5 * self.ship_size_tech + 10
+                self.creds -= 10
                 print('Player', self.player_number, "upgraded their max building size from", self.ship_size_tech - 1, 'to', self.ship_size_tech)
         else:
             while self.can_upgrade():
@@ -103,13 +103,12 @@ class CombatPlayer(Player):
                 #ship.move_to_nearest_planet(self.board.misc_dict, Planet) # this is for laters
 
     def can_build_ships(self):
-        if self.ship_to_build == 2 and self.creds >= 12: return True
+        if self.ship_to_build == 2 and self.creds >= 9 and self.ship_size_tech >= 1: return True
         elif self.ship_to_build == 1 and self.creds >= 6: return True
         else: return False
 
     def determine_availible_ship_classes(self):
-        if self.ship_to_build == 2: return 1
-        elif self.ship_to_build == 1: return 2
+        return self.ship_to_build
 
     def create_ship(self, ship_class, ID, position):
         if ship_class == 1: return Scout(self, ID, position, self.grid_size, True)

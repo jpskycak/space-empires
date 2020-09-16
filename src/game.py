@@ -65,12 +65,12 @@ class Game:
         turn = 1
         self.state_obsolete()
         self.player_has_not_won = True
+        print('---------------------------------------------')
         while self.check_if_player_has_won() and turn <= self.max_turns:
             self.complete_turn(turn)
             self.log.log_info(turn)
             turn += 1
-        if self.players_dead >= (len(self.board.players) - 1):
-            self.player_has_won()
+        self.player_has_won()
             
     def player_has_won(self):
         self.state_obsolete()
@@ -98,12 +98,13 @@ class Game:
         self.complete_combat_phase()
         self.state_obsolete()
         print('--------------------------------------------------')
-        print('Economic Phase')
-        self.complete_economic_phase(turn)
-        for player in self.board.players:
-            print('Player', player.player_number, 'Has', player.creds, 'creds extra after the economic phase.')
-        self.state_obsolete()
-        print('--------------------------------------------------')
+        if turn < self.max_turns:
+            print('Economic Phase')
+            self.complete_economic_phase(turn)
+            for player in self.board.players:
+                print('Player', player.player_number, 'Has', player.creds, 'creds extra after the economic phase.')
+            self.state_obsolete()
+            print('--------------------------------------------------')
         self.board.update_board()
 
     # combat functions
@@ -125,6 +126,8 @@ class Game:
         for player in self.board.players:
             player.creds += player.income()
             player.maintenance()
+            if turn == 1:
+                player.upgrade(turn)
             player.build_fleet(turn)
 
     # misc functions

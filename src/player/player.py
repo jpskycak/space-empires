@@ -63,12 +63,13 @@ class Player:
                 total_ship_yards_at_position += self.ship_yard_tech
 
     def build_fleet(self, turn = 0):
-        print('building a fleet')
+        #print('building a fleet')
         position = self.find_random_ship_yard().position
         while self.can_build_ships():
             self.ship_to_build = self.determine_availible_ship_classes()
             ship_ID = len(self.ships) + 1
             ship = self.create_ship(self.ship_to_build, ship_ID, position)
+            self.ship_to_build = self.change_ship_to_build()
             if ship.cost <= self.creds:
                 self.ships.append(ship)
                 self.creds -= ship.cost
@@ -79,6 +80,10 @@ class Player:
             return True
         else:
             return False
+
+    def change_ship_to_build(self):
+        if self.ship_to_build == 2: return 1
+        elif self.ship_to_build == 1: return 2
 
     def income(self):
         income = 0
@@ -110,10 +115,10 @@ class Player:
                     print('Player', self.player_number, "couldn't maintain their", ship.name)
 
     def screen_ships(self, ships_at_x_y, board):
-        print('ships_at_x_y', ships_at_x_y)
+        #print('ships_at_x_y', ships_at_x_y)
         players = self.get_players_in_list(ships_at_x_y)
         player_ships = [[ship for ship in ships_at_x_y] for player in players]
-        print('player_ships', player_ships)
+        #print('player_ships', player_ships)
         for ships_1 in player_ships:
             for ships_2 in player_ships[player_ships.index(ships_1):player_ships.index(ships_1) + 1]:
                 while len(ships_1) > len(ships_2):

@@ -20,7 +20,7 @@ class Board:
             self.rolls = [1, 2, 3, 4, 5, 6]
         elif asc_or_dsc == 'dsc':
             self.rolls = [6, 5, 4, 3, 2, 1]
-        print('asc_or_dsc', asc_or_dsc)
+        #print('asc_or_dsc', asc_or_dsc)
 
     def update_board(self):
         for x in range(0, self.grid_size + 1):
@@ -61,37 +61,32 @@ class Board:
         player.colonies.append(Colony(self, len(player.colonies) + 1, position, self.grid_size))
 
     # combat stuffs
-    def order_list_of_ships_at_x_y(self, dictionary, x, y):
-        ships_arr = []
-        for (dict_x, dict_y), ships in dictionary:  # array of ships
-            for ship in ships:
-                if dict_x == x and dict_y == y:  # if it can fight
-                    if not isinstance(ship, Colony_Ship) and not isinstance(ship, Decoy) and not isinstance(ship, Miner) and not isinstance(ship, Colony):
-                        ships_arr.append(ship)
-                    else:  # if not then die
-                        ship.player.ships.remove(ship)
-        ordered_ships_arr = self.simple_sort(ships_arr)
-        #print('ordered_ships_arr', ordered_ships_arr)
-        return ordered_ships_arr
-
-
-    def simple_sort(self, arr):  # merge sort
-        sorted_arr = []
-        while len(arr) > 0:
-            sorted_arr.append(self.max_value(arr))
-            arr.remove(self.max_value(arr))
+    def simple_sort(self, arr):
+        fixed_arr, sorted_arr = [ship for ship in arr if self.if_it_can_fight(ship)], []
+        while len(fixed_arr) > 0:
+            sorted_arr.append(self.max_value(fixed_arr))
+            fixed_arr.remove(self.max_value(fixed_arr))
         return sorted_arr
 
     def max_value(self, arr):
         max_value = arr[0]
-        if len(arr) >= 3:
-            for i in range(1, len(arr)):
-                if arr[i].fighting_class > max_value.fighting_class:
-                    max_value = arr[i]
-        elif len(arr) == 2:
-            if arr[1].fighting_class > max_value.fighting_class:
-                max_value = arr[1]
+        for ship in arr[1:]:
+            if self.ship_1_fires_first(ship, max_value):
+                max_value = ship
         return max_value
+
+    def if_it_can_fight(self, ship): return not isinstance(ship, Colony_Ship) and not isinstance(ship, Decoy) and not isinstance(ship, Miner) and not isinstance(ship, Colony)
+    
+    def ship_1_fires_first(self, ship_1, ship_2):
+        if ship_1.fighting_class > ship_2.fighting_class: return True
+        elif ship_1.fighting_class < ship_2.fighting_class: return False
+        else:
+            if ship_1.attack_tech > ship_2.attack_tech: return True
+            elif ship_1.attack_tech < ship_2.attack_tech: return False
+            else:
+                if ship_1.attack > ship_2.attack: return True
+                elif ship_1.attack < ship_2.attack: return False
+                else: return True
 
     def get_die_roll(self):
         if self.dice_roll_index == 5:
@@ -117,9 +112,7 @@ class Asteroid:
         self.position = position
         self.x = position[0]
         self.y = position[1]
-        self.tier = tier  # type of ore
-        self.size = size  # scalar for tier
-        # ex a tier 5 size 3 asteroird gives 15 creds while a tier 3 size 2 asteroid give 6 creds
+        self.income = 5
 
 
 
