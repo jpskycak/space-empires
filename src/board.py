@@ -62,7 +62,12 @@ class Board:
 
     # combat stuffs
     def simple_sort(self, arr):
-        fixed_arr, sorted_arr = [ship for ship in arr if self.if_it_can_fight(ship)], []
+        fixed_arr, sorted_arr = [], []
+        for ship in arr:
+            if self.if_it_can_fight(ship):
+                fixed_arr.append(ship)
+            else:
+                ship.player.ships.remove(ship)
         while len(fixed_arr) > 0:
             sorted_arr.append(self.max_value(fixed_arr))
             fixed_arr.remove(self.max_value(fixed_arr))
