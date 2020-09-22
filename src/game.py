@@ -25,12 +25,13 @@ from unit.carrier import Carrier
 
 
 class Game:
-    def __init__(self, grid_size, asc_or_dsc, max_turns = 1000):
+    def __init__(self, grid_size, asc_or_dsc, create_planets = False, max_turns = 1000):
         self.grid_size = grid_size  # ex [5,5]
         self.game_won = False
         self.players_dead = 0
         self.board = Board(grid_size, asc_or_dsc)
         self.max_turns = max_turns
+        self.create_planets = create_planets
         self.player = Player((0, 0), self.grid_size, '0', 'black', self.board)
         self.combat_engine = CombatEngine(self.board, self, self.grid_size, asc_or_dsc)
         self.log = Logger(self.board)
@@ -38,7 +39,7 @@ class Game:
     # main functions
     def initialize_game(self):
         self.board.players = self.create_players()
-        self.board.create_planets_and_asteroids()
+        self.board.create_planets_and_asteroids(self.create_planets)
         self.log.get_next_active_file('logs')
 
     def create_players(self):
@@ -46,11 +47,11 @@ class Game:
         colors = ['Blue', 'Red', 'Purple', 'Green']
         players = []
         for i in range(0, 2):
-            type_of_player = 3
+            type_of_player = 1
             #print('type_of_player', type_of_player)
             if type_of_player == 1:
                 players.append(DumbPlayer(
-                    starting_positions[i], self.grid_size, i + 1, colors[i]))
+                    starting_positions[i], self.grid_size, i + 1, colors[i], self.board))
             if type_of_player == 2:
                 players.append(RandomPlayer(
                     starting_positions[i], self.grid_size, i + 1, colors[i]))

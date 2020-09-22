@@ -40,12 +40,10 @@ class Unit:
         # 0 is up   1 is right    2 is down   3 is left
         if self.can_move:
             for i in range(0, len(self.movement_tech)):
-
                 for _ in range(0, self.movement_tech[i]):
-
-                    if self.x < self.grid_size - 1:
+                    if self.x < self.grid_size:
                         self.x += 1
-                    elif self.x >= self.grid_size - 1:
+                    elif self.x > self.grid_size:
                         self.x -= 1
 
     def random_move(self):

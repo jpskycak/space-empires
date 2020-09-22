@@ -3,7 +3,7 @@ sys.path.append('src')
 from logger import Logger
 from game import Game
 
-game_1 = Game(5, 'asc', max_turns = 2)
+game_1 = Game(5, 'asc', max_turns = 4)
 print('---------------------------------------------')
 logs = Logger(game_1.board)
 game_1.initialize_game()
