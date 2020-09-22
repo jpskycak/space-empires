@@ -3,7 +3,7 @@ sys.path.append('src')
 from logger import Logger
 from game import Game
 
-game_1 = Game(5, 'asc', max_turns = 4)
+game_1 = Game(5, 'asc', 3, max_turns = 4)
 print('---------------------------------------------')
 logs = Logger(game_1.board)
 game_1.initialize_game()
@@ -21,7 +21,7 @@ if log_1.compare_test_and_example():  # should give assert error if they aren't 
 else:
     print('Ascending Die Combat Player doenst work...')
 
-game_2 = Game(5, 'dsc', max_turns=2)
+game_2 = Game(5, 'dsc', 3, max_turns=2)
 print('---------------------------------------------')
 logs = Logger(game_2.board)
 game_2.initialize_game()
