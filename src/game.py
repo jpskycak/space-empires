@@ -33,14 +33,14 @@ class Game:
         self.max_turns = max_turns
         self.create_planets = create_planets
         self.type_of_player = type_of_player
-        self.player = Player((0, 0), self.grid_size, '0', 'black', self.board)
+        self.player = Player((0, 0), self.grid_size, '0', 'black', self.board, create_planets)
         self.combat_engine = CombatEngine(self.board, self, self.grid_size, asc_or_dsc)
         self.log = Logger(self.board)
 
     # main functions
     def initialize_game(self):
         self.board.players = self.create_players()
-        self.board.create_planets_and_asteroids(self.create_planets)
+        self.board.create_planets_and_asteroids(self.player.create_planets)
         self.log.get_next_active_file('logs')
 
     def create_players(self):
@@ -51,13 +51,13 @@ class Game:
             #print('type_of_player', type_of_player)
             if self.type_of_player == 1:
                 players.append(DumbPlayer(
-                    starting_positions[i], self.grid_size, i + 1, colors[i], self.board))
+                    starting_positions[i], self.grid_size, i + 1, colors[i], self.board, self.create_planets))
             if self.type_of_player == 2:
                 players.append(RandomPlayer(
                     starting_positions[i], self.grid_size, i + 1, colors[i]))
             if self.type_of_player == 3:
                 players.append(CombatPlayer(
-                    starting_positions[i], self.grid_size, i + 1, colors[i], self.board))
+                    starting_positions[i], self.grid_size, i + 1, colors[i], self.board, self.create_planets))
             players[i].build_fleet()
 
         return players

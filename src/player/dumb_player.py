@@ -22,8 +22,8 @@ from player.player import Player
 
 
 class DumbPlayer(Player):
-    def __init__(self, position, grid_size, player_number, player_color, board):
-        super().__init__(position, grid_size, player_number, player_color, board)
+    def __init__(self, position, grid_size, player_number, player_color, board, create_planets):
+        super().__init__(position, grid_size, player_number, player_color, board, create_planets)
         self.type = 'Dumb Player'
         self.creds = 0
         self.status = 'Playing'
@@ -57,6 +57,7 @@ class DumbPlayer(Player):
         self.ship_size_tech = 0
         self.fighting_class_tech = 0
         self.movement_tech_upgrade_number = 0
+		self.create_planets = create_planets
 
     def upgrade(self, turn):
         self.build_fleet()
