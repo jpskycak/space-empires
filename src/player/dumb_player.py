@@ -1,36 +1,34 @@
+from player.player import Player
+from board import Board
+from unit.unit import Unit
+from unit.scout import Scout
+from unit.destroyer import Destroyer
+from unit.cruiser import Cruiser
+from unit.battle_cruiser import BattleCruiser
+from unit.battleship import Battleship
+from unit.dreadnaught import Dreadnaught
+from unit.colony_ship import Colony_Ship
+from unit.colony import Colony
+from unit.ship_yard import Ship_Yard
+from unit.base import Base
+from unit.miner import Miner
+from unit.decoy import Decoy
+from unit.carrier import Carrier
 import random
 import sys
 sys.path.append('src')
-from unit.carrier import Carrier
-from unit.decoy import Decoy
-from unit.miner import Miner
-from unit.base import Base
-from unit.ship_yard import Ship_Yard
-from unit.colony import Colony
-from unit.colony_ship import Colony_Ship
-from unit.dreadnaught import Dreadnaught
-from unit.battleship import Battleship
-from unit.battle_cruiser import BattleCruiser
-from unit.cruiser import Cruiser
-from unit.destroyer import Destroyer
-from unit.scout import Scout
-from unit.unit import Unit
-from board import Board
-from player.player import Player
-
-
 
 
 class DumbPlayer(Player):
-    def __init__(self, position, grid_size, player_number, player_color, board, create_planets):
-        super().__init__(position, grid_size, player_number, player_color, board, create_planets)
+    def __init__(self, position, grid_size, player_number, player_color, board, can_colonize):
+        super().__init__(position, grid_size, player_number, player_color, board, can_colonize)
         self.type = 'Dumb Player'
         self.creds = 0
         self.status = 'Playing'
         self.death_count = 0  # if winCount = amount of units self.lose = true
         self.player_number = player_number
         self.player_color = player_color
-        # starts out with 3 scouts and 3 colony ships later it would be 3 miners
+# starts out with 3 scouts and 3 colony ships later it would be 3 miners
         self.ships = [
             Scout(self, 1, position, self.grid_size, True),
             Scout(self, 2, position, self.grid_size, True),
@@ -45,7 +43,8 @@ class DumbPlayer(Player):
             Ship_Yard(self, 3, position, self.grid_size, False),
             Ship_Yard(self, 4, position, self.grid_size, False)
         ]
-        self.home_base = Colony(self, 1, position, self.grid_size, home_base = True)
+        self.home_base = Colony(
+            self, 1, position, self.grid_size, home_base=True)
         self.colonies = []
         self.starting_position = position
         self.build_fleet()
@@ -57,7 +56,7 @@ class DumbPlayer(Player):
         self.ship_size_tech = 0
         self.fighting_class_tech = 0
         self.movement_tech_upgrade_number = 0
-		self.create_planets = create_planets
+        self.can_colonize = can_colonize
 
     def upgrade(self, turn):
         self.build_fleet()
@@ -100,7 +99,7 @@ class DumbPlayer(Player):
     def determine_availible_ship_classes(self):
         if self.creds >= 6 and self.ship_size_tech >= 0:
             return 1
-            
+
         else:
             return None
 
