@@ -20,9 +20,8 @@ sys.path.append('src')
 
 
 class DumbPlayer(Player):
-    def __init__(self, position, grid_size, player_number, player_color, board, will_colonize):
-        super().__init__(position, grid_size, player_number,
-                         player_color, board, will_colonize)
+    def __init__(self, position, grid_size, player_number, player_color, board):
+        super().__init__(position, grid_size, player_number, player_color, board)
         self.type = 'Dumb Player'
         self.creds = 0
         self.status = 'Playing'
@@ -57,7 +56,9 @@ class DumbPlayer(Player):
         self.ship_size_tech = 0
         self.fighting_class_tech = 0
         self.movement_tech_upgrade_number = 0
-        self.will_colonize = will_colonize
+
+    def will_colonize(self):
+        return False
 
     def upgrade(self, turn):
         self.build_fleet()

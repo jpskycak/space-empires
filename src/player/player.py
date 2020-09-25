@@ -17,7 +17,7 @@ from unit.carrier import Carrier
 
 
 class Player:
-    def __init__(self, position, grid_size, player_number, player_color, board, will_colonize):
+    def __init__(self, position, grid_size, player_number, player_color, board):
         self.creds = 0
         self.status = 'Playing'
         self.death_count = 0  # if winCount = amount of units self.lose = true
@@ -53,7 +53,9 @@ class Player:
         self.movement_tech_upgrade_number = 0
         self.ship_to_build = 2
         self.board = board
-        self.will_colonize = will_colonize
+
+    def will_colonize(self):
+        return False
 
     def find_random_ship_yard(self):
         return self.ship_yards[random.randint(0, len(self.ship_yards) - 1)]
@@ -149,7 +151,7 @@ class Player:
     # check stuffs
     def check_colonization(self, board):
         print('check colonization')
-        if self.will_colonize:
+        if self.will_colonize():
             for ship in self.ships:
                 if isinstance(ship, Colony_Ship):
                     for planet in board.planets:

@@ -25,7 +25,7 @@ from unit.carrier import Carrier
 
 
 class Game:
-    def __init__(self, grid_size, asc_or_dsc, type_of_player, will_colonize=False, max_turns=1000):
+    def __init__(self, grid_size, asc_or_dsc, type_of_player, max_turns=1000):
         self.grid_size = grid_size  # ex [5,5]
         self.game_won = False
         self.players_dead = 0
@@ -33,7 +33,7 @@ class Game:
         self.max_turns = max_turns
         self.type_of_player = type_of_player
         self.player = Player((0, 0), self.grid_size, '0',
-                             'black', self.board, will_colonize)
+                             'black', self.board)
         self.combat_engine = CombatEngine(
             self.board, self, self.grid_size, asc_or_dsc)
         self.log = Logger(self.board)
@@ -53,13 +53,13 @@ class Game:
             #print('type_of_player', type_of_player)
             if self.type_of_player == 1:
                 players.append(DumbPlayer(
-                    starting_positions[i], self.grid_size, i + 1, colors[i], self.board, self.player.will_colonize))
+                    starting_positions[i], self.grid_size, i + 1, colors[i], self.board))
             if self.type_of_player == 2:
                 players.append(RandomPlayer(
                     starting_positions[i], self.grid_size, i + 1, colors[i]))
             if self.type_of_player == 3:
                 players.append(CombatPlayer(
-                    starting_positions[i], self.grid_size, i + 1, colors[i], self.board, self.player.will_colonize))
+                    starting_positions[i], self.grid_size, i + 1, colors[i], self.board))
             players[i].build_fleet()
 
         return players
