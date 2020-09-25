@@ -21,8 +21,8 @@ sys.path.append('src')
 
 
 class CombatPlayer(Player):
-    def __init__(self, position, grid_size, player_number, player_color, board, can_colonize):
-        super().__init__(position, grid_size, player_number, player_color, board, can_colonize)
+    def __init__(self, position, grid_size, player_number, player_color, board, will_colonize):
+        super().__init__(position, grid_size, player_number, player_color, board, will_colonize)
         self.type = 'Combat Player'
         self.creds = 0
         self.status = 'Playing'
@@ -56,7 +56,7 @@ class CombatPlayer(Player):
         self.movement_tech_upgrade_number = 0
         self.ship_to_build = 2
         self.board = board
-        self.can_colonize = can_colonize
+        self.will_colonize = will_colonize
 
     def upgrade(self, turn):  # actual function should be in here because you can only upgrade new ships not ones in the field
         # print('upgrading')

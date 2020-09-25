@@ -25,15 +25,17 @@ from unit.carrier import Carrier
 
 
 class Game:
-    def __init__(self, grid_size, asc_or_dsc, type_of_player, can_colonize = False, max_turns = 1000):
+    def __init__(self, grid_size, asc_or_dsc, type_of_player, will_colonize=False, max_turns=1000):
         self.grid_size = grid_size  # ex [5,5]
         self.game_won = False
         self.players_dead = 0
         self.board = Board(grid_size, asc_or_dsc)
         self.max_turns = max_turns
         self.type_of_player = type_of_player
-        self.player = Player((0, 0), self.grid_size, '0', 'black', self.board, can_colonize)
-        self.combat_engine = CombatEngine(self.board, self, self.grid_size, asc_or_dsc)
+        self.player = Player((0, 0), self.grid_size, '0',
+                             'black', self.board, will_colonize)
+        self.combat_engine = CombatEngine(
+            self.board, self, self.grid_size, asc_or_dsc)
         self.log = Logger(self.board)
 
     # main functions
@@ -43,20 +45,21 @@ class Game:
         self.log.get_next_active_file('logs')
 
     def create_players(self):
-        starting_positions = [[self.grid_size // 2, 0], [self.grid_size // 2, self.grid_size], [0, self.grid_size // 2], [self.grid_size, self.grid_size // 2]]  # players now start at the axis' and not the corners
+        starting_positions = [[self.grid_size // 2, 0], [self.grid_size // 2, self.grid_size], [0, self.grid_size // 2], [
+            self.grid_size, self.grid_size // 2]]  # players now start at the axis' and not the corners
         colors = ['Blue', 'Red', 'Purple', 'Green']
         players = []
         for i in range(0, 2):
             #print('type_of_player', type_of_player)
             if self.type_of_player == 1:
                 players.append(DumbPlayer(
-                    starting_positions[i], self.grid_size, i + 1, colors[i], self.board, self.player.can_colonize))
+                    starting_positions[i], self.grid_size, i + 1, colors[i], self.board, self.player.will_colonize))
             if self.type_of_player == 2:
                 players.append(RandomPlayer(
                     starting_positions[i], self.grid_size, i + 1, colors[i]))
             if self.type_of_player == 3:
                 players.append(CombatPlayer(
-                    starting_positions[i], self.grid_size, i + 1, colors[i], self.board, self.player.can_colonize))
+                    starting_positions[i], self.grid_size, i + 1, colors[i], self.board, self.player.will_colonize))
             players[i].build_fleet()
 
         return players
@@ -71,7 +74,7 @@ class Game:
             self.log.log_info(turn)
             turn += 1
         self.player_has_won()
-            
+
     def player_has_won(self):
         self.state_obsolete()
         for player in self.board.players:
@@ -102,7 +105,8 @@ class Game:
             print('Economic Phase')
             self.complete_economic_phase(turn)
             for player in self.board.players:
-                print('Player', player.player_number, 'Has', player.creds, 'creds extra after the economic phase.')
+                print('Player', player.player_number, 'Has',
+                      player.creds, 'creds extra after the economic phase.')
             self.state_obsolete()
             print('--------------------------------------------------')
         self.board.update_board()
@@ -160,17 +164,18 @@ class Game:
             for ship in player.ships:
                 print('              ', ship.name, ':', 'Ship ID:',
                       ship.ID, ':', [ship.x, ship.y])
-            
+
             if player.colonies != []:
                 print('')
                 print('          Player Colonies')
                 for colony in player.colonies:
                     print('              ', colony.name, ':', 'Colony ID:',
-                        colony.ID, ':', [colony.x, colony.y])
+                          colony.ID, ':', [colony.x, colony.y])
 
             print('')
             print('          Player Home Base')
-            print('              ', player.home_base.name, ':', 'Colony ID:', player.home_base.ID, ':', [player.home_base.x, player.home_base.y])
+            print('              ', player.home_base.name, ':', 'Colony ID:',
+                  player.home_base.ID, ':', [player.home_base.x, player.home_base.y])
 
             print('')
             print('          Player Ship Yards')
