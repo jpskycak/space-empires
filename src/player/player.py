@@ -1,5 +1,4 @@
 import random
-from board import Board
 from unit.unit import Unit
 from unit.scout import Scout
 from unit.destroyer import Destroyer
@@ -17,7 +16,7 @@ from unit.carrier import Carrier
 
 
 class Player:
-    def __init__(self, position, grid_size, player_number, player_color, board):
+    def __init__(self, position, grid_size, player_number, player_color):
         self.creds = 0
         self.status = 'Playing'
         self.death_count = 0  # if winCount = amount of units self.lose = true
@@ -52,10 +51,6 @@ class Player:
         self.fighting_class_tech = 0
         self.movement_tech_upgrade_number = 0
         self.ship_to_build = 2
-        self.board = board
-
-    def will_colonize(self):
-        return False
 
     def find_random_ship_yard(self):
         return self.ship_yards[random.randint(0, len(self.ship_yards) - 1)]
@@ -81,10 +76,7 @@ class Player:
                 print('Player', self.player_number, 'just bought a', ship.name)
 
     def can_build_ships(self):
-        if self.creds >= 6:
-            return True
-        else:
-            return False
+        return self.creds >= 6
 
     def change_ship_to_build(self):
         if self.ship_to_build == 2:
@@ -143,9 +135,7 @@ class Player:
     def get_players_in_list(self, ships):
         players = []
         for ship in ships:
-            if ship.player not in players:
-                players.append(ship.player)
-
+            if ship.player not in players: players.append(ship.player)
         return players
 
     # check stuffs
@@ -153,21 +143,26 @@ class Player:
         print('check colonization')
         if self.will_colonize():
             for ship in self.ships:
-                if isinstance(ship, Colony_Ship):
-                    for planet in board.planets:
-                        if ship.x == planet.x and ship.y == planet.y and not planet.is_colonized:
-                            print('it do be colonized')
-                            if ship.terraform_tech >= planet.tier - 1:  # if the colony ship can colonize the planet
-                                print('Player', self.player_number, 'just colonized a tier',
-                                      planet.tier, 'planet at co-ords:', (planet.x, planet.y))
-                                board.create_colony(
-                                    self, planet, planet.position)
-                                self.ships.remove(ship)
-                            else:
-                                print('Player', self.player_number, "can't colonize a tier", planet.tier, 'planet at co-ords:',
-                                      (planet.x, planet.y), 'because their terraform tech is', ship.terraform_tech)
+                for planet in board.planets:
+                    if self.will_colonize_planet(ship, planet):
+                        print('it do be colonized')
+                        if ship.terraform_tech >= planet.tier - 1:
+                            print('Player', self.player_number, 'just colonized a tier',planet.tier, 'planet at co-ords:', (planet.x, planet.y))
+                            board.create_colony(self, planet, planet.position)
+                            self.ships.remove(ship)
+                        else:
+                            print('Player', self.player_number, "can't colonize a tier", planet.tier, 'planet at co-ords:', (planet.x, planet.y), 'because their terraform tech is', ship.terraform_tech)
 
-    # helper functions
+    def will_colonize(self):
+        return True
+
+    def will_colonize_planet(self, ship, planet, game = None): #game not yet inputed cause infinite import loop bad
+        return isinstance(ship, Colony_Ship) and ship.x == planet.x and ship.y == planet.y and not planet.is_colonized
+        
+    
+        
+
+    # phat helper functions
     def determine_availible_ship_classes(self):
         if self.creds > 30 and self.ship_size_tech >= 6:
             return random.randint(1, 7)

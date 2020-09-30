@@ -4,6 +4,8 @@ from unit.decoy import Decoy
 from unit.colony_ship import Colony_Ship
 from unit.colony import Colony
 from unit.miner import Miner
+from unit.scout import Scout
+from player.my_betterthanelisbot_player import ColbyStrategyPlayer
 
 class CombatEngine:
     def __init__(self, board, game, grid_size, asc_or_dsc):
@@ -31,6 +33,8 @@ class CombatEngine:
                 hit_or_miss = self.start_fight(attacking_ship, defending_ship)  # make 'em fight
                 if defending_ship.status == 'Deceased':
                     defending_ship.player.ships.remove(defending_ship)
+                    if isinstance(defending_ship.player, ColbyStrategyPlayer) and isinstance(defending_ship, Scout):
+                        defending_ship.player.dead_scout_position = defending_ship.position
                     fixed_ships.remove(defending_ship)
                 ships_that_shot.append(attacking_ship)
             self.dice_roll_index += 1

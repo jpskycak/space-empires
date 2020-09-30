@@ -20,8 +20,8 @@ sys.path.append('src')
 
 
 class DumbPlayer(Player):
-    def __init__(self, position, grid_size, player_number, player_color, board):
-        super().__init__(position, grid_size, player_number, player_color, board)
+    def __init__(self, position, grid_size, player_number, player_color):
+        super().__init__(position, grid_size, player_number, player_color)
         self.type = 'Dumb Player'
         self.creds = 0
         self.status = 'Playing'
@@ -93,9 +93,9 @@ class DumbPlayer(Player):
                     print('Player', self.player_number,
                           "couldn't maintain their", ship.name)
 
-    def move(self):
+    def move(self, move_round):
         for ship in self.ships:
-            ship.dumb_move()
+            ship.dumb_move(move_round)
 
     # helper functions
     def determine_availible_ship_classes(self):
