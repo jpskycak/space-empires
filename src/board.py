@@ -61,8 +61,6 @@ class Board:
         player.colonies.append(Colony(self, len(player.colonies) + 1, position, self.grid_size))
 
     # combat stuffs
-    
-
     def if_it_can_fight(self, ship): return not isinstance(ship, Colony_Ship) and not isinstance(ship, Decoy) and not isinstance(ship, Miner) and not isinstance(ship, Colony)
     
     def ship_1_fires_first(self, ship_1, ship_2):
