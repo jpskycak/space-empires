@@ -88,44 +88,18 @@ class ColbyStrategyPlayer(Player):
     def can_build_dreadnaughts(self):
         return self.finished_basic_upgrades and self.creds >= 24
 
-    def find_closest_ship_yard_to_scout_death(self):
-        closest_ship_yard = self.ship_yards[0]
-        for sy in self.ship_yards[1:]:
-            if self.distance(sy.position, self.dead_scout_position) < self.distance(closest_ship_yard.position, self.dead_scout_position):
-                closest_ship_yard = sy
-        return closest_ship_yard
-
-    def distance(self, pos_1, pos_2):
-        return ((pos_2[0]-pos_1[0]) ** 2 + (pos_2[1]-pos_1[1]) ** 2) ** 0.5
 
     def will_colonize(self):
         return True
 
     def move(self, move_round, board):
         scouts = [ship for ship in self.ships if isinstance(ship, Scout)]
-        if not self.scouts_in_correct_half_line_position(scouts):
+        if not self.decoys_in_correct_half_line_position(scouts):
             for i, scout in enumerate(scouts):
                 scout.move_to_position(self.half_way_line[i], move_round)
         for ship in self.ships not in scouts:
             if isinstance(ship, Colony_Ship):
                 ship.move_to_nearest_planet(board)
-
-    def scouts_in_correct_half_line_position(self, scouts):
-        if len(scouts) < 14:
-            for scout in scouts:
-                if scout.position not in self.half_way_line:
-                    return False
-            return True
-        else: return False
-
-    def decide_ship_movement(self, ship, board, move_round, game = None):
-        new_ship = ship
-        if isinstance(new_ship, Colony_Ship):
-            new_ship.move_to_nearest_planet(board)
-        elif isinstance(new_ship, Scout):
-            half_way_line_index = [ship for ship in self.ships if isinstance(ship, Scout)].index(new_ship)
-            new_ship.move_to_position(self.half_way_line[half_way_line_index], move_round)
-        return new_ship.position
 
 
 

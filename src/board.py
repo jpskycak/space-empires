@@ -8,9 +8,8 @@ from unit.decoy import Decoy
 
 class Board:
     # grid_size is grid size and player_positions is the array of the home bases of players
-    def __init__(self, grid_size, asc_or_dsc):
+    def __init__(self, game, grid_size, asc_or_dsc):
         self.grid_size = grid_size
-        self.players = []
         self.player_home_bases = [
             [self.grid_size // 2, 0], [self.grid_size // 2, self.grid_size]]
         self.ships_dict = {}
@@ -26,7 +25,7 @@ class Board:
         for x in range(0, self.grid_size + 1):
             for y in range(0, self.grid_size + 1):
                 ships_arr = []
-                for player in self.players:
+                for player in self.game.players:
                     for ship in player.ships:
                         if ship.x == x and ship.y == y:
                             ships_arr.append(ship)
@@ -61,24 +60,7 @@ class Board:
         player.colonies.append(Colony(self, len(player.colonies) + 1, position, self.grid_size))
 
     # combat stuffs
-    def simple_sort(self, arr):
-        fixed_arr, sorted_arr = [], []
-        for ship in arr:
-            if self.if_it_can_fight(ship):
-                fixed_arr.append(ship)
-            else:
-                ship.player.ships.remove(ship)
-        while len(fixed_arr) > 0:
-            sorted_arr.append(self.max_value(fixed_arr))
-            fixed_arr.remove(self.max_value(fixed_arr))
-        return sorted_arr
-
-    def max_value(self, arr):
-        max_value = arr[0]
-        for ship in arr[1:]:
-            if self.ship_1_fires_first(ship, max_value):
-                max_value = ship
-        return max_value
+    
 
     def if_it_can_fight(self, ship): return not isinstance(ship, Colony_Ship) and not isinstance(ship, Decoy) and not isinstance(ship, Miner) and not isinstance(ship, Colony)
     
@@ -99,6 +81,25 @@ class Board:
         else:
             self.dice_roll_index += 1
         return self.rolls[self.dice_roll_index]
+
+    def simple_sort(self, arr):
+        fixed_arr, sorted_arr = [], []
+        for ship in arr:
+            if self.if_it_can_fight(ship):
+                fixed_arr.append(ship)
+            else:
+                ship.player.ships.remove(ship)
+        while len(fixed_arr) > 0:
+            sorted_arr.append(self.max_value(fixed_arr))
+            fixed_arr.remove(self.max_value(fixed_arr))
+        return sorted_arr
+
+    def max_value(self, arr):
+        max_value = arr[0]
+        for ship in arr[1:]:
+            if self.ship_1_fires_first(ship, max_value):
+                max_value = ship
+        return max_value    
 
 
 class Planet:

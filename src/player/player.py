@@ -158,9 +158,6 @@ class Player:
 
     def will_colonize_planet(self, ship, planet, game = None): #game not yet inputed cause infinite import loop bad
         return isinstance(ship, Colony_Ship) and ship.x == planet.x and ship.y == planet.y and not planet.is_colonized
-        
-    
-        
 
     # phat helper functions
     def determine_availible_ship_classes(self):

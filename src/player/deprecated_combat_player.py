@@ -55,7 +55,7 @@ class CombatPlayer(Player):
         self.fighting_class_tech = 0
         self.movement_tech_upgrade_number = 0
         self.ship_to_build = 2
-    
+
     def will_colonize(self):
         return False
 
@@ -107,7 +107,7 @@ class CombatPlayer(Player):
     def move(self, move_round):
         for ship in self.ships:
             # if not isinstance(ship, Base) and not isinstance(ship, Colony) and not isinstance(ship, Colony_Ship) and not isinstance(ship, Decoy):
-            ship.move_to_centre(move_round)
+            ship.move_to_center(move_round)
             # elif isinstance(ship, Colony_Ship):
             # ship.move_to_nearest_planet(self.board.misc_dict, Planet) # this is for laters
 

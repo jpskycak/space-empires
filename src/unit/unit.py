@@ -24,7 +24,7 @@ class Unit:
         self.ship_yard_tech = 0
         self.centre = [(self.grid_size) // 2, (self.grid_size) // 2]
 
-    def move_to_centre(self, move_round):
+    def move_to_center(self, move_round):
         if self.can_move:
             for _ in range(0, self.movement_tech[move_round - 1]):
                 if self.x != self.centre[0]:

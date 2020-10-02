@@ -4,9 +4,9 @@ import random
 from board import Board
 from logger import Logger
 from player.player import Player
-from player.dumb_player import DumbPlayer
+from player.deprecated_dumb_player import DumbPlayer
 from player.random_player import RandomPlayer
-from player.combat_player import CombatPlayer
+from player.deprecated_combat_player import CombatPlayer
 from combat_engine import CombatEngine
 from unit.unit import Unit
 from unit.scout import Scout
@@ -40,7 +40,7 @@ class Game:
 
     # main functions
     def initialize_game(self):
-        self.board.players = self.create_players()
+        self.players = self.create_players()
         self.board.create_planets_and_asteroids()
         self.log.get_next_active_file('logs')
 
@@ -77,13 +77,13 @@ class Game:
 
     def player_has_won(self):
         self.state_obsolete()
-        for player in self.board.players:
+        for player in self.players:
             if player.status == 'Playing':
                 self.game_won = True
                 print('Player', player.player_number, 'WINS!')
 
     def check_if_player_has_won(self):
-        for player in self.board.players:
+        for player in self.players:
             if player.home_base.status == 'Deceased':
                 player.status = 'Deceased'
                 return False
@@ -96,22 +96,37 @@ class Game:
         print('Move Phase')
         self.complete_move_phase(turn)
         self.state_obsolete()
+        self.generate_state()
         print('--------------------------------------------------')
         print('Combat Phase')
         self.complete_combat_phase()
         self.state_obsolete()
+        self.generate_state()
         print('--------------------------------------------------')
         if turn < self.max_turns:
             print('Economic Phase')
             self.complete_economic_phase(turn)
-            for player in self.board.players:
+            for player in self.players:
                 print('Player', player.player_number, 'Has',
                       player.creds, 'creds extra after the economic phase.')
             self.state_obsolete()
+            self.generate_state()
             print('--------------------------------------------------')
         self.board.update_board()
 
-    # combat functions
+    def generate_state(self):
+        self.state = {'player' + i: {str(attribute):value if not isinstance(value, list) else str(attribute):{unit.name: {attr: val for attr, val in unit.__dict__.items()} for unit in value} for attribute, value in player.__dict__.items()} for i, player in enumerate(self.players)} #get player states
+        for x in range(0, self.grid_size + 1):
+            for y in range(0, self.grid_size + 1):
+                self.state[(x,y)] = self.board.misc_dict[(x,y)] #get asteroids and etc stuff
+            
+
+    def complete_move_phase(self, turn):
+        for player in self.players:
+            player.check_colonization(self.board)
+            for move_round in range(0, 3):  # 3 rounds of movements
+                player.move(move_round)
+
     def complete_combat_phase(self):
         #print('fighting (combat)')
         possible_fights = self.combat_engine.possible_fights()
@@ -119,15 +134,9 @@ class Game:
         for _, ships in possible_fights.items():
             #print('ships', [ship.name for ship in ships])
             self.combat_engine.complete_all_combats(ships)
-
-    def complete_move_phase(self, turn):
-        for player in self.board.players:
-            player.check_colonization(self.board)
-            for move_round in range(0, 3):  # 3 rounds of movements
-                player.move(move_round)
-
+    
     def complete_economic_phase(self, turn):
-        for player in self.board.players:
+        for player in self.players:
             player.creds += player.income()
             player.maintenance()
             if turn == 1:
@@ -156,7 +165,7 @@ class Game:
         print('Players')
         print('')
 
-        for player in self.board.players:
+        for player in self.players:
             print('     Player:', player.player_number, '| Type:',
                   player.type, '| Status:', player.status)
             print('')
