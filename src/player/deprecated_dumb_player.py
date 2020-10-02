@@ -47,7 +47,6 @@ class DumbPlayer(Player):
             self, 1, position, self.grid_size, home_base=True)
         self.colonies = []
         self.starting_position = position
-        self.build_fleet()
         self.attack_tech = 0
         self.defense_tech = 0
         self.movement_tech = [1, 1, 1]
@@ -105,5 +104,5 @@ class DumbPlayer(Player):
         else:
             return None
 
-    def create_ship(self, ship_class, ID, position):
-        return Scout(self, ID, position, self.grid_size, True)
+    def create_ship(self, ship_class, position):
+        return Scout(self, position, self.grid_size, True)

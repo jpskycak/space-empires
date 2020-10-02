@@ -13,7 +13,7 @@ from unit.base import Base
 from unit.miner import Miner
 from unit.decoy import Decoy
 from unit.carrier import Carrier
-
+from strategies import BestStrategy
 
 class Player:
     def __init__(self, position, grid_size, player_number, player_color):
@@ -51,6 +51,7 @@ class Player:
         self.fighting_class_tech = 0
         self.movement_tech_upgrade_number = 0
         self.ship_to_build = 2
+        self.strategy = BestStrategy(self)
 
     def find_random_ship_yard(self):
         return self.ship_yards[random.randint(0, len(self.ship_yards) - 1)]
@@ -66,8 +67,7 @@ class Player:
         position = self.find_random_ship_yard().position
         while self.can_build_ships():
             self.ship_to_build = self.determine_availible_ship_classes()
-            ship_ID = len(self.ships) + 1
-            ship = self.create_ship(self.ship_to_build, ship_ID, position)
+            ship = self.create_ship(self.ship_to_build, position)
             self.ship_to_build = self.change_ship_to_build()
             print('cp', self.creds)
             if ship.cost <= self.creds:
@@ -84,12 +84,34 @@ class Player:
         elif self.ship_to_build == 1:
             return 2
 
-    def income(self):
-        income = 0
-        for colony in self.colonies:
-            income += colony.income
-        income += self.home_base.income
-        return income
+    def upgrade(self, stat_to_upgrade):
+        if stat_to_upgrade == 1 and self.attack_tech < 3:  # offense
+            self.attack_tech += 1
+            self.creds -= 10 * self.attack_tech
+            print('Player', self.player_number, 'upgraded their attack strength from', self.attack_tech - 1, 'to', self.attack_tech)
+        elif stat_to_upgrade == 2 and self.defense_tech < 3:  # defense
+            self.defense_tech += 1
+            self.creds -= 10 * self.defense_tech
+            print('Player', self.player_number, 'upgraded their defense strength from', self.defense_tech - 1, 'to', self.defense_tech)
+        elif stat_to_upgrade == 3 and self.fighting_class_tech < 3:  # tactics
+            self.fighting_class_tech += 1
+            self.creds -= 5 * self.fighting_class_tech + 10
+            print('Player', self.player_number, 'upgraded their fighting class from', self.fighting_class_tech - 1, 'to', self.fighting_class_tech)
+        elif stat_to_upgrade == 4 and self.movement_tech_upgrade_number < 5:  # speed
+            self.upgrade_movement_tech()
+            print('Player', self.player_number, 'upgraded their movement speed from', self.movement_tech_upgrade_number - 1, 'to', self.movement_tech_upgrade_number)
+        elif stat_to_upgrade == 5 and self.ship_yard_tech < 2:  # ship yard
+            self.ship_yard_tech += 0.5
+            self.creds -= 10 * self.ship_yard_tech
+            print('Player', self.player_number, "upgraded their ship-yard's building size from", self.ship_yard_tech - 1, 'to', self.ship_yard_tech)
+        elif stat_to_upgrade == 6 and self.terraform_tech < 2:  # terraform
+            self.terraform_tech += 1
+            self.creds -= 15 * self.terraform_tech
+            print('Player', self.player_number, "upgraded their ablility to terraform from", self.terraform_tech - 1, 'to', self.terraform_tech)
+        elif stat_to_upgrade == 7 and self.ship_size_tech < 6:  # biggest ship size that you can build
+                self.ship_size_tech += 1
+                self.creds -= 10
+                print('Player', self.player_number, "upgraded their max building size from", self.ship_size_tech - 1, 'to', self.ship_size_tech)
 
     def upgrade_movement_tech(self):
         self.movement_tech_upgrade_number += 1
@@ -105,17 +127,6 @@ class Player:
             self.movement_tech[1] == 3
         print('Player', self.player_number, "upgraded their max movement speed from",
               self.movement_tech_upgrade_number - 1, 'to', self.movement_tech_upgrade_number)
-
-    def maintenance(self):
-        for ship in self.ships:
-            if not isinstance(ship, Base) and not isinstance(ship, Colony) and not isinstance(ship, Colony_Ship) and not isinstance(ship, Decoy):
-                cost = ship.defense_tech + ship.defense + ship.armor
-                if self.creds >= cost:
-                    self.creds -= cost
-                else:
-                    self.ships.remove(ship)
-                    print('Player', self.player_number,
-                          "couldn't maintain their", ship.name)
 
     def screen_ships(self, ships_at_x_y, board):
         #print('ships_at_x_y', ships_at_x_y)
@@ -178,30 +189,30 @@ class Player:
         else:
             return None
 
-    def create_ship(self, ship_class, ID, position):
+    def create_ship(self, ship_class, position):
         if ship_class == 1:
             scout_colony_ship_decoy_or_miner = random.randint(1, 4)
             if scout_colony_ship_decoy_or_miner == 1:
-                return Scout(self, ID, position, self.grid_size, True)
+                return Scout(self, position, self.grid_size, True)
             if scout_colony_ship_decoy_or_miner == 2:
-                return Colony_Ship(self, ID, position, self.grid_size, True)
+                return Colony_Ship(self, position, self.grid_size, True)
             if scout_colony_ship_decoy_or_miner == 3:
-                return Decoy(self, ID, position, self.grid_size, True)
+                return Decoy(self, position, self.grid_size, True)
             if scout_colony_ship_decoy_or_miner == 4:
-                return Miner(self, ID, position, self.grid_size, True)
+                return Miner(self, position, self.grid_size, True)
         elif ship_class == 2:
-            return Destroyer(self, ID, position, self.grid_size, True)
+            return Destroyer(self, position, self.grid_size, True)
         elif ship_class == 3:
-            return Cruiser(self, ID, position, self.grid_size, True)
+            return Cruiser(self, position, self.grid_size, True)
         elif ship_class == 4:
-            return BattleCruiser(self, ID, position, self.grid_size, True)
+            return BattleCruiser(self, position, self.grid_size, True)
         elif ship_class == 5:
-            return Battleship(self, ID, position, self.grid_size, True)
+            return Battleship(self, position, self.grid_size, True)
         elif ship_class == 6:
-            return Dreadnaught(self, ID, position, self.grid_size, True)
+            return Dreadnaught(self, position, self.grid_size, True)
         elif ship_class == 7:
-            return Carrier(self, ID, position, self.grid_size, True)
+            return Carrier(self, position, self.grid_size, True)
         elif ship_class == 8:
-            return Colony_Ship(self, ID, position, self.grid_size, True)
+            return Colony_Ship(self, position, self.grid_size, True)
         else:
-            return Scout(self, ID, position, self.grid_size, True)
+            return Scout(self, position, self.grid_size, True)

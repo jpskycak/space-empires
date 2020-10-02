@@ -2,8 +2,8 @@ from unit.unit import Unit
 
 
 class Base(Unit):
-    def __init__(self, player, ID, position, grid_size, can_move=False, attack_tech=0, defense_tech=0):
-        super().__init__(player, ID, position, grid_size,
+    def __init__(self, player, position, grid_size, can_move=False, attack_tech=0, defense_tech=0):
+        super().__init__(player, position, grid_size,
                          can_move, attack_tech, defense_tech)
         self.name = 'Base'
         self.label = 'Base'

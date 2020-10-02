@@ -12,7 +12,7 @@ from unit.base import Base
 from unit.miner import Miner
 from unit.decoy import Decoy
 from unit.carrier import Carrier
-
+'''
 class DumbStrategy:
     def __init__(self, wutever we need):
         self......
@@ -30,17 +30,12 @@ class CombatStrategy:
         .
         .
         .
-
+'''
 class BestStrategy:
-    def __init__(self, player): #wutever els we need):
-        self.player = player #not gonna be actual player it gonna be the player class for the functions
-        ...
-        ..
-        .
-        .
-        .
+    def __init__(self, player_dict): #wutever els we need):
+        self.player = player #not gonna be actual player it gonna be the player class for the functions its not gonna have any actual data
 
-    def will_colonize_planet(colony_ship, game_state) #game not yet inputed cause infinite import loop bad
+    def will_colonize_planet(self, colony_ship, game_state): #game not yet inputed cause infinite import loop bad
         return True#isinstance(colony_ship, Colony_Ship) and colony_ship.x == planet.x and colony_ship.y == planet.y and not planet.is_colonized
 
     def decide_ship_movement(self, ship, game_state):
@@ -51,7 +46,7 @@ class BestStrategy:
             new_ship.move_to_position(self.half_way_line[half_way_line_index], move_round)
         return new_ship.position
     
-    def decide_purchases(game_state):
+    def decide_purchases(self, game_state):
         if not self.finished_basic_upgrades() and not self.other_player_is_attacking():
             return self.upgrade()
         elif self.finished_basic_upgrades() and not self.other_player_is_attacking():
@@ -63,7 +58,7 @@ class BestStrategy:
         return self.simple_sort(game_state[self.player])[-1]
 
 
-    def decide_which_ship_to_attack(attacking_ship, position, game_state):
+    def decide_which_ship_to_attack(self, attacking_ship, position, game_state):
         return self.strongest_enemy_ship(game_state[position])
 
     def find_closest_ship_yard_to_decoy_death(self):
@@ -102,6 +97,6 @@ class BestStrategy:
                 max_value = ship
         return max_value
 
-    def strongest_enemy_ship(game_state_ship_list):
+    def strongest_enemy_ship(self, game_state_ship_list):
         for ship_attributes in game_state_ship_list:
-            if ship['player']['player_number'] != 
+            if ship['player']['player_number'] != self.player

@@ -15,9 +15,8 @@ from unit.base import Base
 from unit.miner import Miner
 from unit.decoy import Decoy
 from unit.carrier import Carrier
-import random
-import sys
-sys.path.append('src')
+from strategies import BestStrategy
+
 
 
 class ColbyStrategyPlayer(Player):
@@ -55,8 +54,8 @@ class ColbyStrategyPlayer(Player):
         self.fighting_class_tech = 0
         self.movement_tech_upgrade_number = 0
         self.ship_to_build = 2
-        self.half_way_line = [(i, self.grid_size // 2)
-                              for i in range(0, self.grid_size + 1)]
+        self.half_way_line = [(i, self.grid_size // 2) for i in range(0, self.grid_size + 1)]
+        self.strategy = BestStrategy(Player(self.starting_position, self.grid_size, self.player_number, player_color))
 
     def screen_ships(self, ships_at_x_y, board):
         return board.simple_sort(ships_at_x_y)
@@ -66,18 +65,14 @@ class ColbyStrategyPlayer(Player):
         if self.other_player_not_attacking():  # if other player is not attacking
             while self.can_build_colony_ships():
                 position = self.find_random_ship_yard().position
-                ship_ID = len(self.ships) + 1
-                ship = Colony_Ship(self, ship_ID, position,
-                                   self.grid_size, True)
+                ship = Colony_Ship(self, position, self.grid_size, True)
                 self.ships.append(ship)
                 self.creds -= ship.cost
                 print('Player', self.player_number, 'just bought a', ship.name)
         else:  # if other player is attacking
             while self.can_build_dreadnaughts():
                 position = self.find_closest_ship_yard_to_scout_death().position
-                ship_ID = len(self.ships) + 1
-                ship = Dreadnaught(self, ship_ID, position,
-                                   self.grid_size, True)
+                ship = Dreadnaught(self, position, self.grid_size, True)
                 self.ships.append(ship)
                 self.creds -= ship.cost
                 print('Player', self.player_number, 'just bought a', ship.name)
@@ -88,18 +83,8 @@ class ColbyStrategyPlayer(Player):
     def can_build_dreadnaughts(self):
         return self.finished_basic_upgrades and self.creds >= 24
 
-
     def will_colonize(self):
         return True
-
-    def move(self, move_round, board):
-        scouts = [ship for ship in self.ships if isinstance(ship, Scout)]
-        if not self.decoys_in_correct_half_line_position(scouts):
-            for i, scout in enumerate(scouts):
-                scout.move_to_position(self.half_way_line[i], move_round)
-        for ship in self.ships not in scouts:
-            if isinstance(ship, Colony_Ship):
-                ship.move_to_nearest_planet(board)
 
 
 

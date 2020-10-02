@@ -122,8 +122,8 @@ class CombatPlayer(Player):
     def determine_availible_ship_classes(self):
         return self.ship_to_build
 
-    def create_ship(self, ship_class, ID, position):
+    def create_ship(self, ship_class, position):
         if ship_class == 1:
-            return Scout(self, ID, position, self.grid_size, True)
+            return Scout(self, position, self.grid_size, True)
         if ship_class == 2:
-            return Destroyer(self, ID, position, self.grid_size, True)
+            return Destroyer(self, position, self.grid_size, True)

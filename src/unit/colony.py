@@ -2,8 +2,8 @@ from unit.unit import Unit
 
 
 class Colony(Unit):
-    def __init__(self, player, ID, position, grid_size, home_base = False, can_move=False):
-        super().__init__(player, ID, position, grid_size, can_move)
+    def __init__(self, player, position, grid_size, home_base=False, can_move=False):
+        super().__init__(player, position, grid_size, can_move)
         self.player = player
         self.status = 'Alive'
         if home_base:

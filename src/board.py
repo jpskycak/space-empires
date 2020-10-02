@@ -10,6 +10,7 @@ class Board:
     # grid_size is grid size and player_positions is the array of the home bases of players
     def __init__(self, game, grid_size, asc_or_dsc):
         self.grid_size = grid_size
+        self.game = game
         self.player_home_bases = [
             [self.grid_size // 2, 0], [self.grid_size // 2, self.grid_size]]
         self.ships_dict = {}
