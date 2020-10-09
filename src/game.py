@@ -1,5 +1,6 @@
 import random
 from board import Board
+from board import Planet
 from logger import Logger
 from player.player import Player
 from player.deprecated_dumb_player import DumbPlayer
@@ -105,7 +106,7 @@ class Game:
         self.board.update_board()
 
     def generate_state(self, phase, round_ = 0, first_player):
-        self.game_state = {'turn': self.turn, 'phase': phase, 'round': round_, 'player': first_player, 'combat': 'coming soon'}
+        self.game_state = {'turn': self.turn, 'phase': phase, 'round': round_, 'player': first_player, 'combat': 'coming soon to a dank river valley near you | if you get the reference u will soon date a thicc e-girl'}
         players = {}
         for i, player in enumerate(self.players):
             player_attributes = {}

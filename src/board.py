@@ -40,13 +40,13 @@ class Board:
         self.asteroids = []
         for i in range(0, self.grid_size + 1):
             for j in range(0, self.grid_size + 1):
-                # 1,2 is a planet and 3,4,5,6 are asteroids
+                # 1,2 is a planet and 3,4, are asteroids and 5,6 are None
                 if [i, j] != self.player_home_bases[0] and [i, j] != self.player_home_bases[1]:
-                    planet_or_asteroid = self.get_die_roll()
+                    planet_or_asteroid = 1#self.get_die_roll()
                     if planet_or_asteroid <= 2:
                         self.misc_dict[(i, j)] = self.create_planet([i, j])
                         self.planets.append(self.create_planet([i, j]))
-                    elif planet_or_asteroid > 2:
+                    elif planet_or_asteroid > 2 and planet_or_asteroid <= 4:
                         self.misc_dict[(i, j)] = self.create_asteroid([i, j]) 
                         self.asteroids.append(self.create_asteroid([i, j]))
 
