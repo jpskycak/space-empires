@@ -104,18 +104,24 @@ class Game:
             print('--------------------------------------------------')
         self.board.update_board()
 
-    def generate_state(self):
-        self.game_state = {'turn': self.turn}
+    def generate_state(self, phase, round_ = 0, first_player):
+        self.game_state = {'turn': self.turn, 'phase': phase, 'round': round_, 'player': first_player, 'combat': 'coming soon'}
+        players = {}
         for i, player in enumerate(self.players):
             player_attributes = {}
             for attribute, value in player.__dict__.items():
                 for unit in value:
                     if isinstance(value, list) and not isinstance(value[0], int): player_attributes[attribute] = {unit.name: {unit_attribute: unit_value for unit_attribute, unit_value in unit.__dict__.items()} for unit in value}
                     else: player_attributes[attribute] = value
-            self.game_state['player' + i] = player_attributes
+                    players.apend(player_attributes)
+        self.game_state['players'] = players
+        planets = []
         for x in range(0, self.grid_size + 1):
             for y in range(0, self.grid_size + 1):
-                self.game_state[(x,y)] = self.board.misc_dict[(x,y)] #get asteroids and etc stuff
+                if self.has_planets(self.board.misc_dict[(x,y)]):
+                    for planet in [planet for planet in self.board.misc_dict[(x,y)] if isinstance(planet, Planet)]:
+                        planets.append(self.board.misc_dict[(x,y)]) #get asteroids and etc stuff
+        self.game_state['planets'] = planets
 
     def complete_move_phase(self):
         for player in self.players:
