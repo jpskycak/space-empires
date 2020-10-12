@@ -20,7 +20,6 @@ class CombatEngine:
         self.current_roll = self.rolls[self.dice_roll_index]
 
     def complete_all_combats(self, ships):
-        fixed_ships = [ship for ship in ships if not isinstance(ship, Colony) and not isinstance(ship, Colony_Ship) and not isinstance(ship, Decoy) and not isinstance(ship, Miner)]
         for ship in [ship for ship in ships if ship not in fixed_ships]: ship.player.ships.remove(ship)
         ships_that_shot = []
         while self.more_than_one_player_left_fighting(fixed_ships):
@@ -91,7 +90,7 @@ class CombatEngine:
                     for ship in self.board.ships_dict[(x, y)]:
                         if not self.if_it_can_fight(ship):
                             ship.player.ships.remove(ship)
-                    positions_of_ships[(x, y)] = self.game.board.simple_sort(self.board.ships_dict[(x, y)])
+                    positions_of_ships[(x, y)] = [ship for ship in self.game.board.simple_sort(self.board.ships_dict[(x, y)]) if not isinstance(ship, Colony) and not isinstance(ship, Colony_Ship) and not isinstance(ship, Decoy) and not isinstance(ship, Miner)]
         return positions_of_ships
 
     def if_it_can_fight(self, ship): return not isinstance(ship, Colony_Ship) and not isinstance(ship, Decoy) and not isinstance(ship, Miner) and not isinstance(ship, Colony)

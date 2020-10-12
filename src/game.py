@@ -106,7 +106,7 @@ class Game:
         self.board.update_board()
 
     def generate_state(self, phase, round_ = 0, first_player):
-        self.game_state = {'turn': self.turn, 'phase': phase, 'round': round_, 'player': first_player, 'combat': 'coming soon to a dank river valley near you | if you get the reference u will soon date a thicc e-girl'}
+        self.game_state = {'turn': self.turn, 'phase': phase, 'round': round_, 'player': first_player, 'combat': self.generate_combat_array()}
         players = {}
         for i, player in enumerate(self.players):
             player_attributes = {}
@@ -123,6 +123,9 @@ class Game:
                     for planet in [planet for planet in self.board.misc_dict[(x,y)] if isinstance(planet, Planet)]:
                         planets.append(self.board.misc_dict[(x,y)]) #get asteroids and etc stuff
         self.game_state['planets'] = planets
+
+    def generate_combat_array(self):
+        return [{'location': location, 'order': [{'player': ship.player.player_number, 'unit': ship.player.ships.index(ships)} for ships in ships]} for location, ships in self.combat_engine.possible_fights()]
 
     def complete_move_phase(self):
         for player in self.players:
