@@ -106,7 +106,8 @@ class Game:
         self.board.update_board()
 
     def generate_state(self, phase, round_ = 0, first_player):
-        self.game_state = {'turn': self.turn, 'phase': phase, 'round': round_, 'player': first_player, 'combat': self.generate_combat_array()}
+        movement_state = self.generate_movement_state(round_)
+        self.game_state = {'turn': self.turn, 'phase': phase, 'round':movement_state['round'], 'player': first_player, 'combat': self.generate_combat_array()}
         players = {}
         for i, player in enumerate(self.players):
             player_attributes = {}
@@ -127,12 +128,12 @@ class Game:
     def generate_combat_array(self):
         return [{'location': location, 'order': [{'player': ship.player.player_number, 'unit': ship.player.ships.index(ships)} for ships in ships]} for location, ships in self.combat_engine.possible_fights()]
 
+    def generate_movement_state(self, round_):
+        return {'round': round_}
+
     def complete_move_phase(self):
-        for player in self.players:
-            player.check_colonization(self.board)
-            for move_round in range(0, 3):  # 3 rounds of movements
-                for ship in player.ships:
-                    ship.position = player.strategy.decide_ship_movement(ship, self.game_state)
+        self.movement_engine.complete_all_movements(self.game_state)
+        
 
     def complete_combat_phase(self):
         possible_fights = self.combat_engine.possible_fights()
