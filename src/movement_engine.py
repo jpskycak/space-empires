@@ -1,4 +1,4 @@
-class Movement_Engine:
+class MovementEngine:
     def __init__(self, board, game):
         self.board = board
         self.game = game

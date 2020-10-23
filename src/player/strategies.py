@@ -33,7 +33,8 @@ class CombatStrategy:
 '''
 class BestStrategy:
     def __init__(self, player_dict): #wutever els we need):
-        self.player = player #not gonna be actual player it gonna be the player class for the functions its not gonna have any actual data
+        self.player_dict = player_dict #not gonna be actual player it gonna be the player class for the functions its not gonna have any actual data
+        self.player = Player((0, 0), self.grid_size, '0', 'black')
 
     def will_colonize_planet(self, colony_ship, game_state): #game not yet inputed cause infinite import loop bad
         return True#isinstance(colony_ship, Colony_Ship) and colony_ship.x == planet.x and colony_ship.y == planet.y and not planet.is_colonized
@@ -55,8 +56,7 @@ class BestStrategy:
         elif self.finished_basic_upgrades() and self.other_player_is_attacking(): return Dreadnaught
 
     def decide_removals(game_state):
-        return self.simple_sort(game_state[self.player])[-1]
-
+        return self.simple_sort(game_state[self.player_dict])[-1]
 
     def decide_which_ship_to_attack(self, attacking_ship, position, game_state):
         return self.strongest_enemy_ship(game_state[position])
@@ -99,4 +99,4 @@ class BestStrategy:
 
     def strongest_enemy_ship(self, game_state_ship_list):
         for ship_attributes in game_state_ship_list:
-            if ship['player']['player_number'] != self.player
+            if ship['player']['player_number'] != self.player_dict['player_number']: return ship_attributes

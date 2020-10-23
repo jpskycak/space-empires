@@ -1,4 +1,7 @@
 import random
+from strategies import BestStrategy
+import sys
+sys.path.append('src')
 from unit.unit import Unit
 from unit.scout import Scout
 from unit.destroyer import Destroyer
@@ -13,7 +16,7 @@ from unit.base import Base
 from unit.miner import Miner
 from unit.decoy import Decoy
 from unit.carrier import Carrier
-from strategies import BestStrategy
+
 
 class Player:
     def __init__(self, position, grid_size, player_number, player_color):

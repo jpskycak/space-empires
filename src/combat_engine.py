@@ -5,7 +5,7 @@ from unit.colony_ship import Colony_Ship
 from unit.colony import Colony
 from unit.miner import Miner
 from unit.scout import Scout
-from player.my_betterthanelisbot_player import ColbyStrategyPlayer
+from player.mybotisbetterthanelisbot_player import ColbyStrategyPlayer
 
 class CombatEngine:
     def __init__(self, board, game, grid_size, asc_or_dsc):
@@ -19,7 +19,13 @@ class CombatEngine:
             self.rolls = [6, 5, 4, 3, 2, 1]
         self.current_roll = self.rolls[self.dice_roll_index]
 
+    def complete_all_fights(self):
+        possible_fights = self.possible_fights()
+        for _, ships in possible_fights.items():
+            self.complete_all_combats(ships)
+
     def complete_all_combats(self, ships):
+        fixed_ships = [ship for ship in ships if not isinstance(ship, Colony) and not isinstance(ship, Colony_Ship) and not isinstance(ship, Decoy) and not isinstance(ship, Miner)]
         for ship in [ship for ship in ships if ship not in fixed_ships]: ship.player.ships.remove(ship)
         ships_that_shot = []
         while self.more_than_one_player_left_fighting(fixed_ships):
@@ -94,7 +100,6 @@ class CombatEngine:
         return positions_of_ships
 
     def if_it_can_fight(self, ship): return not isinstance(ship, Colony_Ship) and not isinstance(ship, Decoy) and not isinstance(ship, Miner) and not isinstance(ship, Colony)
-
 
     def is_a_possible_fight_at_x_y(self, x, y):
         self.board.update_board()

@@ -1,3 +1,5 @@
+import sys
+sys.path.append('src')
 from player.player import Player
 from board import Board
 from board import Planet

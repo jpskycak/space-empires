@@ -1,3 +1,5 @@
+import sys
+sys.path.append('src')
 from player.player import Player
 from board import Board
 from board import Planet
@@ -16,8 +18,7 @@ from unit.miner import Miner
 from unit.decoy import Decoy
 from unit.carrier import Carrier
 import random
-import sys
-sys.path.append('src')
+
 
 
 class CombatPlayer(Player):
