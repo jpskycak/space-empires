@@ -36,7 +36,7 @@ class CombatEngine:
             defending_ship = self.get_next_enemy_ship(fixed_ships[:index] + fixed_ships[index + 1:], attacking_ship.player)
             if defending_ship != None and attacking_ship != None:
                 hit_or_miss = self.start_fight(attacking_ship, defending_ship)  # make 'em fight
-                if defending_ship.status == 'Deceased':
+                if defending_ship.is_alive:
                     defending_ship.player.ships.remove(defending_ship)
                     if isinstance(defending_ship.player, ColbyStrategyPlayer) and isinstance(defending_ship, Scout):
                         defending_ship.player.dead_scout_position = defending_ship.position
@@ -71,7 +71,7 @@ class CombatEngine:
         if ship_2.armor < 1:
             print("Player", ship_2.player.player_number, "'s unit was destroyed at co-ords", [ship_2.x, ship_2.y])
             print('-------------------------')
-            ship_2.status = 'Deceased'
+            ship_2.is_alive = False
         return hit_or_miss
 
     # helping combat function

@@ -16,7 +16,7 @@ class Unit:
         self.x = position[0]
         self.y = position[1]
         self.grid_size = grid_size
-        self.status = 'Playing'  # for ship yard and other stuffs
+        self.is_alive = True  # for ship yard and other stuffs
         self.can_move = can_move
         self.attack_tech = 0
         self.defense_tech = 0
