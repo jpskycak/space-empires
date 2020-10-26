@@ -87,18 +87,18 @@ class Game:
         print('Turn', self.turn)
         self.check_if_player_has_won()
         print('Move Phase')
-        self.complete_move_phase()
+        self.movement_engine.complete_all_movements(self.board, self.game_state)
         self.state_obsolete()
         self.generate_state()
         print('--------------------------------------------------')
         print('Combat Phase')
-        self.complete_combat_phase()
+        self.combat_engine.complete_all_fights()
         self.state_obsolete()
         self.generate_state()
         print('--------------------------------------------------')
         if self.turn < self.max_turns:
             print('Economic Phase')
-            self.complete_economic_phase()
+            self.economic_engine.complete_all_taxes()()
             for player in self.players:
                 print('Player', player.player_number, 'Has',
                       player.creds, 'creds extra after the economic phase.')
@@ -137,15 +137,6 @@ class Game:
     def generate_economic_state(self, player):
         return [{'income': self.economic_engine.income(player), 'maintenance cost': self.economic_engine.maintenance(player)}]
 
-    def complete_move_phase(self):
-        self.movement_engine.complete_all_movements(self.board, self.game_state)
-        
-    def complete_combat_phase(self):
-        self.combat_engine.complete_all_fights()
-
-    def complete_economic_phase(self):
-        self.economic_engine.complete_all_taxes()
-    
     def has_planets(self, info):
         return isinstance(info, Planet)
 
