@@ -3,9 +3,9 @@ from board import Board
 from board import Planet
 from logger import Logger
 from player.player import Player
-from player.deprecated_dumb_player import DumbPlayer
+from player.dumb_player import DumbPlayer
 from player.random_player import RandomPlayer
-from player.deprecated_combat_player import CombatPlayer
+from player.combat_player import CombatPlayer
 from player.mybotisbetterthanelisbot_player import ColbyStrategyPlayer
 from combat_engine import CombatEngine
 from movement_engine import MovementEngine
@@ -38,12 +38,16 @@ class Game:
         self.combat_engine = CombatEngine(self.board, self, self.grid_size, asc_or_dsc)
         self.movement_engine = MovementEngine(self.board, self)
         self.economic_engine = EconomicEngine(self.board, self)
-        self.log = Logger(self.board)
+        self.log = Logger()
+        self.game_state = {}
+        
 
     # main functions
     def initialize_game(self):
         self.players = self.create_players()
         self.board.create_planets_and_asteroids()
+        self.turn = 1
+        self.generate_state()
         self.log.get_next_active_file('logs')
 
     def create_players(self):
@@ -51,20 +55,20 @@ class Game:
         colors = ['Blue', 'Red', 'Purple', 'Green']
         players = []
         for i in range(0, 2):
-            if self.type_of_player == 1: players.append(DumbPlayer(starting_positions[i], self.grid_size, i + 1, colors[i]))
+            if self.type_of_player == 1: players.append(DumbPlayer(starting_positions[i], self.grid_size, i + 1, colors[i], self))
             if self.type_of_player == 2: players.append(RandomPlayer(starting_positions[i], self.grid_size, i + 1, colors[i]))
             if self.type_of_player == 3: players.append(CombatPlayer(starting_positions[i], self.grid_size, i + 1, colors[i]))
             if self.type_of_player == 4: players.append(ColbyStrategyPlayer(starting_positions[i], self.grid_size, i + 1, colors[i]))
         return players
 
     def play(self):
-        self.turn = 1
+        self.generate_state()
         self.state_obsolete()
         self.player_has_not_won = True
         print('---------------------------------------------')
         while self.check_if_player_has_won() and self.turn <= self.max_turns:
             self.complete_turn()
-            self.log.log_info(self.turn)
+            self.log.log_info(self.game_state)
             self.turn += 1
         self.player_has_won()
 
@@ -98,7 +102,7 @@ class Game:
         print('--------------------------------------------------')
         if self.turn < self.max_turns:
             print('Economic Phase')
-            self.economic_engine.complete_all_taxes()()
+            self.economic_engine.complete_all_taxes(self.turn)
             for player in self.players:
                 print('Player', player.player_number, 'Has',
                       player.creds, 'creds extra after the economic phase.')
@@ -109,24 +113,23 @@ class Game:
 
     def generate_state(self, phase = 0, round_ = 0, first_player = None):
         movement_state = self.generate_movement_state(round_)
-        self.game_state = {'turn': self.turn, 'phase': phase, 'round':movement_state['round'], 'player': first_player, 'combat': self.generate_combat_array()}
+        self.game_state['turn'] = self.turn
+        self.game_state['phase'] = phase
+        self.game_state['round'] = movement_state['round'], 
+        self.game_state['combat'] = self.generate_combat_array()
         players = []
-        for i, player in enumerate(self.players):
+        for player in self.players:
             player_attributes = {}
             for attribute, value in player.__dict__.items():
-                for unit in value:
-                    if isinstance(value, list) and not isinstance(value[0], int): player_attributes[attribute] = {unit.name: {unit_attribute: unit_value for unit_attribute, unit_value in unit.__dict__.items()} for unit in value}
-                    else: player_attributes[attribute] = value
-            player['economic_state'] = self.generate_economic_state(player)
+                if isinstance(value, list) and len(value) == 0:
+                    player_attributes[attribute] = value
+                elif isinstance(value, list) and not isinstance(value[0], int) and len(value) > 0: 
+                    for _ in value: player_attributes[attribute] = {(ship.name, ship.ID): {key: value for key, value in ship.__dict__.items() if key != 'player'} for ship in value} 
+                else: player_attributes[attribute] = value
+            player_attributes['economic_state'] = self.generate_economic_state(player)
             players.append(player_attributes)
         self.game_state['players'] = players
-        planets = []
-        for x in range(0, self.grid_size + 1):
-            for y in range(0, self.grid_size + 1):
-                if self.has_planets(self.board.misc_dict[(x,y)]):
-                    for planet in [planet for planet in self.board.misc_dict[(x,y)] if isinstance(planet, Planet)]:
-                        planets.append(self.board.misc_dict[(x,y)]) #get asteroids and etc stuff
-        self.game_state['planets'] = planets
+        self.game_state['misc_dict'] = self.board.misc_dict
 
     def generate_combat_array(self):
         return [{'location': location, 'order': [{'player': ship.player.player_number, 'unit': ship.player.ships.index(ships)} for ship in ships]} for location, ships in self.combat_engine.possible_fights()]
@@ -135,10 +138,7 @@ class Game:
         return {'round': round_}
 
     def generate_economic_state(self, player):
-        return [{'income': self.economic_engine.income(player), 'maintenance cost': self.economic_engine.maintenance(player)}]
-
-    def has_planets(self, info):
-        return isinstance(info, Planet)
+        return [{'income': self.economic_engine.income(player), 'maintenance cost': self.economic_engine.maintenance(player, self.turn)}]
 
     # misc functions
     # obsolete but can be used for debugging

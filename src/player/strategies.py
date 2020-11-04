@@ -1,3 +1,6 @@
+import sys
+import random
+sys.path.append('src')
 from unit.unit import Unit
 from unit.scout import Scout
 from unit.destroyer import Destroyer
@@ -12,8 +15,74 @@ from unit.base import Base
 from unit.miner import Miner
 from unit.decoy import Decoy
 from unit.carrier import Carrier
+
+class BasicStrategy: #no movement or actual strategy, just funcitons like decide_removals or decide_which_ship_to_attack or simple_sort
+    def __init__(self, player_dict, player):#wutever we need):
+        self.player_dict = player_dict
+        self.player = player #just an empty class to call functions and stuffs
+
+    def decide_removals(self, game_state, turn):
+        if turn == 1: return None
+        else: return self.simple_sort(game_state['players'][self.player_dict['player_number']-1]['ships'])[-1]
+
+    def decide_which_ship_to_attack(self, attacking_ship, position, game_state):
+        return self.strongest_enemy_ship(game_state[position])
+
+    def simple_sort(self, ship_dict):
+        fixed_arr, sorted_arr = [], []
+        for _, ship_attributes in ship_dict.items():
+            if ship_attributes['name'] != 'Decoy' and ship_attributes['name'] != 'Colony Ship' and ship_attributes['name'] != 'Miner' and ship_attributes['name'] != 'Colony':
+                fixed_arr.append(ship_attributes)
+        while len(fixed_arr) > 0:
+            sorted_arr.append(self.max_value(fixed_arr))
+            fixed_arr.remove(self.max_value(fixed_arr))
+        return sorted_arr
+
+    def max_value(self, arr):
+        strongest_ship = arr[0]
+        for ship in arr[1:]:
+            if self.ship_1_fires_first(ship, strongest_ship):
+                strongest_ship = ship
+        return strongest_ship
+
+    def ship_1_fires_first(self, ship_1, ship_2):
+        if ship_1['fighting_class'] > ship_2['fighting_class']: return True
+        elif ship_1['fighting_class'] < ship_2['fighting_class']: return False
+        else:
+            if ship_1['attack_tech'] > ship_2['attack_tech']: return True
+            elif ship_1['attack_tech'] < ship_2['attack_tech']: return False
+            else:
+                if ship_1['attack'] > ship_2['attack']: return True
+                elif ship_1['attack'] < ship_2['attack']: return False
+                else: return True
+
+    def strongest_enemy_ship(self, game_state_ship_list):
+        for ship_attributes in game_state_ship_list:
+            if ship_attributes['player']['player_number'] != self.player_dict['player_number']: return ship_attributes
+
+    def decide_ship_placement(self, game_state):
+        return self.player_dict['ship_yards']['Ship Yard', random.randint(1, len(self.player_dict['ship_yards']))]['x'], self.player_dict['ship_yards']['Ship Yard', random.randint(1, len(self.player_dict['ship_yards']))]['y']
+
+class DumbStrategy(BasicStrategy):
+    def __init__(self, player_dict, player):#wutever we need):
+        self.player_dict = player_dict
+        self.player = player #just an empty class to call functions and stuffs
+
+    def decide_purchases(self, game_state):
+        return self.decide_ship_purchases(game_state)
+
+    def decide_ship_purchases(self, game_state):
+        return Scout(None, (0,0), 0, 0, True)
+
+    def decide_ship_movement(self, ship, game_state, movement_round):
+        x,y = ship['x'], ship['y']
+        if ship['x'] < self.player_dict['grid_size']:
+            x += ship['movement_tech'][movement_round]
+        return x, y
+
+
 '''
-class DumbStrategy:
+class CombatStrategy(BasicStrategy):
     def __init__(self, wutever we need):
         self......
         ...
@@ -21,25 +90,16 @@ class DumbStrategy:
         .
         .
         .
-    
-class CombatStrategy:
-    def __init__(self, wutever we need):
-        self......
-        ...
-        ..
-        .
-        .
-        .
 '''
-class BestStrategy:
-    def __init__(self, player_dict): #wutever els we need):
+class BestStrategy(BasicStrategy):
+    def __init__(self, player_dict, Player): #wutever els we need):
         self.player_dict = player_dict #not gonna be actual player it gonna be the player class for the functions its not gonna have any actual data
-        self.player = Player((0, 0), self.grid_size, '0', 'black')
+        self.player = Player((0, 0), player_dict['grid_size'], '0', 'black') #just an empty class to call functions and stuffs
 
     def will_colonize_planet(self, colony_ship, game_state): #game not yet inputed cause infinite import loop bad
         return True#isinstance(colony_ship, Colony_Ship) and colony_ship.x == planet.x and colony_ship.y == planet.y and not planet.is_colonized
 
-    def decide_ship_movement(self, ship, game_state):
+    def decide_ship_movement(self, ship, game_state, movement_round):
         new_ship = ship
         if isinstance(new_ship, Colony_Ship): new_ship.move_to_nearest_planet(board)
         elif isinstance(new_ship, Scout) and self.scouts_in_correct_half_line_position(scouts):
@@ -51,15 +111,15 @@ class BestStrategy:
         if not self.finished_basic_upgrades() and not self.other_player_is_attacking():
             return self.upgrade()
         elif self.finished_basic_upgrades() and not self.other_player_is_attacking():
+            if self.player.decoys_in_correct_half_line_position(): return Colony_Ship(None, (0,0), 0, 0, True)
+            else: return Decoy
+        elif self.finished_basic_upgrades() and self.other_player_is_attacking(): return Dreadnaught(None, (0,0), 0, 0, True)
+
+    def decide_ship_purchases(self, game_state):
+        if self.finished_basic_upgrades() and not self.other_player_is_attacking():
             if self.player.decoys_in_correct_half_line_position(): return Colony_Ship
             else: return Decoy
         elif self.finished_basic_upgrades() and self.other_player_is_attacking(): return Dreadnaught
-
-    def decide_removals(game_state):
-        return self.simple_sort(game_state[self.player_dict])[-1]
-
-    def decide_which_ship_to_attack(self, attacking_ship, position, game_state):
-        return self.strongest_enemy_ship(game_state[position])
 
     def find_closest_ship_yard_to_decoy_death(self):
         closest_ship_yard = self.ship_yards[0]
@@ -77,26 +137,3 @@ class BestStrategy:
                 if decoy.position not in self.half_way_line: return False
             return True
         else: return False
-
-    def simple_sort(self, arr):
-        fixed_arr, sorted_arr = [], []
-        for ship in arr:
-            if self.if_it_can_fight(ship):
-                fixed_arr.append(ship)
-            else:
-                ship.player.ships.remove(ship)
-        while len(fixed_arr) > 0:
-            sorted_arr.append(self.max_value(fixed_arr))
-            fixed_arr.remove(self.max_value(fixed_arr))
-        return sorted_arr
-
-    def max_value(self, arr):
-        max_value = arr[0]
-        for ship in arr[1:]:
-            if self.ship_1_fires_first(ship, max_value):
-                max_value = ship
-        return max_value
-
-    def strongest_enemy_ship(self, game_state_ship_list):
-        for ship_attributes in game_state_ship_list:
-            if ship['player']['player_number'] != self.player_dict['player_number']: return ship_attributes

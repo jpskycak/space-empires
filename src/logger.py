@@ -6,9 +6,6 @@ sys.path.append('src')
 
 
 class Logger:
-    def __init__(self, board = None):  # the passing of Board gives me players and their ships
-        self.board = board
-
     def get_next_active_file(self, path, name=None):
         #print(os.getcwd())  # what directory ur in (for debugging)
         new_log_number = sum([len(files) for r, d, files in os.walk(path)]) + 1
@@ -32,27 +29,24 @@ class Logger:
         self.correct_example_file_path = correct_example_file_path
         self.correct_file = open(self.correct_example_file_path, 'r')
 
-    def log_info(self, turn, log_colonies=False, log_ship_yards=False):
+    def log_info(self, game_state, log_colonies=False, log_ship_yards=False):
         #print(os.getcwd())  # what directory ur in (for debugging)
-        turn_string = 'Turn: ' + str(turn) + '\n'
+        turn_string = 'Turn: ' + str(game_state['turn']) + '\n'
         self.active_file.write(turn_string)
-        for player in self.board.players:
-            player_string = 'Player: ' + str(player.player_number) + '\nStatus: ' + str(player.status) + '\n'
+        for player in game_state['players']:
+            player_string = 'Player: ' + str(player['player_number']) + '\nStatus: ' + str(player['status']) + '\n'
             self.active_file.write(player_string)
-            for ship in player.ships:
-                ship_string = str(ship.name) + ': Position: [' + str(ship.x) + ',' + str(ship.y) + '] \n'
+            for _, ship_attributes in player['ships'].items():
+                ship_string = str(ship_attributes['name']) + ': Position: [' + str(ship_attributes['x']) + ',' + str(ship_attributes['y']) + '] \n'
                 self.active_file.write(ship_string)
-
             if log_colonies:
-                for colony in player.colonies:
-                    colony_string = str(colony.name) + ' Colony ID:', str(colony.ID) + ': [' + str(colony.x) + str(colony.y) + '] \n'
+                for _, colony_attributes in player['colonies'].items():
+                    colony_string = str(colony_attributes['name']) + ' Colony ID:', str(colony_attributes['ID']) + ': [' + str(colony_attributes['x']) + str(colony_attributes['y']) + '] \n'
                     self.active_file.write(colony_string)
-
             if log_ship_yards:
-                for ship_yard in player.ship_yards:
-                    ship_yard_string = 'Ship Yard ID:' + str(ship_yard.ID) + ': [' + str(colony.x) + str(colony.y) + '] \n'
+                for _, ship_yard_attributes in player['ship_yards']:
+                    ship_yard_string = 'Ship Yard ID:' + str(ship_yard_attributes['ID']) + ': [' + str(ship_yard_attributes['x']) + str(ship_yard_attributes['y']) + '] \n'
                     self.active_file.write(ship_yard_string)
-
             self.active_file.write('\n')
 
     def read_info(self): # To print stuff out

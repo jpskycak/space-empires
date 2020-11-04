@@ -17,7 +17,7 @@ from unit.base import Base
 from unit.miner import Miner
 from unit.decoy import Decoy
 from unit.carrier import Carrier
-from strategies import BestStrategy
+from player.strategies import BestStrategy
 
 
 

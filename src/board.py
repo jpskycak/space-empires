@@ -44,10 +44,10 @@ class Board:
                 if [i, j] != self.player_home_bases[0] and [i, j] != self.player_home_bases[1]:
                     planet_or_asteroid = 1#self.get_die_roll()
                     if planet_or_asteroid <= 2:
-                        self.misc_dict[(i, j)] = self.create_planet([i, j])
+                        self.misc_dict[(i, j)] = [self.create_planet([i, j])]
                         self.planets.append(self.create_planet([i, j]))
                     elif planet_or_asteroid > 2 and planet_or_asteroid <= 4:
-                        self.misc_dict[(i, j)] = self.create_asteroid([i, j]) 
+                        self.misc_dict[(i, j)] = [self.create_asteroid([i, j])]
                         self.asteroids.append(self.create_asteroid([i, j]))
 
     def create_planet(self, position):

@@ -1,5 +1,5 @@
 import random
-from strategies import BestStrategy
+from player.strategies import BestStrategy
 import sys
 sys.path.append('src')
 from unit.unit import Unit
@@ -28,21 +28,20 @@ class Player:
         # starts out with 8 scouts later it would be 3 miners
         self.grid_size = grid_size
         self.ships = [
-            Scout(self, 1, position, self.grid_size, True),
-            Scout(self, 2, position, self.grid_size, True),
-            Scout(self, 3, position, self.grid_size, True),
-            Colony_Ship(self, 4, position, self.grid_size, True),
-            Colony_Ship(self, 5, position, self.grid_size, True),
-            Colony_Ship(self, 6, position, self.grid_size, True)
+            Scout(self, position, self.grid_size, 1, True),
+            Scout(self, position, self.grid_size, 2, True),
+            Scout(self, position, self.grid_size, 3, True),
+            Colony_Ship(self, position, self.grid_size, 4, True),
+            Colony_Ship(self, position, self.grid_size, 5, True),
+            Colony_Ship(self, position, self.grid_size, 6, True)
         ]
         self.ship_yards = [
-            Ship_Yard(self, 1, position, self.grid_size, False),
-            Ship_Yard(self, 2, position, self.grid_size, False),
-            Ship_Yard(self, 3, position, self.grid_size, False),
-            Ship_Yard(self, 4, position, self.grid_size, False)
+            Ship_Yard(self, position, self.grid_size, 1, False),
+            Ship_Yard(self, position, self.grid_size, 2, False),
+            Ship_Yard(self, position, self.grid_size, 3, False),
+            Ship_Yard(self, position, self.grid_size, 4, False)
         ]
-        self.home_base = Colony(
-            self, 1, position, self.grid_size, home_base=True)
+        self.home_base = Colony(self, position, self.grid_size, 1, home_base=True)
         self.colonies = []
         self.starting_position = position
         self.attack_tech = 0
@@ -54,10 +53,10 @@ class Player:
         self.fighting_class_tech = 0
         self.movement_tech_upgrade_number = 0
         self.ship_to_build = 2
-        self.strategy = BestStrategy(self)
+        #self.strategy = BestStrategy(self.__dict__, Player)
 
     def find_random_ship_yard(self):
-        return self.ship_yards[random.randint(0, len(self.ship_yards) - 1)]
+        return self.ship_yards[random.randint(0, len(self.ship_yards) - 1)].position
 
     def find_amount_of_hull_size_building_capiblity(self, position):
         total_ship_yards_at_position = 0
@@ -65,14 +64,12 @@ class Player:
             if ship_yard.position == position:
                 total_ship_yards_at_position += self.ship_yard_tech
 
-    def build_fleet(self, turn=0):
+    def build_fleet(self, game_state, turn=0):
         #print('building a fleet')
         position = self.find_random_ship_yard().position
         while self.can_build_ships():
-            self.ship_to_build = self.determine_availible_ship_classes()
+            self.ship_to_build = self.strategy.decide_ship_purchases(game_state)
             ship = self.create_ship(self.ship_to_build, position)
-            self.ship_to_build = self.change_ship_to_build()
-            print('cp', self.creds)
             if ship.cost <= self.creds:
                 self.ships.append(ship)
                 self.creds -= ship.cost
@@ -80,12 +77,6 @@ class Player:
 
     def can_build_ships(self):
         return self.creds >= 6
-
-    def change_ship_to_build(self):
-        if self.ship_to_build == 2:
-            return 1
-        elif self.ship_to_build == 1:
-            return 2
 
     def upgrade(self, stat_to_upgrade):
         if stat_to_upgrade == 1 and self.attack_tech < 3:  # offense

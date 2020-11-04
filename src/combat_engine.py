@@ -33,9 +33,9 @@ class CombatEngine:
             self.current_roll = self.rolls[self.dice_roll_index]
             index, attacking_ship = self.get_next_ally_ship(fixed_ships, ships_that_shot)
             temp = fixed_ships[:index] + fixed_ships[index + 1:]
-            defending_ship = self.get_next_enemy_ship(fixed_ships[:index] + fixed_ships[index + 1:], attacking_ship.player)
+            defending_ship = self.get_next_enemy_ship(temp, attacking_ship.player)
             if defending_ship != None and attacking_ship != None:
-                hit_or_miss = self.start_fight(attacking_ship, defending_ship)  # make 'em fight
+                hit_or_miss = self.start_fight(attacking_ship, defending_ship)  # make'em fight
                 if defending_ship.is_alive:
                     defending_ship.player.ships.remove(defending_ship)
                     if isinstance(defending_ship.player, ColbyStrategyPlayer) and isinstance(defending_ship, Scout):

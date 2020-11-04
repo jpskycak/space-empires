@@ -6,6 +6,7 @@ class MovementEngine:
     def complete_all_movements(self, board, game_state):
         for player in self.game.players:
                 player.check_colonization(self.board)
-                for _ in range(0, 3):  # 3 rounds of movements
+                for movement_round in range(0, 3):  # 3 rounds of movements
                     for ship in player.ships:
-                        ship.position = player.strategy.decide_ship_movement(ship, game_state)
+                        for _ in ship.movement_tech:
+                            ship.x, ship.y = player.strategy.decide_ship_movement(ship.__dict__, game_state, movement_round)

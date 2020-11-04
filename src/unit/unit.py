@@ -1,4 +1,3 @@
-from board import Planet
 import random
 import sys
 sys.path.append('src')
@@ -10,9 +9,9 @@ LEFT = 3
 
 
 class Unit:
-    def __init__(self, player, position, grid_size, can_move=True, attack_tech=0, defense_tech=0, movement_tech=0, ship_yard_tech=0):
+    def __init__(self, player, position, grid_size, ID, can_move=True, attack_tech=0, defense_tech=0, movement_tech=0, ship_yard_tech=0):
         self.player = player
-        self.ID = len(self.player.ships)
+        self.ID = ID
         self.x = position[0]
         self.y = position[1]
         self.grid_size = grid_size
@@ -73,9 +72,9 @@ class Unit:
                     elif self.x <= 0:
                         self.x += 1
 
-    def move_to_nearest_planet(self, move_round, board):
+    def move_to_nearest_planet(self, move_round, board, planet_class):
         for position, space_object in board.misc_dict.items():
-            if isinstance(space_object, Planet):
+            if isinstance(space_object, planet_class):
                 if space_object.is_claimed == False:
                     for _ in range(0, self.movement_tech[move_round - 1]):
                         if self.x != position[0]:
