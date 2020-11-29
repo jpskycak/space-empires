@@ -10,3 +10,6 @@ class MovementEngine:
                     for ship in player.ships:
                         for _ in ship.movement_tech:
                             ship.x, ship.y = player.strategy.decide_ship_movement(ship.__dict__, game_state, movement_round)
+
+    def generate_movement_state(self, round_):
+        return {'round': round_}

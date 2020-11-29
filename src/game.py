@@ -112,11 +112,11 @@ class Game:
         self.board.update_board()
 
     def generate_state(self, phase = 0, round_ = 0, first_player = None):
-        movement_state = self.generate_movement_state(round_)
+        movement_state = self.movement_engine.generate_movement_state(round_)
         self.game_state['turn'] = self.turn
         self.game_state['phase'] = phase
         self.game_state['round'] = movement_state['round'], 
-        self.game_state['combat'] = self.generate_combat_array()
+        self.game_state['combat'] = self.combat_engine.generate_combat_array()
         players = []
         for player in self.players:
             player_attributes = {}
@@ -126,19 +126,11 @@ class Game:
                 elif isinstance(value, list) and not isinstance(value[0], int) and len(value) > 0: 
                     for _ in value: player_attributes[attribute] = {(ship.name, ship.ID): {key: value for key, value in ship.__dict__.items() if key != 'player'} for ship in value} 
                 else: player_attributes[attribute] = value
-            player_attributes['economic_state'] = self.generate_economic_state(player)
+            player_attributes['economic_state'] = self.economic_engine.generate_economic_state(player, self.turn)
             players.append(player_attributes)
         self.game_state['players'] = players
         self.game_state['misc_dict'] = self.board.misc_dict
 
-    def generate_combat_array(self):
-        return [{'location': location, 'order': [{'player': ship.player.player_number, 'unit': ship.player.ships.index(ships)} for ship in ships]} for location, ships in self.combat_engine.possible_fights()]
-
-    def generate_movement_state(self, round_):
-        return {'round': round_}
-
-    def generate_economic_state(self, player):
-        return [{'income': self.economic_engine.income(player), 'maintenance cost': self.economic_engine.maintenance(player, self.turn)}]
 
     # misc functions
     # obsolete but can be used for debugging

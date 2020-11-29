@@ -111,3 +111,6 @@ class CombatEngine:
                     return True
                 
         return False
+
+    def generate_combat_array(self):
+        return [{'location': location, 'order': [{'player': ship.player.player_number, 'unit': ship.player.ships.index(ships)} for ship in ships]} for location, ships in self.possible_fights()]
