@@ -56,7 +56,7 @@ class CombatPlayer(Player):
         self.fighting_class_tech = 0
         self.movement_tech_upgrade_number = 0
         self.ship_to_build = 2
-
+'''
     def will_colonize(self):
         return False
 
@@ -102,16 +102,6 @@ class CombatPlayer(Player):
                 else:
                     break
 
-    def can_upgrade(self):
-        return self.creds > 10 * self.attack_tech and self.creds > 10 * self.defense_tech and self.creds > 5 * self.fighting_class_tech + 10 and self.creds > 10 * self.movement_tech_upgrade_number + 10 and self.creds > 10 * self.ship_yard_tech and self.creds > 15 * self.terraform_tech
-
-    def move(self, move_round):
-        for ship in self.ships:
-            # if not isinstance(ship, Base) and not isinstance(ship, Colony) and not isinstance(ship, Colony_Ship) and not isinstance(ship, Decoy):
-            ship.move_to_center(move_round)
-            # elif isinstance(ship, Colony_Ship):
-            # ship.move_to_nearest_planet(self.board.misc_dict, Planet) # this is for laters
-
     def can_build_ships(self):
         if self.ship_to_build == 2 and self.creds >= 9 and self.ship_size_tech >= 1:
             return True
@@ -128,3 +118,4 @@ class CombatPlayer(Player):
             return Scout(self, position, self.grid_size, True)
         if ship_class == 2:
             return Destroyer(self, position, self.grid_size, True)
+'''

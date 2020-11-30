@@ -20,6 +20,7 @@ class BasicStrategy: #no movement or actual strategy, just funcitons like decide
     def __init__(self, player_dict, player):#wutever we need):
         self.player_dict = player_dict
         self.player = player #just an empty class to call functions and stuffs
+        self.__name__ = 'BasicStrategy'
 
     def decide_removals(self, game_state, turn):
         if turn == 1: return None
@@ -63,10 +64,14 @@ class BasicStrategy: #no movement or actual strategy, just funcitons like decide
     def decide_ship_placement(self, game_state):
         return self.player_dict['ship_yards']['Ship Yard', random.randint(1, len(self.player_dict['ship_yards']))]['x'], self.player_dict['ship_yards']['Ship Yard', random.randint(1, len(self.player_dict['ship_yards']))]['y']
 
+    def will_colonize(self, game_state):
+        return False
+
 class DumbStrategy(BasicStrategy):
-    def __init__(self, player_dict, player):#wutever we need):
+    def __init__(self, player_dict, player):#wutever else we need):
         self.player_dict = player_dict
         self.player = player #just an empty class to call functions and stuffs
+        self.__name__ = 'DumbStrategy'
 
     def decide_purchases(self, game_state):
         return self.decide_ship_purchases(game_state)
@@ -80,17 +85,46 @@ class DumbStrategy(BasicStrategy):
             x += ship['movement_tech'][movement_round]
         return x, y
 
-
-'''
 class CombatStrategy(BasicStrategy):
-    def __init__(self, wutever we need):
-        self......
-        ...
-        ..
-        .
-        .
-        .
-'''
+    def __init__(self, player_dict, player):#wutever else we need):
+        self.player_dict = player_dict
+        self.player = player #just an empty class to call functions and stuffs
+        self.__name__ = 'CombatStrategy'
+        self.previous_buy = Scout(None, (0,0), 0, 0, True)
+
+    def decide_purchases(self, game_state):
+        if game_state['turn'] == 1 and game_state['players'][self.player_dict['player_number']-1]['ship_size_tech'] == 0: return 7
+        else: return self.decide_ship_purchases(game_state)
+
+    def decide_ship_purchases(self, game_state):
+        if self.check_previous_buy() == 2: 
+            self.previous_buy = Scout(None, (0,0), 0, 0, True)
+            return Scout(None, (0,0), 0, 0, True)
+        if self.check_previous_buy() == 1: 
+            self.previous_buy = Destroyer(None, (0,0), 0, 0, True)
+            return Destroyer(None, (0,0), 0, 0, True)
+
+
+    def check_previous_buy(self):
+        if isinstance(self.previous_buy, Scout): return 1
+        elif isinstance(self.previous_buy, Destroyer): return 2
+
+    def decide_ship_movement(self, ship, game_state, movement_round):
+        center_point_x, center_point_y = game_state['grid_size'] // 2, game_state['grid_size'] // 2
+        x, y = ship['x'], ship['y']
+        if x != center_point_x:
+            if x < center_point_x:
+                x += ship['movement_tech'][movement_round]
+            elif x > center_point_x:
+                x -= ship['movement_tech'][movement_round]  
+        if y != center_point_y:
+            if y < center_point_y:
+                y += ship['movement_tech'][movement_round]
+            elif y > center_point_y:
+                y -= ship['movement_tech'][movement_round]
+        return x, y
+
+''' W.I.P.
 class BestStrategy(BasicStrategy):
     def __init__(self, player_dict, Player): #wutever els we need):
         self.player_dict = player_dict #not gonna be actual player it gonna be the player class for the functions its not gonna have any actual data
@@ -137,3 +171,4 @@ class BestStrategy(BasicStrategy):
                 if decoy.position not in self.half_way_line: return False
             return True
         else: return False
+        '''

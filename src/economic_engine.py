@@ -22,23 +22,27 @@ class EconomicEngine:
     def complete_all_taxes(self, turn):
         for player in self.game.players:
             player.creds += self.income(player)
-            self.maintenance(player, turn)
-            purchase = player.strategy.decide_purchases(self.game.game_state)
-            if not isinstance(purchase, int):  # if its not an upgrade
-                ship = self.create_ship(player, purchase, player.strategy.decide_ship_placement(
-                    self.game.game_state), player.grid_size, len(player.ships))
-                while player.creds >= ship.cost:
-                    purchase = player.strategy.decide_ship_purchases(
-                        self.game.game_state)
+            print('Player', player.player_number, "'s income is", self.income(player))
+            var = self.maintenance(player, turn)
+            player.creds -= var
+            print('Player', player.player_number, "'s maintenance is", var)
+            previous_ship_purchase = Scout(None, (0,0), 0, 0, True)
+            while player.creds > previous_ship_purchase.cost and self.can_upgrade(player):
+                purchase = player.strategy.decide_purchases(self.game.game_state)
+                if not isinstance(purchase, int):  # if its not an upgrade
                     ship = self.create_ship(player, purchase, player.strategy.decide_ship_placement(
-                        self.game.game_state), self.game.grid_size, len(player.ships))
-                    player.ships.append(ship)
-                    player.creds -= ship.cost
-            else:  # if it is an upgrade
-                while self.can_upgrade(player):
+                        self.game.game_state), player.grid_size, len(player.ships))
+                    if player.creds >= ship.cost:
+                        player.ships.append(ship)
+                        player.creds -= ship.cost
+                        previous_ship_purchase = ship
+                        print('Player', player.player_number, "bought a", ship.name)
+                    previous_ship_purchase = ship
+                else:  # if it is an upgrade
                     upgrade = player.strategy.decide_purchases(
-                        self.game.game_state)
+                            self.game.game_state)
                     player.upgrade(upgrade)
+                self.game.generate_state()
 
     def create_ship(self, player, ship, position, grid_size, ID):
         if isinstance(ship, Scout):
@@ -62,11 +66,11 @@ class EconomicEngine:
 
     def can_upgrade(self, player):
         return player.creds > 10 * player.attack_tech \
-            and player.creds > 10 * player.defense_tech \
-            and player.creds > 5 * player.fighting_class_tech + 10 \
-            and player.creds > 10 * player.movement_tech_upgrade_number + 10 \
-            and player.creds > 10 * player.ship_yard_tech \
-            and player.creds > 15 * player.terraform_tech \
+            or player.creds > 10 * player.defense_tech \
+            or player.creds > 5 * player.fighting_class_tech + 10 \
+            or player.creds > 10 * player.movement_tech_upgrade_number + 10 \
+            or player.creds > 10 * player.ship_yard_tech \
+            or player.creds > 15 * player.terraform_tech \
 
     def income(self, player):
         income = 0
@@ -82,11 +86,9 @@ class EconomicEngine:
             if not isinstance(ship, Base) and not isinstance(ship, Colony) and not isinstance(ship, Colony_Ship) and not isinstance(ship, Decoy):
                 cost = ship.defense_tech + ship.defense + ship.armor
                 if player.creds >= cost:
-                    player.creds -= cost
                     total_cost += cost
                 else:
-                    removals.append(player.strategy.decide_removals(
-                        self.game.game_state, turn))
+                    removals.append(player.strategy.decide_removals(self.game.game_state, turn))
                     #print('Player', player.player_number, "couldn't maintain their", ship.name)
         player.ships = [
             ship for ship in player.ships if ship.__dict__ not in removals]

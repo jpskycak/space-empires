@@ -1,28 +1,27 @@
+import random
+from unit.carrier import Carrier
+from unit.decoy import Decoy
+from unit.miner import Miner
+from unit.base import Base
+from unit.ship_yard import Ship_Yard
+from unit.colony import Colony
+from unit.colony_ship import Colony_Ship
+from unit.dreadnaught import Dreadnaught
+from unit.battleship import Battleship
+from unit.battle_cruiser import BattleCruiser
+from unit.cruiser import Cruiser
+from unit.destroyer import Destroyer
+from unit.scout import Scout
+from unit.unit import Unit
+from board import Board
 from player.player import Player
 from player.strategies import DumbStrategy
 import sys
 sys.path.append('src')
-from board import Board
-from unit.unit import Unit
-from unit.scout import Scout
-from unit.destroyer import Destroyer
-from unit.cruiser import Cruiser
-from unit.battle_cruiser import BattleCruiser
-from unit.battleship import Battleship
-from unit.dreadnaught import Dreadnaught
-from unit.colony_ship import Colony_Ship
-from unit.colony import Colony
-from unit.ship_yard import Ship_Yard
-from unit.base import Base
-from unit.miner import Miner
-from unit.decoy import Decoy
-from unit.carrier import Carrier
-import random
-
 
 
 class DumbPlayer(Player):
-    def __init__(self, position, grid_size, player_number, player_color, game):
+    def __init__(self, position, grid_size, player_number, player_color):
         super().__init__(position, grid_size, player_number, player_color)
         self.type = 'Dumb Player'
         self.creds = 0
@@ -44,7 +43,8 @@ class DumbPlayer(Player):
             Ship_Yard(self, position, self.grid_size, 3, False),
             Ship_Yard(self, position, self.grid_size, 4, False)
         ]
-        self.home_base = Colony(self, position, self.grid_size, 1, home_base=True)
+        self.home_base = Colony(
+            self, position, self.grid_size, 1, home_base=True)
         self.colonies = []
         self.starting_position = position
         self.attack_tech = 0
@@ -57,14 +57,13 @@ class DumbPlayer(Player):
         self.movement_tech_upgrade_number = 0
         data_dict = {}
         for attribute, value in self.__dict__.items():
-                if isinstance(value, list) and len(value) == 0:
-                    data_dict[attribute] = value
-                elif isinstance(value, list) and not isinstance(value[0], int) and len(value) > 0: 
-                    for _ in value: data_dict[attribute] = {(ship.name, ship.ID): {key: value for key, value in ship.__dict__.items() if key != 'player'} for ship in value} 
-                else: data_dict[attribute] = value
-        self.strategy = DumbStrategy(data_dict, Player((0, 0), self.grid_size, '0', 'black'))
-
-    def will_colonize(self):
-        return False
-
-
+            if isinstance(value, list) and len(value) == 0:
+                data_dict[attribute] = value
+            elif isinstance(value, list) and not isinstance(value[0], int) and len(value) > 0:
+                for _ in value:
+                    data_dict[attribute] = {(ship.name, ship.ID): {
+                        key: value for key, value in ship.__dict__.items() if key != 'player'} for ship in value}
+            else:
+                data_dict[attribute] = value
+        self.strategy = DumbStrategy(data_dict, Player(
+            (0, 0), self.grid_size, '0', 'black'))

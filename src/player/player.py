@@ -1,5 +1,5 @@
 import random
-from player.strategies import BestStrategy
+from player.strategies import BasicStrategy
 import sys
 sys.path.append('src')
 from unit.unit import Unit
@@ -19,7 +19,7 @@ from unit.carrier import Carrier
 
 
 class Player:
-    def __init__(self, position, grid_size, player_number, player_color):
+    def __init__(self, strategy, position, grid_size, player_number, player_color):
         self.creds = 0
         self.status = 'Playing'
         self.death_count = 0  # if winCount = amount of units self.lose = true
@@ -52,8 +52,16 @@ class Player:
         self.ship_size_tech = 0
         self.fighting_class_tech = 0
         self.movement_tech_upgrade_number = 0
-        self.ship_to_build = 2
-        #self.strategy = BestStrategy(self.__dict__, Player)
+        data_dict = {}
+        for attribute, value in self.__dict__.items():
+            if isinstance(value, list) and len(value) == 0: 
+                data_dict[attribute] = value
+            elif isinstance(value, list) and not isinstance(value[0], int) and len(value) >= 1: 
+                for _ in value: 
+                    data_dict[attribute] = {(ship.name, ship.ID): {key: value for key, value in ship.__dict__.items() if key != 'player'} for ship in value} 
+            else: 
+                data_dict[attribute] = value
+        self.strategy = strategy(data_dict, Player)
 
     def find_random_ship_yard(self):
         return self.ship_yards[random.randint(0, len(self.ship_yards) - 1)].position
@@ -107,6 +115,9 @@ class Player:
                 self.creds -= 10
                 print('Player', self.player_number, "upgraded their max building size from", self.ship_size_tech - 1, 'to', self.ship_size_tech)
 
+    def can_upgrade(self):
+        return self.creds > 10 * self.attack_tech and self.creds > 10 * self.defense_tech and self.creds > 5 * self.fighting_class_tech + 10 and self.creds > 10 * self.movement_tech_upgrade_number + 10 and self.creds > 10 * self.ship_yard_tech and self.creds > 15 * self.terraform_tech
+
     def upgrade_movement_tech(self):
         self.movement_tech_upgrade_number += 1
         if self.movement_tech_upgrade_number == 1:
@@ -146,7 +157,7 @@ class Player:
     # check stuffs
     def check_colonization(self, board):
         print('check colonization')
-        if self.will_colonize():
+        if self.strategy.will_colonize(self.strategy):
             for ship in self.ships:
                 for planet in board.planets:
                     if self.will_colonize_planet(ship, planet):

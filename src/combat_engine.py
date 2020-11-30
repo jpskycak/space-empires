@@ -36,7 +36,7 @@ class CombatEngine:
             defending_ship = self.get_next_enemy_ship(temp, attacking_ship.player)
             if defending_ship != None and attacking_ship != None:
                 hit_or_miss = self.start_fight(attacking_ship, defending_ship)  # make'em fight
-                if defending_ship.is_alive:
+                if not defending_ship.is_alive:
                     defending_ship.player.ships.remove(defending_ship)
                     if isinstance(defending_ship.player, ColbyStrategyPlayer) and isinstance(defending_ship, Scout):
                         defending_ship.player.dead_scout_position = defending_ship.position
@@ -113,4 +113,12 @@ class CombatEngine:
         return False
 
     def generate_combat_array(self):
-        return [{'location': location, 'order': [{'player': ship.player.player_number, 'unit': ship.player.ships.index(ships)} for ship in ships]} for location, ships in self.possible_fights()]
+        combat_array = []
+        for location, ships in self.possible_fights().items():
+            combat_at_location = {'location': location}
+            combat_at_location_arr = []
+            for i, ship in enumerate(ships):
+                combat_at_location_arr.append({'player': ship.player.player_number, 'unit': i})
+            combat_at_location['order'] = combat_at_location_arr
+            combat_array.append(combat_at_location)
+        return combat_array

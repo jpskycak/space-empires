@@ -36,15 +36,16 @@ class Logger:
         for player in game_state['players']:
             player_string = 'Player: ' + str(player['player_number']) + '\nStatus: ' + str(player['status']) + '\n'
             self.active_file.write(player_string)
-            for _, ship_attributes in player['ships'].items():
-                ship_string = str(ship_attributes['name']) + ': Position: [' + str(ship_attributes['x']) + ',' + str(ship_attributes['y']) + '] \n'
-                self.active_file.write(ship_string)
+            if isinstance(player['ships'], dict):
+                for ship_attributes in player['ships'].values():
+                    ship_string = str(ship_attributes['name']) + ': Position: [' + str(ship_attributes['x']) + ',' + str(ship_attributes['y']) + '] \n'
+                    self.active_file.write(ship_string)
             if log_colonies:
-                for _, colony_attributes in player['colonies'].items():
+                for colony_attributes in player['colonies'].values():
                     colony_string = str(colony_attributes['name']) + ' Colony ID:', str(colony_attributes['ID']) + ': [' + str(colony_attributes['x']) + str(colony_attributes['y']) + '] \n'
                     self.active_file.write(colony_string)
             if log_ship_yards:
-                for _, ship_yard_attributes in player['ship_yards']:
+                for ship_yard_attributes in player['ship_yards'].values():
                     ship_yard_string = 'Ship Yard ID:' + str(ship_yard_attributes['ID']) + ': [' + str(ship_yard_attributes['x']) + str(ship_yard_attributes['y']) + '] \n'
                     self.active_file.write(ship_yard_string)
             self.active_file.write('\n')
@@ -60,4 +61,3 @@ class Logger:
             if active != correct:
                 return False
         return True
-        #return filecmp.cmp(self.active_file_name, self.correct_example_file_path, shallow=False)
