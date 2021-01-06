@@ -1,8 +1,6 @@
 import os
 import difflib
-import sys
 import filecmp
-sys.path.append('src')
 
 
 class Logger:

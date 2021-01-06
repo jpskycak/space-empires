@@ -1,6 +1,6 @@
 import sys
 sys.path.append('src')
-from player.strategies import CombatStrategy
+from strategies.combat_strategy import CombatStrategy
 from game import Game
 from logger import Logger
 

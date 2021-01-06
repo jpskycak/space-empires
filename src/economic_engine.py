@@ -23,26 +23,22 @@ class EconomicEngine:
         for player in self.game.players:
             player.creds += self.income(player)
             print('Player', player.player_number, "'s income is", self.income(player))
-            var = self.maintenance(player, turn)
-            player.creds -= var
-            print('Player', player.player_number, "'s maintenance is", var)
-            previous_ship_purchase = Scout(None, (0,0), 0, 0, True)
-            while player.creds > previous_ship_purchase.cost and self.can_upgrade(player):
-                purchase = player.strategy.decide_purchases(self.game.game_state)
-                if not isinstance(purchase, int):  # if its not an upgrade
-                    ship = self.create_ship(player, purchase, player.strategy.decide_ship_placement(
-                        self.game.game_state), player.grid_size, len(player.ships))
-                    if player.creds >= ship.cost:
-                        player.ships.append(ship)
-                        player.creds -= ship.cost
-                        previous_ship_purchase = ship
-                        print('Player', player.player_number, "bought a", ship.name)
-                    previous_ship_purchase = ship
-                else:  # if it is an upgrade
-                    upgrade = player.strategy.decide_purchases(
-                            self.game.game_state)
-                    player.upgrade(upgrade)
-                self.game.generate_state()
+            maintenance_cost = self.maintenance(player, turn)
+            player.creds -= maintenance_cost
+            print('Player', player.player_number, "'s maintenance is", maintenance_cost)
+            purchase = player.strategy.decide_purchases(self.game.game_state)
+            for unit in purchase['units']:
+                ship = self.create_ship(player, unit, player.strategy.decide_ship_placement(
+                        self.game.game_state), player.grid_size, player.new_ship_index)
+                if player.creds >= ship.cost:
+                    player.ships.append(ship)
+                    player.creds -= ship.cost
+                    print('Player', player.player_number, "bought a", ship.name)
+                    player.new_ship_index += 1
+            for technology in purchase['technology']:
+                if player.creds > player.upgrade_costs(technology):
+                    player.upgrade(technology)
+            self.game.generate_state()
 
     def create_ship(self, player, ship, position, grid_size, ID):
         if isinstance(ship, Scout):
@@ -80,18 +76,17 @@ class EconomicEngine:
         return income
 
     def maintenance(self, player, turn):
-        removals = []
         total_cost = 0
         for ship in player.ships:
             if not isinstance(ship, Base) and not isinstance(ship, Colony) and not isinstance(ship, Colony_Ship) and not isinstance(ship, Decoy):
                 cost = ship.defense_tech + ship.defense + ship.armor
                 if player.creds >= cost:
                     total_cost += cost
-                else:
-                    removals.append(player.strategy.decide_removals(self.game.game_state, turn))
-                    #print('Player', player.player_number, "couldn't maintain their", ship.name)
-        player.ships = [
-            ship for ship in player.ships if ship.__dict__ not in removals]
+        if total_cost > player.creds:
+            removals = player.strategy.decide_removals(self.game.game_state, turn)
+            print('Player', player.player_number, "couldn't maintain their", [('ID', i, 'Name', ship.name) for i, ship in enumerate(player.ships) if i in removals])
+
+        player.ships = [ship for i, ship in enumerate(player.ships) if i not in removals]
         return total_cost
 
     def generate_economic_state(self, player, turn):

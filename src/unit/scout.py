@@ -7,7 +7,6 @@ class Scout(Unit):
                          attack_tech, defense_tech, movement_tech)
         self.name = 'Scout'
         self.label = 'SC'
-        self.player = player
         self.hull_size = 1
         self.attack = 3
         self.defense = 0

@@ -3,10 +3,6 @@ from board import Board
 from board import Planet
 from logger import Logger
 from player.player import Player
-from player.dumb_player import DumbPlayer
-from player.random_player import RandomPlayer
-from player.combat_player import CombatPlayer
-from player.mybotisbetterthanelisbot_player import ColbyStrategyPlayer
 from combat_engine import CombatEngine
 from movement_engine import MovementEngine
 from economic_engine import EconomicEngine
@@ -24,9 +20,9 @@ from unit.base import Base
 from unit.miner import Miner
 from unit.decoy import Decoy
 from unit.carrier import Carrier
-from player.strategies import BasicStrategy
-from player.strategies import DumbStrategy
-from player.strategies import CombatStrategy
+from strategies.basic_strategy import BasicStrategy
+from strategies.dumb_strategy import DumbStrategy
+from strategies.combat_strategy import CombatStrategy
 
 
 class Game:
@@ -129,8 +125,8 @@ class Game:
             print('--------------------------------------------------')
         self.board.update_board()
 
-    def generate_state(self, phase=0, round_=0, first_player=None):
-        movement_state = self.movement_engine.generate_movement_state(round_)
+    def generate_state(self, phase=None, movement_round=0):
+        movement_state = self.movement_engine.generate_movement_state(movement_round)
         self.game_state['grid_size'] = self.grid_size
         self.game_state['turn'] = self.turn
         self.game_state['phase'] = phase

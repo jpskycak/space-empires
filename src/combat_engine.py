@@ -5,7 +5,6 @@ from unit.colony_ship import Colony_Ship
 from unit.colony import Colony
 from unit.miner import Miner
 from unit.scout import Scout
-from player.mybotisbetterthanelisbot_player import ColbyStrategyPlayer
 
 class CombatEngine:
     def __init__(self, board, game, grid_size, asc_or_dsc):
@@ -31,15 +30,13 @@ class CombatEngine:
         while self.more_than_one_player_left_fighting(fixed_ships):
             if len(ships_that_shot) == len(fixed_ships): ships_that_shot = []
             self.current_roll = self.rolls[self.dice_roll_index]
-            index, attacking_ship = self.get_next_ally_ship(fixed_ships, ships_that_shot)
-            temp = fixed_ships[:index] + fixed_ships[index + 1:]
-            defending_ship = self.get_next_enemy_ship(temp, attacking_ship.player)
+            attacking_ship_index_in_fixed_ships, attacking_ship = self.get_next_ally_ship(fixed_ships, ships_that_shot)
+            fixed_ships_without_attacking_ship = fixed_ships[:attacking_ship_index_in_fixed_ships] + fixed_ships[attacking_ship_index_in_fixed_ships + 1:]
+            defending_ship = fixed_ships_without_attacking_ship[attacking_ship.player.strategy.strongest_enemy_ship(self.generate_combat_array(), attacking_ship.index, (attacking_ship.x, attacking_ship.y))]
             if defending_ship != None and attacking_ship != None:
                 hit_or_miss = self.start_fight(attacking_ship, defending_ship)  # make'em fight
                 if not defending_ship.is_alive:
                     defending_ship.player.ships.remove(defending_ship)
-                    if isinstance(defending_ship.player, ColbyStrategyPlayer) and isinstance(defending_ship, Scout):
-                        defending_ship.player.dead_scout_position = defending_ship.position
                     fixed_ships.remove(defending_ship)
                 ships_that_shot.append(attacking_ship)
             self.dice_roll_index += 1
@@ -59,11 +56,6 @@ class CombatEngine:
         for i, ship in enumerate(fixed_ships):
             if ship not in ships_that_missed:
                 return i, ship
-
-    def get_next_enemy_ship(self, ships, attacking_ship_player):
-        for ship in ships:
-            if ship.player != attacking_ship_player:
-                return ship
 
     def start_fight(self, ship_1, ship_2):
         print("Player", ship_1.player.player_number, "'s", ship_1.name, ship_1.ID, "vs Player", ship_2.player.player_number, "'s", ship_2.name, ship_2.ID)
@@ -113,12 +105,12 @@ class CombatEngine:
         return False
 
     def generate_combat_array(self):
-        combat_array = []
+        combat_dict = {}
         for location, ships in self.possible_fights().items():
-            combat_at_location = {'location': location}
             combat_at_location_arr = []
             for i, ship in enumerate(ships):
                 combat_at_location_arr.append({'player': ship.player.player_number, 'unit': i})
-            combat_at_location['order'] = combat_at_location_arr
-            combat_array.append(combat_at_location)
-        return combat_array
+            combat_dict[location] = combat_at_location_arr
+        return combat_dict
+
+    
