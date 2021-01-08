@@ -17,17 +17,15 @@ import random
 sys.path.append('src')
 
 
-class BasicStrategy:  # no movement or actual strategy, just funcitons like decide_removals or decide_which_unit_to_attack or simple_sort
+class BasicStrategy:  # no movement or actual strategy, just funcitons like decide_removal or decide_which_unit_to_attack or simple_sort
     def __init__(self, player_index):  # wutever we need):
         self.player_index = player_index
 
-    def decide_removals(self, game_state):
-        sorted_list, new_sorted_list = self.simple_sort(game_state['players'][self.player_index]['ships']), self.simple_sort(
-            game_state['players'][self.player_index]['ships'])
+    def decide_removal(self, game_state):
+        sorted_list = self.simple_sort(game_state['players'][self.player_index]['ships'])
         total_cost = sum([ship['cost'] for ship in sorted_list])
-        while total_cost > game_state['players'][self.player_index]['creds']:
-            new_sorted_list.remove(sorted_list[-1])
-        return [i for i, ship in enumerate(sorted_list) if ship not in new_sorted_list]
+        if total_cost > game_state['players'][self.player_index]['creds']:
+            return sorted_list[-1]['id'] - 1
 
     def decide_which_unit_to_attack(self, full_combat_state, attacker_index, location):
         return self.strongest_enemy_ship(full_combat_state[location])

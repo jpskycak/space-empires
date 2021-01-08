@@ -83,10 +83,9 @@ class EconomicEngine:
                 if player.creds >= cost:
                     total_cost += cost
         if total_cost > player.creds:
-            removals = player.strategy.decide_removals(self.game.game_state, turn)
-            print('Player', player.player_number, "couldn't maintain their", [('ID', i, 'Name', ship.name) for i, ship in enumerate(player.ships) if i in removals])
-
-        player.ships = [ship for i, ship in enumerate(player.ships) if i not in removals]
+            removal_index = player.strategy.decide_removal(self.game.game_state, turn)
+            print('Player', player.player_number, "couldn't maintain their", [('ID', index, 'Name', ship.name) for index, ship in enumerate(player.ships) if index == removal_index])
+        player.ships = [ship for index, ship in enumerate(player.ships) if index !=  removal_index]
         return total_cost
 
     def generate_economic_state(self, player, turn):

@@ -17,7 +17,7 @@ import random
 sys.path.append('src')
 
 
-class BasicStrategy:  # no movement or actual strategy, just funcitons like decide_removals or decide_which_unit_to_attack or simple_sort
+class BasicStrategy:  # no movement or actual strategy, just funcitons like decide_removal or decide_which_unit_to_attack or simple_sort
     def __init__(self, player_dict, player):  # wutever we need):
         game_state['players'][self.player_index] = player_dict
         self.player = player  # just an empty class to call functions and stuffs

@@ -33,7 +33,6 @@ class CombatStrategy(BasicStrategy):
             self.previous_buy = Destroyer(None, (0,0), 0, 0, True)
             return Destroyer(None, (0,0), 0, 0, True)
 
-
     def check_previous_buy(self):
         if isinstance(self.previous_buy, Scout): return 1
         elif isinstance(self.previous_buy, Destroyer): return 2
