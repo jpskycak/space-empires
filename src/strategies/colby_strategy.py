@@ -23,7 +23,7 @@ class ColbyStrategy(BasicStrategy):
     def __init__(self, player_index):  # wutever else we need):
         self.player_index = player_index
 
-    def will_colonize_planet(self, colony_ship, game_state): #game not yet inputed cause infinite import loop bad
+    def will_colonize_planet(self, coordinates, game_state): #game not yet inputed cause infinite import loop bad
         return True#isinstance(colony_ship, Colony_Ship) and colony_ship.x == planet.x and colony_ship.y == planet.y and not planet.is_colonized
 
     def decide_ship_movement(self, ship, game_state, movement_round):

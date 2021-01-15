@@ -2,8 +2,8 @@ from unit.unit import Unit
 
 
 class Ship_Yard(Unit):
-    def __init__(self, player, position, grid_size, can_move=False, attack_tech=0, defense_tech=0, ship_yard_tech=0):
-        super().__init__(player, position, grid_size, can_move,
+    def __init__(self, player, position, board_size, can_move=False, attack_tech=0, defense_tech=0, ship_yard_tech=0):
+        super().__init__(player, position, board_size, can_move,
                          attack_tech, defense_tech, ship_yard_tech)
         self.position = position
         self.name = 'Ship Yard'

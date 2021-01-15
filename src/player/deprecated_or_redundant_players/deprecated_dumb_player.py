@@ -20,8 +20,8 @@ sys.path.append('src')
 
 
 class DumbPlayer(Player):
-    def __init__(self, position, grid_size, player_number, player_color):
-        super().__init__(position, grid_size, player_number, player_color)
+    def __init__(self, position, board_size, player_number, player_color):
+        super().__init__(position, board_size, player_number, player_color)
         self.type = 'Dumb Player'
         self.creds = 0
         self.status = 'Playing'
@@ -30,21 +30,21 @@ class DumbPlayer(Player):
         self.player_color = player_color
 # starts out with 3 scouts and 3 colony ships later it would be 3 miners
         self.ships = [
-            Scout(self, 1, position, self.grid_size, True),
-            Scout(self, 2, position, self.grid_size, True),
-            Scout(self, 3, position, self.grid_size, True),
-            Colony_Ship(self, 4, position, self.grid_size, True),
-            Colony_Ship(self, 5, position, self.grid_size, True),
-            Colony_Ship(self, 6, position, self.grid_size, True)
+            Scout(self, 1, position, self.board_size, True),
+            Scout(self, 2, position, self.board_size, True),
+            Scout(self, 3, position, self.board_size, True),
+            Colony_Ship(self, 4, position, self.board_size, True),
+            Colony_Ship(self, 5, position, self.board_size, True),
+            Colony_Ship(self, 6, position, self.board_size, True)
         ]
         self.ship_yards = [
-            Ship_Yard(self, 1, position, self.grid_size, False),
-            Ship_Yard(self, 2, position, self.grid_size, False),
-            Ship_Yard(self, 3, position, self.grid_size, False),
-            Ship_Yard(self, 4, position, self.grid_size, False)
+            Ship_Yard(self, 1, position, self.board_size, False),
+            Ship_Yard(self, 2, position, self.board_size, False),
+            Ship_Yard(self, 3, position, self.board_size, False),
+            Ship_Yard(self, 4, position, self.board_size, False)
         ]
         self.home_base = Colony(
-            self, 1, position, self.grid_size, home_base=True)
+            self, 1, position, self.board_size, home_base=True)
         self.colonies = []
         self.starting_position = position
         self.attack_tech = 0
@@ -56,7 +56,7 @@ class DumbPlayer(Player):
         self.fighting_class_tech = 0
         self.movement_tech_upgrade_number = 0
 
-    def will_colonize(self):
+    def will_colonize_planet(self):
         return False
 
     def upgrade(self, turn):
@@ -105,4 +105,4 @@ class DumbPlayer(Player):
             return None
 
     def create_ship(self, ship_class, position):
-        return Scout(self, position, self.grid_size, True)
+        return Scout(self, position, self.board_size, True)

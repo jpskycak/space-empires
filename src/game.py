@@ -26,17 +26,17 @@ from strategies.combat_strategy import CombatStrategy
 
 
 class Game:
-    def __init__(self, player_strats, grid_size, asc_or_dsc, type_of_player, max_turns=1000):
-        self.grid_size = grid_size  # ex [5,5]
+    def __init__(self, player_strats, board_size, asc_or_dsc, type_of_player, max_turns=1000):
+        self.board_size = board_size  # ex [5,5]
         self.game_won = False
         self.players_dead = 0
-        self.board = Board(self, grid_size, asc_or_dsc)
+        self.board = Board(self, board_size, asc_or_dsc)
         self.max_turns = max_turns
         self.type_of_player = type_of_player
         self.player = Player(BasicStrategy, (0, 0),
-                             self.grid_size, '0', 'black')
+                             self.board_size, '0', 'black')
         self.combat_engine = CombatEngine(
-            self.board, self, self.grid_size, asc_or_dsc)
+            self.board, self, self.board_size, asc_or_dsc)
         self.movement_engine = MovementEngine(self.board, self)
         self.economic_engine = EconomicEngine(self.board, self)
         self.log = Logger()
@@ -52,29 +52,30 @@ class Game:
         self.log.get_next_active_file('logs')
 
     def create_players(self):
-        starting_positions = [[self.grid_size // 2, 0], [self.grid_size // 2, self.grid_size], [0, self.grid_size // 2], [
-            self.grid_size, self.grid_size // 2]]  # players now start at the axis' and not the corners
+        starting_positions = [[self.board_size // 2, 0], [self.board_size // 2, self.board_size], [0, self.board_size // 2], [
+            self.board_size, self.board_size // 2]]  # players now start at the axis' and not the corners
         colors = ['Blue', 'Red', 'Purple', 'Green']
         players = []
         for i, strategy in enumerate(self.player_strats):
             players.append(
-                Player(strategy, starting_positions[i], self.grid_size, i + 1, colors[i]))
+                Player(strategy, starting_positions[i], self.board_size, i + 1, colors[i]))
         '''for i in range(0, 2):
             if self.type_of_player == 1:
                 players.append(DumbPlayer(
-                    starting_positions[i], self.grid_size, i + 1, colors[i]))
+                    starting_positions[i], self.board_size, i + 1, colors[i]))
             if self.type_of_player == 2:
                 players.append(RandomPlayer(
-                    starting_positions[i], self.grid_size, i + 1, colors[i]))
+                    starting_positions[i], self.board_size, i + 1, colors[i]))
             if self.type_of_player == 3:
                 players.append(CombatPlayer(
-                    starting_positions[i], self.grid_size, i + 1, colors[i]))
+                    starting_positions[i], self.board_size, i + 1, colors[i]))
             if self.type_of_player == 4:
                 players.append(ColbyStrategyPlayer(
-                    starting_positions[i], self.grid_size, i + 1, colors[i]))'''
+                    starting_positions[i], self.board_size, i + 1, colors[i]))'''
         return players
 
     def play(self):
+        print('Initial State')
         self.generate_state()
         self.state_obsolete()
         self.player_has_not_won = True
@@ -126,11 +127,12 @@ class Game:
         self.board.update_board()
 
     def generate_state(self, phase=None, movement_round=0):
-        movement_state = self.movement_engine.generate_movement_state(movement_round)
-        self.game_state['grid_size'] = self.grid_size
+        movement_state = self.movement_engine.generate_movement_state(
+            movement_round)
+        self.game_state['board_size'] = self.board_size
         self.game_state['turn'] = self.turn
         self.game_state['phase'] = phase
-        self.game_state['round'] = movement_state['round'],
+        self.game_state['movement_round'] = movement_state['movement_round']
         self.game_state['combat'] = self.combat_engine.generate_combat_array()
         players = []
         for player in self.players:
@@ -141,13 +143,13 @@ class Game:
                         if isinstance(value[0], int):
                             player_attributes[attribute] = value
                         elif not isinstance(value[0], int):
-                            ships = {}
+                            ships = []
                             for ship in value:
                                 ship_attributes = {}
-                                for key, value in ship.__dict__.items(): 
+                                for key, value in ship.__dict__.items():
                                     if key != 'player':
                                         ship_attributes[key] = value
-                                ships[(ship.name, ship.ID)] = ship_attributes
+                                ships.append(ship_attributes)
                             player_attributes[attribute] = ships
                     else:
                         player_attributes[attribute] = value

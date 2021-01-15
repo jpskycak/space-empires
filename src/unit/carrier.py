@@ -2,8 +2,8 @@ from unit.unit import Unit
 
 
 class Carrier(Unit):
-    def __init__(self, player, position, grid_size, can_move, attack_tech=0, defense_tech=0, movement_tech=0, stored_ships=[]):
-        super().__init__(player, position, grid_size, can_move,
+    def __init__(self, player, position, board_size, can_move, attack_tech=0, defense_tech=0, movement_tech=0, stored_ships=[]):
+        super().__init__(player, position, board_size, can_move,
                          attack_tech, defense_tech, movement_tech)
         self.name = 'Carrier'
         self.label = 'CA'

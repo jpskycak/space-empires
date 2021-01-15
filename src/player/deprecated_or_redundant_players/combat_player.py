@@ -1,50 +1,49 @@
+import random
+from unit.carrier import Carrier
+from unit.decoy import Decoy
+from unit.miner import Miner
+from unit.base import Base
+from unit.ship_yard import Ship_Yard
+from unit.colony import Colony
+from unit.colony_ship import Colony_Ship
+from unit.dreadnaught import Dreadnaught
+from unit.battleship import Battleship
+from unit.battle_cruiser import BattleCruiser
+from unit.cruiser import Cruiser
+from unit.destroyer import Destroyer
+from unit.scout import Scout
+from unit.unit import Unit
+from board import Planet
+from board import Board
+from player.player import Player
 import sys
 sys.path.append('src')
-from player.player import Player
-from board import Board
-from board import Planet
-from unit.unit import Unit
-from unit.scout import Scout
-from unit.destroyer import Destroyer
-from unit.cruiser import Cruiser
-from unit.battle_cruiser import BattleCruiser
-from unit.battleship import Battleship
-from unit.dreadnaught import Dreadnaught
-from unit.colony_ship import Colony_Ship
-from unit.colony import Colony
-from unit.ship_yard import Ship_Yard
-from unit.base import Base
-from unit.miner import Miner
-from unit.decoy import Decoy
-from unit.carrier import Carrier
-import random
-
 
 
 class CombatPlayer(Player):
-    def __init__(self, position, grid_size, player_number, player_color):
-        super().__init__(position, grid_size, player_number, player_color)
+    def __init__(self, position, board_size, player_number, player_color):
+        super().__init__(position, board_size, player_number, player_color)
         self.type = 'Combat Player'
         self.creds = 0
         self.status = 'Playing'
         self.death_count = 0  # if winCount = amount of units self.lose = true
         # starts out with 3 scouts and 3 colony ships later it would be 3 miners
         self.ships = [
-            Scout(self, position, self.grid_size, 1, True),
-            Scout(self, position, self.grid_size, 2, True),
-            Scout(self, position, self.grid_size, 3, True),
-            Colony_Ship(self, position, self.grid_size, 4, True),
-            Colony_Ship(self, position, self.grid_size, 5, True),
-            Colony_Ship(self, position, self.grid_size, 6, True)
+            Scout(self, position, self.board_size, 1, True),
+            Scout(self, position, self.board_size, 2, True),
+            Scout(self, position, self.board_size, 3, True),
+            Colony_Ship(self, position, self.board_size, 4, True),
+            Colony_Ship(self, position, self.board_size, 5, True),
+            Colony_Ship(self, position, self.board_size, 6, True)
         ]
         self.ship_yards = [
-            Ship_Yard(self, position, self.grid_size, 1, False),
-            Ship_Yard(self, position, self.grid_size, 2, False),
-            Ship_Yard(self, position, self.grid_size, 3, False),
-            Ship_Yard(self, position, self.grid_size, 4, False)
+            Ship_Yard(self, position, self.board_size, 1, False),
+            Ship_Yard(self, position, self.board_size, 2, False),
+            Ship_Yard(self, position, self.board_size, 3, False),
+            Ship_Yard(self, position, self.board_size, 4, False)
         ]
         self.home_base = Colony(
-            self, 1, position, self.grid_size, home_base=True)
+            self, 1, position, self.board_size, home_base=True)
         self.colonies = []
         self.starting_position = position
         self.attack_tech = 0
@@ -56,8 +55,10 @@ class CombatPlayer(Player):
         self.fighting_class_tech = 0
         self.movement_tech_upgrade_number = 0
         self.ship_to_build = 2
+
+
 '''
-    def will_colonize(self):
+    def will_colonize_planet(self):
         return False
 
     def upgrade(self, turn):  # actual function should be in here because you can only upgrade new ships not ones in the field
@@ -115,7 +116,7 @@ class CombatPlayer(Player):
 
     def create_ship(self, ship_class, position):
         if ship_class == 1:
-            return Scout(self, position, self.grid_size, True)
+            return Scout(self, position, self.board_size, True)
         if ship_class == 2:
-            return Destroyer(self, position, self.grid_size, True)
+            return Destroyer(self, position, self.board_size, True)
 '''

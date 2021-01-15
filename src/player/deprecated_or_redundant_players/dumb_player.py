@@ -21,8 +21,8 @@ sys.path.append('src')
 
 
 class DumbPlayer(Player):
-    def __init__(self, position, grid_size, player_number, player_color):
-        super().__init__(position, grid_size, player_number, player_color)
+    def __init__(self, position, board_size, player_number, player_color):
+        super().__init__(position, board_size, player_number, player_color)
         self.type = 'Dumb Player'
         self.creds = 0
         self.status = 'Playing'
@@ -30,21 +30,21 @@ class DumbPlayer(Player):
         self.player_number = player_number
         self.player_color = player_color
         self.ships = [
-            Scout(self, position, self.grid_size, 1, True),
-            Scout(self, position, self.grid_size, 2, True),
-            Scout(self, position, self.grid_size, 3, True),
-            Colony_Ship(self, position, self.grid_size, 4, True),
-            Colony_Ship(self, position, self.grid_size, 5, True),
-            Colony_Ship(self, position, self.grid_size, 6, True)
+            Scout(self, position, self.board_size, 1, True),
+            Scout(self, position, self.board_size, 2, True),
+            Scout(self, position, self.board_size, 3, True),
+            Colony_Ship(self, position, self.board_size, 4, True),
+            Colony_Ship(self, position, self.board_size, 5, True),
+            Colony_Ship(self, position, self.board_size, 6, True)
         ]
         self.ship_yards = [
-            Ship_Yard(self, position, self.grid_size, 1, False),
-            Ship_Yard(self, position, self.grid_size, 2, False),
-            Ship_Yard(self, position, self.grid_size, 3, False),
-            Ship_Yard(self, position, self.grid_size, 4, False)
+            Ship_Yard(self, position, self.board_size, 1, False),
+            Ship_Yard(self, position, self.board_size, 2, False),
+            Ship_Yard(self, position, self.board_size, 3, False),
+            Ship_Yard(self, position, self.board_size, 4, False)
         ]
         self.home_base = Colony(
-            self, position, self.grid_size, 1, home_base=True)
+            self, position, self.board_size, 1, home_base=True)
         self.colonies = []
         self.starting_position = position
         self.attack_tech = 0
@@ -66,4 +66,4 @@ class DumbPlayer(Player):
             else:
                 data_dict[attribute] = value
         self.strategy = DumbStrategy(data_dict, Player(
-            (0, 0), self.grid_size, '0', 'black'))
+            (0, 0), self.board_size, '0', 'black'))

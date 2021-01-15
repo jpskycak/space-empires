@@ -75,7 +75,7 @@ class BasicStrategy:  # no movement or actual strategy, just funcitons like deci
     def decide_ship_placement(self, game_state):
         return game_state['players'][self.player_index]['ship_yards']['Ship Yard', random.randint(1, len(game_state['players'][self.player_index]['ship_yards']))]['x'], game_state['players'][self.player_index]['ship_yards']['Ship Yard', random.randint(1, len(game_state['players'][self.player_index]['ship_yards']))]['y']
 
-    def will_colonize(self, game_state):
+    def will_colonize_planet(self, game_state):
         return False
 
 
@@ -93,7 +93,7 @@ class DumbStrategy(BasicStrategy):
 
     def decide_ship_movement(self, ship, game_state, movement_round):
         x, y = ship['x'], ship['y']
-        if ship['x'] < game_state['players'][self.player_index]['grid_size']:
+        if ship['x'] < game_state['players'][self.player_index]['board_size']:
             x += ship['movement_tech'][movement_round]
         return x, y
 
@@ -102,7 +102,7 @@ class DumbStrategy(BasicStrategy):
 class BestStrategy(BasicStrategy):
     def __init__(self, player_dict, Player): #wutever els we need):
         game_state['players'][self.player_index] = player_dict #not gonna be actual player it gonna be the player class for the functions its not gonna have any actual data
-        self.player = Player((0, 0), player_dict['grid_size'], '0', 'black') #just an empty class to call functions and stuffs
+        self.player = Player((0, 0), player_dict['board_size'], '0', 'black') #just an empty class to call functions and stuffs
 
     def will_colonize_planet(self, colony_ship, game_state): #game not yet inputed cause infinite import loop bad
         return True#isinstance(colony_ship, Colony_Ship) and colony_ship.x == planet.x and colony_ship.y == planet.y and not planet.is_colonized
