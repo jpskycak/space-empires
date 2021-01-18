@@ -18,38 +18,37 @@ sys.path.append('src')
 
 
 class BasicStrategy:  # no movement or actual strategy, just funcitons like decide_removal or decide_which_unit_to_attack or simple_sort
-    def __init__(self, player_dict, player):  # wutever we need):
-        game_state['players'][self.player_index] = player_dict
-        self.player = player  # just an empty class to call functions and stuffs
+    def __init__(self, player_index):  # wutever we need):
+        self.player_index = player_index
         self.__name__ = 'BasicStrategy'
 
     def decide_removals(self, game_state, turn):
         if turn == 1:
             return None
         else:
-            return self.simple_sort(game_state['players'][game_state['players'][self.player_index]['player_number']-1]['ships'])[-1]
+            return self.simple_sort(game_state, game_state['players'][game_state['players'][self.player_index]['player_number']-1]['units'])[-1]
 
-    def decide_which_unit_to_attack(self, attacking_ship, position, game_state):
-        return self.strongest_enemy_ship(game_state[position])
+    def decide_which_unit_to_attack(self, attacking_ship, coords, game_state):
+        return self.strongest_enemy_ship(game_state, game_state['combat_state'][coords])
 
-    def simple_sort(self, ship_dict):
+    def simple_sort(self, game_state, ship_dict):
         fixed_arr, sorted_arr = [], []
         for _, ship_attributes in ship_dict.items():
             if ship_attributes['name'] != 'Decoy' and ship_attributes['name'] != 'Colony Ship' and ship_attributes['name'] != 'Miner' and ship_attributes['name'] != 'Colony':
                 fixed_arr.append(ship_attributes)
         while len(fixed_arr) > 0:
-            sorted_arr.append(self.max_value(fixed_arr))
-            fixed_arr.remove(self.max_value(fixed_arr))
+            sorted_arr.append(self.max_value(game_state, fixed_arr))
+            fixed_arr.remove(self.max_value(game_state, fixed_arr))
         return sorted_arr
 
-    def max_value(self, arr):
+    def max_value(self, game_state, arr):
         strongest_ship = arr[0]
         for ship in arr[1:]:
-            if self.ship_1_fires_first(ship, strongest_ship):
+            if self.ship_1_fires_first(game_state, ship, strongest_ship):
                 strongest_ship = ship
         return strongest_ship
 
-    def ship_1_fires_first(self, ship_1, ship_2):
+    def ship_1_fires_first(self, game_state, ship_1, ship_2):
         if ship_1['fighting_class'] > ship_2['fighting_class']:
             return True
         elif ship_1['fighting_class'] < ship_2['fighting_class']:
@@ -60,20 +59,20 @@ class BasicStrategy:  # no movement or actual strategy, just funcitons like deci
             elif ship_1['attack_tech'] < ship_2['attack_tech']:
                 return False
             else:
-                if ship_1['attack'] > ship_2['attack']:
+                if game_state['unit_data'][ship_1.type]['attack'] > ship_2['attack']:
                     return True
                 elif ship_1['attack'] < ship_2['attack']:
                     return False
                 else:
                     return True
 
-    def strongest_enemy_ship(self, game_state_ship_list):
-        for ship_attributes in game_state_ship_list:
-            if ship_attributes['player']['player_number'] != game_state['players'][self.player_index]['player_number']:
+    def strongest_enemy_ship(self, combat_state_ship_list):
+        for ship_attributes in combat_state_ship_list:
+            if ship_attributes['player']['player_number'] != self.player_index + 1:
                 return ship_attributes
 
     def decide_ship_placement(self, game_state):
-        return game_state['players'][self.player_index]['ship_yards']['Ship Yard', random.randint(1, len(game_state['players'][self.player_index]['ship_yards']))]['x'], game_state['players'][self.player_index]['ship_yards']['Ship Yard', random.randint(1, len(game_state['players'][self.player_index]['ship_yards']))]['y']
+        return game_state['players'][self.player_index]['ship_yards']['Ship Yard', random.randint(1, len(game_state['players'][self.player_index]['ship_yards']))]['coords'][0], game_state['players'][self.player_index]['ship_yards']['Ship Yard', random.randint(1, len(game_state['players'][self.player_index]['ship_yards']))]['coords'][1]
 
     def will_colonize_planet(self, game_state):
         return False
@@ -92,8 +91,8 @@ class DumbStrategy(BasicStrategy):
         return Scout(None, (0, 0), 0, 0, True)
 
     def decide_ship_movement(self, ship, game_state, movement_round):
-        x, y = ship['x'], ship['y']
-        if ship['x'] < game_state['players'][self.player_index]['board_size']:
+        x, y = ship['coords'][0], ship['coords'][1]
+        if ship['coords'][0] < game_state['players'][self.player_index]['board_size']:
             x += ship['movement_tech'][movement_round]
         return x, y
 

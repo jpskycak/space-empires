@@ -28,136 +28,95 @@ class Player:
         self.board_size = board_size
         self.new_ship_index = 7
         self.ships = [
-            Scout(self, position, self.board_size, 1, True),
-            Scout(self, position, self.board_size, 2, True),
-            Scout(self, position, self.board_size, 3, True),
-            Colony_Ship(self, position, self.board_size, 4, True),
-            Colony_Ship(self, position, self.board_size, 5, True),
-            Colony_Ship(self, position, self.board_size, 6, True)
+            Scout(self, position, self.board_size, 1),
+            Scout(self, position, self.board_size, 2),
+            Scout(self, position, self.board_size, 3),
+            Colony_Ship(self, position, self.board_size, 4),
+            Colony_Ship(self, position, self.board_size, 5),
+            Colony_Ship(self, position, self.board_size, 6)
         ]
         self.ship_yards = [
-            Ship_Yard(self, position, self.board_size, 1, False),
-            Ship_Yard(self, position, self.board_size, 2, False),
-            Ship_Yard(self, position, self.board_size, 3, False),
-            Ship_Yard(self, position, self.board_size, 4, False)
+            Ship_Yard(self, position, self.board_size, 1),
+            Ship_Yard(self, position, self.board_size, 2),
+            Ship_Yard(self, position, self.board_size, 3),
+            Ship_Yard(self, position, self.board_size, 4)
         ]
         self.home_base = Colony(
             self, position, self.board_size, 1, home_base=True)
         self.colonies = []
         self.starting_position = position
-        self.attack_tech = 0
-        self.defense_tech = 0
-        self.movement_tech = [1, 1, 1]
-        self.ship_yard_tech = 0
-        self.terraform_tech = 0
-        self.ship_size_tech = 0
+        self.technology = {'attack': 0, 'defense': 0, 'movement': [1, 1, 1], 'shipsize': 0, 'shipyard': 0, 'terraform': 0, 'tactics': 0}
         self.fighting_class_tech = 0
         self.movement_tech_upgrade_number = 0
-        data_dict = {}
-        for attribute, value in self.__dict__.items():
-            if isinstance(value, list) and len(value) == 0:
-                data_dict[attribute] = value
-            elif isinstance(value, list) and not isinstance(value[0], int) and len(value) >= 1:
-                for _ in value:
-                    data_dict[attribute] = {(ship.name, ship.ID): {
-                        key: value for key, value in ship.__dict__.items() if key != 'player'} for ship in value}
-            else:
-                data_dict[attribute] = value
         self.strategy = strategy(int(player_number) - 1)
 
     def find_random_ship_yard(self):
         return self.ship_yards[random.randint(0, len(self.ship_yards) - 1)].position
 
-    def find_amount_of_hull_size_building_capiblity(self, position):
-        total_ship_yards_at_position = 0
+    def find_amount_of_hull_size_building_capibility(self, position):
+        total_hull_size_building_capibility_at_position = 0
         for ship_yard in self.ship_yards:
-            if ship_yard.position == position:
-                total_ship_yards_at_position += self.ship_yard_tech
-
-    def build_fleet(self, game_state, turn=0):
-        #print('building a fleet')
-        position = self.find_random_ship_yard().position
-        while self.can_build_ships():
-            self.ship_to_build = self.strategy.decide_ship_purchases(
-                game_state)
-            ship = self.create_ship(self.ship_to_build, position)
-            if ship.cost <= self.creds:
-                self.ships.append(ship)
-                self.creds -= ship.cost
-                print('Player', self.player_number, 'just bought a', ship.name)
+            if tuple(ship_yard.position) == position:
+                total_hull_size_building_capibility_at_position += self.technology['shipyard'] + 1
+        return total_hull_size_building_capibility_at_position
 
     def can_build_ships(self):
         return self.creds >= 6
 
-    def upgrade(self, stat_to_upgrade):
-        if stat_to_upgrade == 'attack' and self.attack_tech < 3:  # offense
-            self.attack_tech += 1
-            self.creds -= 10 * self.attack_tech
-            print('Player', self.player_number, 'upgraded their attack strength from',
-                  self.attack_tech - 1, 'to', self.attack_tech)
-        elif stat_to_upgrade == 'defense' and self.defense_tech < 3:  # defense
-            self.defense_tech += 1
-            self.creds -= 10 * self.defense_tech
-            print('Player', self.player_number, 'upgraded their defense strength from',
-                  self.defense_tech - 1, 'to', self.defense_tech)
-        elif stat_to_upgrade == 'fighting' and self.fighting_class_tech < 3:  # tactics
-            self.fighting_class_tech += 1
-            self.creds -= 5 * self.fighting_class_tech + 10
-            print('Player', self.player_number, 'upgraded their fighting class from',
-                  self.fighting_class_tech - 1, 'to', self.fighting_class_tech)
-        elif stat_to_upgrade == 'movement' and self.movement_tech_upgrade_number < 5:  # speed
-            self.upgrade_movement_tech()
-            print('Player', self.player_number, 'upgraded their movement speed from',
-                  self.movement_tech_upgrade_number - 1, 'to', self.movement_tech_upgrade_number)
-        elif stat_to_upgrade == 'ship-yard' and self.ship_yard_tech < 2:  # ship yard
-            self.ship_yard_tech += 0.5
-            self.creds -= 10 * self.ship_yard_tech
-            print('Player', self.player_number, "upgraded their ship-yard's building size from",
-                  self.ship_yard_tech - 1, 'to', self.ship_yard_tech)
-        elif stat_to_upgrade == 'terraform' and self.terraform_tech < 2:  # terraform
-            self.terraform_tech += 1
-            self.creds -= 15 * self.terraform_tech
-            print('Player', self.player_number, "upgraded their ablility to terraform from",
-                  self.terraform_tech - 1, 'to', self.terraform_tech)
-        elif stat_to_upgrade == 'building_size' and self.ship_size_tech < 6:  # biggest ship size that you can build
-            self.ship_size_tech += 1
-            self.creds -= 10
-            print('Player', self.player_number, "upgraded their max building size from",
-                  self.ship_size_tech - 1, 'to', self.ship_size_tech)
+    def upgrade(self, stat_to_upgrade, game_state):
+        _, can_upgrade_bool = self.can_upgrade(stat_to_upgrade, game_state)
+        if can_upgrade_bool:
+            if stat_to_upgrade == 'attack' and self.technology['attack'] < 3:  # offense
+                self.technology['attack'] += 1
+                print('Player', self.player_number, 'upgraded their attack strength from', self.technology['attack'] - 1, 'to', self.technology['attack'])
 
-    def upgrade_costs(self, stat_to_upgrade):
-        if stat_to_upgrade == 'attack':  # offense
-            return 10 * self.attack_tech
-        elif stat_to_upgrade == 'defense':  # defense
-            return 10 * self.defense_tech
-        elif stat_to_upgrade == 'fighting':  # tactics
-            return 5 * self.fighting_class_tech + 10
-        elif stat_to_upgrade == 'movement' and self.movement_tech_upgrade_number < 5:  # speed
-            return 10 * self.movement_tech_upgrade_number + 10
-        elif stat_to_upgrade == 'ship yard' and self.ship_yard_tech < 2:  # ship yard
-            return 10 * self.ship_yard_tech
-        elif stat_to_upgrade == 'terraform' and self.terraform_tech < 2:  # terraform
-            return 15 * self.terraform_tech
-        elif stat_to_upgrade == 'building size' and self.ship_size_tech < 6:  # biggest ship size that you can build
-            return 10
+            elif stat_to_upgrade == 'defense' and self.technology['defense'] < 3:  # defense
+                self.technology['defense'] += 1
+                print('Player', self.player_number, 'upgraded their defense strength from', self.technology['defense'] - 1, 'to', self.technology['defense'])
 
-    def can_upgrade(self):
-        return self.creds > 10 * self.attack_tech and self.creds > 10 * self.defense_tech and self.creds > 5 * self.fighting_class_tech + 10 and self.creds > 10 * self.movement_tech_upgrade_number + 10 and self.creds > 10 * self.ship_yard_tech and self.creds > 15 * self.terraform_tech
+            elif stat_to_upgrade == 'tactics' and self.technology['tactics'] < 3:  # tactics
+                self.technology['tactics'] += 1
+                print('Player', self.player_number, 'upgraded their fighting class from', self.technology['tactics'] - 1, 'to', self.technology['tactics'])
+
+            elif stat_to_upgrade == 'movement' and sum(self.technology['movement']) - 2 < 6:  # speed
+                self.upgrade_movement_tech()
+                print('Player', self.player_number, 'upgraded their movement speed from', sum(self.technology['movement']) - 3, 'to', sum(self.technology['movement']) - 2)
+
+            elif stat_to_upgrade == 'shipyard' and self.technology['shipyard'] < 2:  # ship yard
+                self.technology['shipyard'] += 0.5
+                print('Player', self.player_number, "upgraded their ship-yard's building size from",self.technology['shipyard'] - 0.5, 'to', self.technology['shipyard'])
+
+            elif stat_to_upgrade == 'terraform' and self.technology['terraform'] < 2:  # terraform
+                self.technology['terraform'] += 1
+                print('Player', self.player_number, "upgraded their ablility to terraform from", self.technology['terraform'] - 1, 'to', self.technology['terraform'])
+
+            elif stat_to_upgrade == 'shipsize' and self.technology['shipsize'] < 6:  # biggest ship size that you can build
+                self.technology['shipsize'] += 1
+                print('Player', self.player_number, "upgraded their max building size from", self.technology['shipsize'] - 1, 'to', self.technology['shipsize'])
+
+    def can_upgrade(self, stat_to_upgrade, game_state):
+        if stat_to_upgrade != 'movement':
+            return self.upgrade_cost(stat_to_upgrade, game_state), self.creds >= self.upgrade_cost(stat_to_upgrade, game_state)
+        else: 
+            return self.upgrade_cost(stat_to_upgrade, game_state), self.creds >= self.upgrade_cost(stat_to_upgrade, game_state)
+            
+    def upgrade_cost(self, stat_to_upgrade, game_state):
+        if stat_to_upgrade != 'movement':
+            return game_state['technology_data'][stat_to_upgrade][self.technology[stat_to_upgrade]]
+        else:
+            return game_state['technology_data'][stat_to_upgrade][sum(self.technology[stat_to_upgrade]) - 3]
 
     def upgrade_movement_tech(self):
-        self.movement_tech_upgrade_number += 1
         if self.movement_tech_upgrade_number == 1:
-            self.movement_tech[2] == 2
+            self.technology['movement'] = [1,1,2]
         elif self.movement_tech_upgrade_number == 2:
-            self.movement_tech[1] == 2
+            self.technology['movement'] = [1,2,2]
         elif self.movement_tech_upgrade_number == 3:
-            self.movement_tech[0] == 2
+            self.technology['movement'] = [2,2,2]
         elif self.movement_tech_upgrade_number == 4:
-            self.movement_tech[2] == 3
+            self.technology['movement'] = [2,2,3]
         elif self.movement_tech_upgrade_number == 5:
-            self.movement_tech[1] == 3
-        print('Player', self.player_number, "upgraded their max movement speed from",
-              self.movement_tech_upgrade_number - 1, 'to', self.movement_tech_upgrade_number)
+            self.technology['movement'] = [3,3,3]
 
     def screen_ships(self, ships_at_x_y, board):
         #print('ships_at_x_y', ships_at_x_y)
@@ -199,50 +158,3 @@ class Player:
     # game not yet inputed cause infinite import loop bad
     def can_colonize_planet(self, ship, planet, game=None):
         return isinstance(ship, Colony_Ship) and ship.x == planet.x and ship.y == planet.y and not planet.is_colonized
-
-    # phat helper functions
-    def determine_availible_ship_classes(self):
-        if self.creds > 30 and self.ship_size_tech >= 6:
-            return random.randint(1, 7)
-        elif self.creds < 30 and self.creds >= 25 and self.ship_size_tech >= 5:
-            return random.randint(1, 6)
-        elif self.creds < 25 and self.creds >= 20 and self.ship_size_tech >= 4:
-            return random.randint(1, 5)
-        elif self.creds < 20 and self.creds >= 15 and self.ship_size_tech >= 3:
-            return random.randint(1, 4)
-        elif self.creds < 15 and self.creds >= 12 and self.ship_size_tech >= 2:
-            return random.randint(1, 3)
-        elif self.creds < 12 and self.creds >= 9 and self.ship_size_tech >= 1:
-            return random.randint(1, 2)
-        elif self.creds < 9 and self.creds >= 6 and self.ship_size_tech >= 0:
-            return 1
-        else:
-            return None
-
-    def create_ship(self, ship_class, position):
-        if ship_class == 1:
-            scout_colony_ship_decoy_or_miner = random.randint(1, 4)
-            if scout_colony_ship_decoy_or_miner == 1:
-                return Scout(self, position, self.board_size, True)
-            if scout_colony_ship_decoy_or_miner == 2:
-                return Colony_Ship(self, position, self.board_size, True)
-            if scout_colony_ship_decoy_or_miner == 3:
-                return Decoy(self, position, self.board_size, True)
-            if scout_colony_ship_decoy_or_miner == 4:
-                return Miner(self, position, self.board_size, True)
-        elif ship_class == 2:
-            return Destroyer(self, position, self.board_size, True)
-        elif ship_class == 3:
-            return Cruiser(self, position, self.board_size, True)
-        elif ship_class == 4:
-            return BattleCruiser(self, position, self.board_size, True)
-        elif ship_class == 5:
-            return Battleship(self, position, self.board_size, True)
-        elif ship_class == 6:
-            return Dreadnaught(self, position, self.board_size, True)
-        elif ship_class == 7:
-            return Carrier(self, position, self.board_size, True)
-        elif ship_class == 8:
-            return Colony_Ship(self, position, self.board_size, True)
-        else:
-            return Scout(self, position, self.board_size, True)

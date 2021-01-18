@@ -19,59 +19,56 @@ class EconomicEngine:
         self.board = board
         self.game = game
 
-    def complete_all_taxes(self, turn):
+    def complete_all_taxes(self, game_state):
         for player in self.game.players:
             player.creds += self.income(player)
             print('Player', player.player_number, "'s income is", self.income(player))
-            maintenance_cost = self.maintenance(player, turn)
+            maintenance_cost = self.maintenance(player, game_state)
             player.creds -= maintenance_cost
             print('Player', player.player_number, "'s maintenance is", maintenance_cost)
             self.game.generate_state(phase='Economic')
-            purchases = player.strategy.decide_purchases(self.game.game_state)
+            purchases = player.strategy.decide_purchases(game_state)
+            for technology in purchases['technology']:
+                upgrade_cost = player.upgrade_cost(technology, game_state)
+                if player.creds > upgrade_cost:
+                    player.upgrade(technology, game_state)
+                    player.creds -= upgrade_cost
             for unit in purchases['units']:
-                ship = self.create_ship(player, unit, player.strategy.decide_ship_placement(
-                    self.game.game_state), player.board_size, player.new_ship_index)
-                if player.creds >= ship.cost:
+                ship_placement = player.strategy.decide_ship_placement(
+                    game_state)
+                ship = self.create_ship(player, unit, ship_placement, player.board_size, player.new_ship_index)
+                ship_size = player.technology['shipsize']
+                ship_size_needed = game_state['unit_data'][ship.type]['shipsize_needed'] - 1
+                hull_size_needed = game_state['unit_data'][ship.type]['hullsize']
+                hull_size_capibility = player.find_amount_of_hull_size_building_capibility(ship_placement)
+                if player.creds >= ship.cost and ship_size_needed >= ship_size and hull_size_capibility >= hull_size_needed:
                     player.ships.append(ship)
                     player.creds -= ship.cost
-                    print('Player', player.player_number, "bought a", ship.name)
+                    print('Player', player.player_number, "bought a", ship.type)
                     player.new_ship_index += 1
-            for technology in purchases['technology']:
-                if player.creds > player.upgrade_costs(technology):
-                    player.upgrade(technology)
-                    player.creds -= player.upgrade_costs(technology)
             self.game.generate_state(phase='Economic')
 
     def create_ship(self, player, ship, position, board_size, ID):
         if ship == 'Scout':
-            return Scout(player, position, board_size, ID, True)
+            return Scout(player, position, board_size, ID)
         elif ship == 'Destroyer':
-            return Destroyer(player, position, board_size, ID, True)
+            return Destroyer(player, position, board_size, ID)
         elif ship == 'Cruiser':
-            return Cruiser(player, position, board_size, ID, True)
+            return Cruiser(player, position, board_size, ID)
         elif ship == 'BattleCruiser':
-            return BattleCruiser(player, position, board_size, ID, True)
+            return BattleCruiser(player, position, board_size, ID)
         elif ship == 'Battleship':
-            return Battleship(player, position, board_size, ID, True)
+            return Battleship(player, position, board_size, ID)
         elif ship == 'Dreadnaught':
-            return Dreadnaught(player, position, board_size, ID, True)
+            return Dreadnaught(player, position, board_size, ID)
         elif ship == 'Carrier':
-            return Carrier(player, position, board_size, ID, True)
+            return Carrier(player, position, board_size, ID)
         elif ship == 'Miner':
-            return Miner(player, position, board_size, ID, True)
+            return Miner(player, position, board_size, ID)
         elif ship == 'Colony_Ship':
-            return Colony_Ship(player, position, board_size, ID, True)
+            return Colony_Ship(player, position, board_size, ID)
         else:
-            return Scout(player, position, board_size, ID, True)
-
-    def can_upgrade(self, player):
-        return player.creds > 10 * player.attack_tech \
-            or player.creds > 10 * player.defense_tech \
-            or player.creds > 5 * player.fighting_class_tech + 10 \
-            or player.creds > 10 * player.movement_tech_upgrade_number + 10 \
-            or player.creds > 10 * player.ship_yard_tech \
-            or player.creds > 15 * player.terraform_tech \
-
+            return Scout(player, position, board_size, ID)
 
     def income(self, player):
         income = 0
@@ -80,22 +77,25 @@ class EconomicEngine:
         income += player.home_base.income
         return income
 
-    def maintenance(self, player, turn):
-        total_cost = 0
-        removal_index = None
-        for ship in player.ships:
-            if not isinstance(ship, Base) and not isinstance(ship, Colony) and not isinstance(ship, Colony_Ship) and not isinstance(ship, Decoy):
-                cost = ship.defense_tech + ship.defense + ship.armor
-                if player.creds >= cost:
-                    total_cost += cost
+    def maintenance(self, player, game_state):
+        total_cost = self.maintenance_cost(player, game_state)
+        removal_id = None
         if total_cost > player.creds:
-            removal_index = player.strategy.decide_removal(
-                self.game.game_state, turn)
-            print('Player', player.player_number, "couldn't maintain their", [
-                  ('ID', index, 'Name', ship.name) for index, ship in enumerate(player.ships) if index == removal_index])
+            removal_id = player.strategy.decide_removal(game_state)
+            for index, ship in enumerate(player.ships):
+                if index == removal_id:
+                    print('Player', player.player_number, "couldn't maintain their", ship.type, 'ID', index)  
         player.ships = [ship for index, ship in enumerate(
-            player.ships) if index != removal_index]
+            player.ships) if index is not removal_id]
         return total_cost
 
-    def generate_economic_state(self, player, turn):
-        return [{'income': self.income(player), 'maintenance cost': self.maintenance(player, turn)}]
+    def maintenance_cost(self, player, game_state):
+        total_cost = 0
+        for ship in player.ships:
+            if not isinstance(ship, Base) and not isinstance(ship, Colony) and not isinstance(ship, Colony_Ship) and not isinstance(ship, Decoy):
+                cost = game_state['unit_data'][ship.type]['maintenance']
+                total_cost += cost
+        return total_cost
+
+    def generate_economic_state(self, player, game_state):
+        return [{'income': self.income(player), 'maintenance cost': self.maintenance_cost(player, game_state)}]

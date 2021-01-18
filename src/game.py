@@ -48,7 +48,7 @@ class Game:
         self.players = self.create_players()
         self.board.create_planets_and_asteroids()
         self.turn = 1
-        self.generate_state()
+        self.generate_state(initial_state = True)
         self.log.get_next_active_file('logs')
 
     def create_players(self):
@@ -108,62 +108,69 @@ class Game:
         self.movement_engine.complete_all_movements(
             self.board, self.game_state)
         self.state_obsolete()
-        self.generate_state()
+        self.generate_state(phase='Combat')
         print('--------------------------------------------------')
         print('Combat Phase')
         self.combat_engine.complete_all_fights()
         self.state_obsolete()
-        self.generate_state()
+        self.generate_state(phase='Economic')
         print('--------------------------------------------------')
         if self.turn < self.max_turns:
             print('Economic Phase')
-            self.economic_engine.complete_all_taxes(self.turn)
+            self.economic_engine.complete_all_taxes(self.game_state)
             for player in self.players:
                 print('Player', player.player_number, 'Has',
                       player.creds, 'creds extra after the economic phase.')
             self.state_obsolete()
-            self.generate_state()
+            self.generate_state(phase='Movement')
             print('--------------------------------------------------')
         self.board.update_board()
 
-    def generate_state(self, phase=None, movement_round=0):
-        movement_state = self.movement_engine.generate_movement_state(
-            movement_round)
+    def generate_state(self, phase=None, movement_round=0, initial_state = False):
+        movement_state = self.movement_engine.generate_movement_state(movement_round)
+        self.game_state['unit_data'] = {
+            'Battleship': {'cp_cost': 20, 'hullsize': 3, 'shipsize_needed': 5, 'tactics': 5, 'attack': 5, 'defense': 2, 'maintenance': 3},
+            'Battlecruiser': {'cp_cost': 15, 'hullsize': 2, 'shipsize_needed': 4, 'tactics': 4, 'attack': 5, 'defense': 1, 'maintenance': 2},
+            'Cruiser': {'cp_cost': 12, 'hullsize': 2, 'shipsize_needed': 3, 'tactics': 3, 'attack': 4, 'defense': 1, 'maintenance': 2},
+            'Destroyer': {'cp_cost': 9, 'hullsize': 1, 'shipsize_needed': 2, 'tactics': 2, 'attack': 4, 'defense': 0, 'maintenance': 1},
+            'Dreadnaught': {'cp_cost': 24, 'hullsize': 3, 'shipsize_needed': 6, 'tactics': 5, 'attack': 6, 'defense': 3, 'maintenance': 3},
+            'Scout': {'cp_cost': 6, 'hullsize': 1, 'shipsize_needed': 1, 'tactics': 1, 'attack': 3, 'defense': 0, 'maintenance': 1},
+            'Shipyard': {'cp_cost': 3, 'hullsize': 1, 'shipsize_needed': 1, 'tactics': 3, 'attack': 3, 'defense': 0, 'maintenance': 0},
+            'Decoy': {'cp_cost': 1, 'hullsize': 0, 'shipsize_needed': 1, 'tactics': 0, 'attack': 0, 'defense': 0, 'maintenance': 0},
+            'Colonyship': {'cp_cost': 8, 'hullsize': 1, 'shipsize_needed': 1, 'tactics': 0, 'attack': 0, 'defense': 0, 'maintenance': 0},
+            'Base': {'cp_cost': 12, 'hullsize': 3, 'shipsize_needed': 2, 'tactics': 5, 'attack': 7, 'defense': 2, 'maintenance': 0},
+        }
+        self.game_state['technology_data'] = {
+            'shipsize': [10, 25, 45, 70, 95],
+            'attack': [20, 50, 90],
+            'defense': [20, 50, 90],
+            'movement': [20, 50, 90, 130, 170],
+            'shipyard': [20, 50]
+        } 
         self.game_state['board_size'] = self.board_size
         self.game_state['turn'] = self.turn
         self.game_state['phase'] = phase
         self.game_state['movement_round'] = movement_state['movement_round']
+        self.game_state['player_turn'] = 0
+        self.game_state['winner'] = None
         self.game_state['combat'] = self.combat_engine.generate_combat_array()
-        players = []
-        for player in self.players:
-            player_attributes = {}
-            for attribute, value in player.__dict__.items():
-                if isinstance(value, list):
-                    if len(value) > 0:
-                        if isinstance(value[0], int):
-                            player_attributes[attribute] = value
-                        elif not isinstance(value[0], int):
-                            ships = []
-                            for ship in value:
-                                ship_attributes = {}
-                                for key, value in ship.__dict__.items():
-                                    if key != 'player':
-                                        ship_attributes[key] = value
-                                ships.append(ship_attributes)
-                            player_attributes[attribute] = ships
-                    else:
-                        player_attributes[attribute] = value
-                else:
-                    player_attributes[attribute] = value
-            player_attributes['economic_state'] = self.economic_engine.generate_economic_state(
-                player, self.turn)
-            players.append(player_attributes)
-        self.game_state['players'] = players
-        self.game_state['misc_dict'] = self.board.misc_dict
+        if initial_state: self.game_state['players'] = {}
+        for i, player in enumerate(self.players):
+            player_attributes = {'creds': player.creds, 'home_coords': (player.home_base.x, player.home_base.y), 'status': player.status, 'units': [], 'colonies': [], 'shipyards': [], 'technology': player.technology}
+            for unit in player.ships:
+                player_attributes['units'].append({'coords': (unit.x, unit.y), 'type': unit.type, 'ID': unit.ID, 'hits_left': unit.hits_left, 'technology': unit.technology})
+            for colonies in player.colonies:
+                player_attributes['colonies'].append({'coords': (colonies.x, colonies.y), 'type': colonies.type, 'ID': colonies.ID, 'hits_left': colonies.hits_left, 'technology': colonies.technology})
+            for shipyards in player.ship_yards:
+                player_attributes['shipyards'].append({'coords': (shipyards.x, shipyards.y), 'type': shipyards.type, 'ID': shipyards.ID, 'hits_left': shipyards.hits_left, 'technology': shipyards.technology})
+            player_attributes['economic_state'] = self.economic_engine.generate_economic_state(player, self.game_state)
+            self.game_state['players'][i] = player_attributes
+        self.game_state['planets'] = self.board.planets
+         
 
     # misc functions
-    # obsolete but can be used for debugging
 
+    # obsolete but can be used for debugging
     def state_obsolete(self, print_planets_and_asteroids=False):
         if print_planets_and_asteroids:
             print('Asteroids')
@@ -190,19 +197,19 @@ class Game:
             print('')
             print('          Player Ships')
             for ship in player.ships:
-                print('              ', ship.name, ':', 'Ship ID:',
+                print('              ', ship.type, ':', 'Ship ID:',
                       ship.ID, ':', [ship.x, ship.y])
 
             if player.colonies != []:
                 print('')
                 print('          Player Colonies')
                 for colony in player.colonies:
-                    print('              ', colony.name, ':', 'Colony ID:',
+                    print('              ', colony.type, ':', 'Colony ID:',
                           colony.ID, ':', [colony.x, colony.y])
 
             print('')
             print('          Player Home Base')
-            print('              ', player.home_base.name, ':', 'Colony ID:',
+            print('              ', player.home_base.type, ':', 'Colony ID:',
                   player.home_base.ID, ':', [player.home_base.x, player.home_base.y])
 
             print('')

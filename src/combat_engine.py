@@ -34,7 +34,8 @@ class CombatEngine:
             if len(ships_that_shot) == len(fixed_ships):
                 ships_that_shot = []
             self.current_roll = self.rolls[self.dice_roll_index]
-            attacking_ship = self.get_next_ally_ship(fixed_ships, ships_that_shot)
+            attacking_ship = self.get_next_ally_ship(
+                fixed_ships, ships_that_shot)
             defending_ship_dict = attacking_ship.player.strategy.decide_which_unit_to_attack(
                 self.generate_combat_array(), attacking_ship.player.ships.index(attacking_ship), (attacking_ship.x, attacking_ship.y))
             for ship in self.game.players[defending_ship_dict['player']-1].ships:
@@ -67,10 +68,10 @@ class CombatEngine:
                 return ship
 
     def start_fight(self, ship_1, ship_2):
-        print("Player", ship_1.player.player_number, "'s", ship_1.name, ship_1.ID,
-              "vs Player", ship_2.player.player_number, "'s", ship_2.name, ship_2.ID)
+        print("Player", ship_1.player.player_number, "'s", ship_1.type, ship_1.ID,
+              "vs Player", ship_2.player.player_number, "'s", ship_2.type, ship_2.ID)
         hit_or_miss = self.attack(ship_1, ship_2)
-        if ship_2.armor < 1:
+        if ship_2.hits_left < 1:
             print("Player", ship_2.player.player_number,
                   "'s unit was destroyed at co-ords", [ship_2.x, ship_2.y])
             print('-------------------------')
@@ -81,17 +82,17 @@ class CombatEngine:
     def attack(self, ship_1, ship_2):
         player_1 = ship_1.player
         player_2 = ship_2.player
-        hit_threshold = (ship_1.attack + player_1.attack_tech) - \
-            (ship_2.defense + player_2.defense_tech)
+        hit_threshold = (ship_1.attack + player_1.technology['attack']) - \
+            (ship_2.defense + player_2.technology['defense'])
         die_roll = self.rolls[self.dice_roll_index]
         if die_roll == 1 or die_roll <= hit_threshold:
             print('Player', player_1.player_number, 'Hit their shot, targeting Player',
-                  player_2.player_number, "'s unit", ship_2.name, ship_2.ID)
-            ship_2.armor -= 1  # player 2's ship loses some armor
+                  player_2.player_number, "'s unit", ship_2.type, ship_2.ID)
+            ship_2.hits_left -= 1  # player 2's ship loses some hits_left
             return 'Hit'
         else:
             print('Player', player_1.player_number, 'Missed their shot, targeting Player',
-                  player_2.player_number, "'s unit", ship_2.name, ship_2.ID)
+                  player_2.player_number, "'s unit", ship_2.type, ship_2.ID)
             return 'Miss'
 
     def possible_fights(self):

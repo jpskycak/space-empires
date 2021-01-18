@@ -45,6 +45,7 @@ class Board:
                     planet_or_asteroid = 1  # self.get_die_roll()
                     if planet_or_asteroid <= 2:
                         self.misc_dict[(i, j)] = [self.create_planet([i, j])]
+                        self.planets.append((i,j))
                         self.planets.append(self.create_planet([i, j]))
                     elif planet_or_asteroid > 2 and planet_or_asteroid <= 4:
                         self.misc_dict[(i, j)] = [self.create_asteroid([i, j])]
@@ -58,8 +59,7 @@ class Board:
 
     def create_colony(self, player, planet, position):
         planet.is_colonized = True
-        player.colonies.append(
-            Colony(self, len(player.colonies) + 1, position, self.board_size))
+        player.colonies.append(Colony(self, len(player.colonies) + 1, position, self.board_size))
 
     # combat stuffs
     def if_it_can_fight(self, ship): return not isinstance(ship, Colony_Ship) and not isinstance(
@@ -71,9 +71,9 @@ class Board:
         elif ship_1.fighting_class < ship_2.fighting_class:
             return False
         else:
-            if ship_1.attack_tech > ship_2.attack_tech:
+            if ship_1.technology['attack'] > ship_2.technology['attack']:
                 return True
-            elif ship_1.attack_tech < ship_2.attack_tech:
+            elif ship_1.technology['attack'] < ship_2.technology['attack']:
                 return False
             else:
                 if ship_1.attack > ship_2.attack:

@@ -82,7 +82,7 @@ class DumbPlayer(Player):
     def maintenance(self):
         for ship in self.ships:
             if not isinstance(ship, Base) and not isinstance(ship, Colony) and not isinstance(ship, Colony_Ship) and not isinstance(ship, Decoy):
-                cost = ship.defense_tech + ship.defense + ship.armor
+                cost = ship.defense_tech + ship.defense + ship.hits_left
 
                 if self.creds >= cost:
                     self.creds -= cost

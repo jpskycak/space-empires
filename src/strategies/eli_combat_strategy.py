@@ -14,7 +14,7 @@ class CombatStrategy:
 
     # Move all ships closer to the center
     def decide_ship_movement(self, unit_index, game_state):
-        unit = game_state['players'][self.player_index]['ships'][unit_index]
+        unit = game_state['players'][self.player_index]['units'][unit_index]
         sp = game_state['sp']
         tech_amt = game_state['players'][self.player_index]['spaces'][sp]
         possible_spaces = get_possible_spots(

@@ -8,7 +8,7 @@ class MovementEngine:
                 player.check_colonization(self.board, game_state)
                 for movement_round in range(0, 3):  # 3 rounds of movements
                     for ship_index, ship in enumerate(player.ships):
-                        for _ in range(0,ship.movement_tech[movement_round] + 1):
+                        for _ in range(0,ship.technology['movement'][movement_round] + 1):
                             x, y = player.strategy.decide_ship_movement(ship_index, game_state)
                             ship.x += x
                             ship.y += y
