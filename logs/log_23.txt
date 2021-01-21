@@ -1,0 +1,19 @@
+Turn: 1
+Player: 1
+Status: Playing
+Scout: Position: [2,2] 
+Scout: Position: [2,2] 
+Scout: Position: [2,2] 
+
+Player: 2
+Status: Playing
+Destroyer: Position: [2,4] 
+
+Turn: 2
+Player: 1
+Status: Playing
+Scout: Position: [2,2] 
+
+Player: 2
+Status: Playing
+

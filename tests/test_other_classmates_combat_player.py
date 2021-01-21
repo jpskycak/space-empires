@@ -1,10 +1,10 @@
 import sys
 sys.path.append('src')
 #from strategies.combat_strategy import CombatStrategy
-#from strategies.eli_combat_strategy import CombatStrategy
+from strategies.eli_combat_strategy import CombatStrategy
 #from strategies.riley_combat_strategy import CombatStrategy
 #from strategies.george_combat_strategy import CombatStrategy
-from strategies.david_combat_strategy import CombatStrategy
+#from strategies.david_combat_strategy import CombatStrategy
 from game import Game
 from logger import Logger
 

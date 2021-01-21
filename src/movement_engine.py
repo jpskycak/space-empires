@@ -5,14 +5,28 @@ class MovementEngine:
 
     def complete_all_movements(self, board, game_state):
         for player in self.game.players:
-                player.check_colonization(self.board, game_state)
-                for movement_round in range(0, 3):  # 3 rounds of movements
-                    for ship_index, ship in enumerate(player.ships):
-                        for _ in range(0,ship.technology['movement'][movement_round] + 1):
-                            x, y = player.strategy.decide_ship_movement(ship_index, game_state)
-                            ship.x += x
-                            ship.y += y
-                            self.game.generate_state(phase='Movement', movement_round=movement_round)
+            player.check_colonization(self.board, game_state)
+            for movement_round in range(0, 3):  # 3 rounds of movements
+                for ship_index, ship in enumerate(player.ships):
+                    for _ in range(0, self.get_movement_tech(ship.technology['movement'])[movement_round] + 1):
+                        x, y = player.strategy.decide_ship_movement(ship_index, game_state)
+                        ship.x += x
+                        ship.y += y
+                        self.game.generate_state(phase='Movement', movement_round=movement_round)
 
     def generate_movement_state(self, movement_round):
-        return {'movement_round': movement_round}
+        return {'round': movement_round}
+
+    def get_movement_tech(self, ship_movement_level):
+        if ship_movement_level == 1:
+            return [1, 1, 1]
+        elif ship_movement_level == 2:
+            return [1, 1, 2]
+        elif ship_movement_level == 3:
+            return [1, 2, 2]
+        elif ship_movement_level == 4:
+            return [2, 2, 2]
+        elif ship_movement_level == 5:
+            return [2, 2, 3]
+        elif ship_movement_level == 5:
+            return [2, 3, 3]

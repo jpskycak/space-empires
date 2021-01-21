@@ -71,7 +71,7 @@ class BasicStrategy:  # no movement or actual strategy, just funcitons like deci
             if ship_attributes['player']['player_number'] != self.player_index + 1:
                 return ship_attributes
 
-    def decide_ship_placement(self, game_state):
+    def decide_ship_movement(self, unit_index, game_state):
         return game_state['players'][self.player_index]['ship_yards']['Ship Yard', random.randint(1, len(game_state['players'][self.player_index]['ship_yards']))]['coords'][0], game_state['players'][self.player_index]['ship_yards']['Ship Yard', random.randint(1, len(game_state['players'][self.player_index]['ship_yards']))]['coords'][1]
 
     def will_colonize_planet(self, game_state):
@@ -106,7 +106,7 @@ class BestStrategy(BasicStrategy):
     def will_colonize_planet(self, colony_ship, game_state): #game not yet inputed cause infinite import loop bad
         return True#isinstance(colony_ship, Colony_Ship) and colony_ship.x == planet.x and colony_ship.y == planet.y and not planet.is_colonized
 
-    def decide_ship_movement(self, ship, game_state, movement_round):
+    def decide_ship_movement(self, ship, game_state, round):
         new_ship = ship
         if isinstance(new_ship, Colony_Ship): new_ship.move_to_nearest_planet(board)
         elif isinstance(new_ship, Scout) and self.scouts_in_correct_half_line_position(scouts):

@@ -1,5 +1,6 @@
 import random
 
+
 class BasicStrategy:  # no movement or actual strategy, just funcitons like decide_removal or decide_which_unit_to_attack or simple_sort
     def __init__(self, player_index):  # wutever we need):
         self.player_index = player_index
@@ -7,8 +8,8 @@ class BasicStrategy:  # no movement or actual strategy, just funcitons like deci
     def decide_removal(self, game_state):
         return self.simple_sort(game_state)[-1]['ID']
 
-    def decide_which_unit_to_attack(self, combat_state, attacker_index, location):
-        return self.strongest_enemy_ship(combat_state[location])
+    def decide_which_unit_to_attack(self, combat_state, coords, attacker_index):
+        return self.strongest_enemy_ship(combat_state[coords])
 
     def decide_which_units_to_screen(self, combat_state):
         return []
@@ -29,7 +30,7 @@ class BasicStrategy:  # no movement or actual strategy, just funcitons like deci
         for ship in arr[1:]:
             if self.ship_1_fires_first(game_state, ship, strongest_ship):
                 strongest_ship = ship
-        return strongest_ship   
+        return strongest_ship
 
     def ship_1_fires_first(self, game_state, ship_1, ship_2):
         if ship_1['technology']['tactics'] > ship_2['technology']['tactics']:
@@ -50,11 +51,11 @@ class BasicStrategy:  # no movement or actual strategy, just funcitons like deci
                     return True
 
     def strongest_enemy_ship(self, combat_state_ship_list):
-        for unit_information in combat_state_ship_list:
+        for index, unit_information in enumerate(combat_state_ship_list):
             if unit_information['player'] != self.player_index + 1:
-                return unit_information
+                return index
 
-    def decide_ship_placement(self, game_state):
+    def decide_ship_movement(self, unit_index, game_state):
         ship_yards = game_state['players'][self.player_index]['shipyards']
         random_ship_yard = random.randint(1, len(ship_yards)) - 1
         return ship_yards[random_ship_yard]['coords'][0], ship_yards[random_ship_yard]['coords'][1]
@@ -64,6 +65,20 @@ class BasicStrategy:  # no movement or actual strategy, just funcitons like deci
 
     def upgrade_costs(self, stat_to_upgrade, game_state):
         if stat_to_upgrade != 'movement':
-            return game_state['technology_data'][stat_to_upgrade][game_state['players'][self.player_index]['technology'][stat_to_upgrade]]
+            return game_state['technology_data'][stat_to_upgrade][game_state['players'][self.player_index]['technology'][stat_to_upgrade] - 1]
         else:
             return game_state['technology_data'][stat_to_upgrade][sum(game_state['players'][self.player_index]['technology'][stat_to_upgrade]) - 2]
+
+    def get_movement_tech(self, ship_movement_level):
+        if ship_movement_level == 1:
+            return [1,1,1]
+        elif ship_movement_level == 2:
+            return [1,1,2]
+        elif ship_movement_level == 3:
+            return [1,2,2]
+        elif ship_movement_level == 4:
+            return [2,2,2]
+        elif ship_movement_level == 5:
+            return [2,2,3]
+        elif ship_movement_level == 5:
+            return [2,3,3]

@@ -16,7 +16,7 @@ class Unit:
         self.y = position[1]
         self.board_size = board_size
         self.is_alive = True  # for ship yard and other stuffs
-        self.technology = {'attack': 0, 'defense': 0, 'movement': [1, 1, 1], 'tactics': 0}
+        self.technology = {'attack': 0, 'defense': 0, 'movement': 1, 'tactics': 0}
         #self.attack_tech = 0
         #self.defense_tech = 0
         #self.movement_tech = [1, 1, 1]

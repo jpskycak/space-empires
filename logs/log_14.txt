@@ -1,0 +1,20 @@
+Turn: 1
+Player: 1
+Status: Playing
+
+Player: 2
+Status: Playing
+Scout: Position: [2,2] 
+Scout: Position: [2,2] 
+Scout: Position: [2,2] 
+
+Turn: 2
+Player: 1
+Status: Playing
+
+Player: 2
+Status: Playing
+Scout: Position: [2,2] 
+Scout: Position: [2,2] 
+Scout: Position: [2,2] 
+

@@ -45,7 +45,7 @@ class Player:
             self, position, self.board_size, 1, home_base=True)
         self.colonies = []
         self.starting_position = position
-        self.technology = {'attack': 0, 'defense': 0, 'movement': [1, 1, 1], 'shipsize': 0, 'shipyard': 0, 'terraform': 0, 'tactics': 0}
+        self.technology = {'attack': 0, 'defense': 0, 'movement': 1, 'shipsize': 1, 'shipyard': 1, 'terraform': 0, 'tactics': 0, 'exploration': 0}
         self.fighting_class_tech = 0
         self.movement_tech_upgrade_number = 0
         self.strategy = strategy(int(player_number) - 1)
@@ -57,7 +57,7 @@ class Player:
         total_hull_size_building_capibility_at_position = 0
         for ship_yard in self.ship_yards:
             if tuple(ship_yard.position) == position:
-                total_hull_size_building_capibility_at_position += self.technology['shipyard'] + 1
+                total_hull_size_building_capibility_at_position += self.technology['shipyard']
         return total_hull_size_building_capibility_at_position
 
     def can_build_ships(self):
@@ -79,7 +79,7 @@ class Player:
                 print('Player', self.player_number, 'upgraded their fighting class from', self.technology['tactics'] - 1, 'to', self.technology['tactics'])
 
             elif stat_to_upgrade == 'movement' and sum(self.technology['movement']) - 2 < 6:  # speed
-                self.upgrade_movement_tech()
+                self.technology['movement'] += 1
                 print('Player', self.player_number, 'upgraded their movement speed from', sum(self.technology['movement']) - 3, 'to', sum(self.technology['movement']) - 2)
 
             elif stat_to_upgrade == 'shipyard' and self.technology['shipyard'] < 2:  # ship yard
@@ -105,18 +105,6 @@ class Player:
             return game_state['technology_data'][stat_to_upgrade][self.technology[stat_to_upgrade]]
         else:
             return game_state['technology_data'][stat_to_upgrade][sum(self.technology[stat_to_upgrade]) - 3]
-
-    def upgrade_movement_tech(self):
-        if self.movement_tech_upgrade_number == 1:
-            self.technology['movement'] = [1,1,2]
-        elif self.movement_tech_upgrade_number == 2:
-            self.technology['movement'] = [1,2,2]
-        elif self.movement_tech_upgrade_number == 3:
-            self.technology['movement'] = [2,2,2]
-        elif self.movement_tech_upgrade_number == 4:
-            self.technology['movement'] = [2,2,3]
-        elif self.movement_tech_upgrade_number == 5:
-            self.technology['movement'] = [3,3,3]
 
     def screen_ships(self, ships_at_x_y, board):
         #print('ships_at_x_y', ships_at_x_y)

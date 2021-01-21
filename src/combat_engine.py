@@ -36,9 +36,9 @@ class CombatEngine:
             self.current_roll = self.rolls[self.dice_roll_index]
             attacking_ship = self.get_next_ally_ship(
                 fixed_ships, ships_that_shot)
-            defending_ship_dict = attacking_ship.player.strategy.decide_which_unit_to_attack(
-                self.generate_combat_array(), attacking_ship.player.ships.index(attacking_ship), (attacking_ship.x, attacking_ship.y))
-            for ship in self.game.players[defending_ship_dict['player']-1].ships:
+            defending_ship_index = attacking_ship.player.strategy.decide_which_unit_to_attack(self.generate_combat_array(), (attacking_ship.x, attacking_ship.y),  attacking_ship.player.ships.index(attacking_ship))
+            defending_ship_dict = self.generate_combat_array()[(attacking_ship.x, attacking_ship.y)][defending_ship_index]
+            for ship in self.game.players[defending_ship_dict['player'] - 1].ships:
                 if ship.ID == defending_ship_dict['unit']:
                     defending_ship = ship
                     break
@@ -123,10 +123,10 @@ class CombatEngine:
 
     def generate_combat_array(self):
         combat_dict = {}
-        for location, ships in self.possible_fights().items():
+        for coords, ships in self.possible_fights().items():
             combat_at_location_arr = []
             for ship in ships:
                 combat_at_location_arr.append(
                     {'player': ship.player.player_number, 'unit': ship.ID})
-            combat_dict[location] = combat_at_location_arr
+            combat_dict[coords] = combat_at_location_arr
         return combat_dict
