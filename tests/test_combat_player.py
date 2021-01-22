@@ -6,7 +6,7 @@ from logger import Logger
 
 player_strategies = CombatStrategy
 
-game_1 = Game([player_strategies, player_strategies], 5, 'asc', 3, max_turns=2)
+game_1 = Game([player_strategies, player_strategies], (5,5), 'asc', 3, max_turns=2)
 print('---------------------------------------------')
 game_1.initialize_game()
 game_1.play()
@@ -22,7 +22,7 @@ if log_1.compare_test_and_example():  # should give assert error if they aren't 
 else:
     print('Ascending Die Combat Player doenst work...')
 
-game_2 = Game([player_strategies, player_strategies], 5, 'dsc', 3, max_turns=2)
+game_2 = Game([player_strategies, player_strategies], (5,5), 'dsc', 3, max_turns=2)
 print('---------------------------------------------')
 game_2.initialize_game()
 game_2.play()

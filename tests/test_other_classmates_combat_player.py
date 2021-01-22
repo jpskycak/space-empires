@@ -10,7 +10,7 @@ from logger import Logger
 
 player_strategies = CombatStrategy
 
-game_1 = Game([player_strategies, player_strategies], 5, 'asc', 3, max_turns=2)
+game_1 = Game([player_strategies, player_strategies], (5,5), 'asc', 3, max_turns=2)
 print('---------------------------------------------')
 game_1.initialize_game()
 game_1.play()
@@ -19,7 +19,7 @@ log_1.get_current_active_file('logs')  # get current file
 log_1.get_correct_example_file(
     'test_logs/asc_combat_player_log.txt')  # ingest correct test
 
-game_2 = Game([player_strategies, player_strategies], 5, 'dsc', 3, max_turns=2)
+game_2 = Game([player_strategies, player_strategies], (5,5), 'dsc', 3, max_turns=2)
 print('---------------------------------------------')
 game_2.initialize_game()
 game_2.play()

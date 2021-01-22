@@ -32,8 +32,10 @@ class Logger:
         # print(os.getcwd())  # what directory ur in (for debugging)
         turn_string = 'Turn: ' + str(game_state['turn']) + '\n'
         self.active_file.write(turn_string)
-        for player_number, player in game_state['players'].items():
-            player_string = 'Player: ' + str(player_number + 1) + '\nStatus: ' + str(player['status']) + '\n'
+        for player_index, player in game_state['players'].items():
+            player_string = 'Player: ' + \
+                str(player_index + 1) + '\nStatus: ' + \
+                str(player['status']) + '\n'
             self.active_file.write(player_string)
             for ship_attributes in player['units']:
                 ship_string = str(ship_attributes['type']) + ': Position: [' + str(

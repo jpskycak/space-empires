@@ -22,15 +22,14 @@ class EconomicEngine:
     def complete_all_taxes(self, game_state):
         for player in self.game.players:
             player.creds += self.income(player)
-            print('Player', player.player_number,
+            print('Player', player.player_index,
                   "'s income is", self.income(player))
             maintenance_cost = self.maintenance(player, game_state)
             player.creds -= maintenance_cost
-            print('Player', player.player_number,
+            print('Player', player.player_index,
                   "'s maintenance is", maintenance_cost)
             self.game.generate_state(phase='Economic')
             purchases = player.strategy.decide_purchases(game_state)
-            print('purchases', purchases)
             for technology in purchases['technology']:
                 upgrade_cost = player.upgrade_cost(technology, game_state)
                 if player.creds > upgrade_cost:
@@ -48,7 +47,7 @@ class EconomicEngine:
                 if player.creds >= ship.cost and shipsize_needed >= ship_size and hull_size_capibility >= hull_size_needed:
                     player.ships.append(ship)
                     player.creds -= ship.cost
-                    print('Player', player.player_number, "bought a", ship.type)
+                    print('Player', player.player_index, "bought a", ship.type)
                     player.new_ship_index += 1
             self.game.generate_state(phase='Economic')
 
@@ -88,7 +87,7 @@ class EconomicEngine:
             removal_id = player.strategy.decide_removal(game_state)
             for index, ship in enumerate(player.ships):
                 if index == removal_id:
-                    print('Player', player.player_number,
+                    print('Player', player.player_index,
                           "couldn't maintain their", ship.type, 'ID', index)
         player.ships = [ship for index, ship in enumerate(
             player.ships) if index is not removal_id]

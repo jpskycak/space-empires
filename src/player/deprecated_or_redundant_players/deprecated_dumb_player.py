@@ -20,13 +20,13 @@ sys.path.append('src')
 
 
 class DumbPlayer(Player):
-    def __init__(self, position, board_size, player_number, player_color):
-        super().__init__(position, board_size, player_number, player_color)
+    def __init__(self, position, board_size, player_index, player_color):
+        super().__init__(position, board_size, player_index, player_color)
         self.type = 'Dumb Player'
         self.creds = 0
         self.status = 'Playing'
         self.death_count = 0  # if winCount = amount of units self.lose = true
-        self.player_number = player_number
+        self.player_index = player_index
         self.player_color = player_color
 # starts out with 3 scouts and 3 colony ships later it would be 3 miners
         self.ships = [
@@ -89,7 +89,7 @@ class DumbPlayer(Player):
 
                 else:
                     self.ships.remove(ship)
-                    print('Player', self.player_number,
+                    print('Player', self.player_index,
                           "couldn't maintain their", ship.name)
 
     def move(self, move_round):

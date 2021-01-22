@@ -21,7 +21,7 @@ class Unit:
         #self.defense_tech = 0
         #self.movement_tech = [1, 1, 1]
         self.ship_yard_tech = 0
-        self.center = [(self.board_size) // 2, (self.board_size) // 2]
+        self.center = [self.board_size[0] // 2, self.board_size[1] // 2]
 '''
     def move_to_center(self, move_round):
         if self.can_move:

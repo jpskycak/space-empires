@@ -25,7 +25,7 @@ class CombatStrategy:
         ds = ['Destroyer', 9]
         sc = ['Scout', 6]
         ship_choice = ds
-        creds = game_state['players'][self.player_index-1]['creds']
+        creds = game_state['players'][self.player_index-1]['cp']
         ship_size_tech = game_state['players'][self.player_index]['technology']['ship_size'][0]
         while creds >= ship_choice[1]:
             if ship_size_tech < 2:

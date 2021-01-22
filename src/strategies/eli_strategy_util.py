@@ -1,5 +1,5 @@
 def is_in_bounds(x, y, bounds):
-    x1, y1 = bounds, bounds
+    x1, y1 = bounds
     return (x >= 0 and x < x1) and (y >= 0 and y < y1)
 
 

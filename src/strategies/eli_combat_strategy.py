@@ -19,8 +19,7 @@ class CombatStrategy:
         sp = game_state['round']
         mov_lvl = p['technology']['movement']
         tech_amt = get_spaces(mov_lvl)[sp]
-        possible_spaces = get_possible_spots(
-            unit["coords"], tech_amt, game_state["board_size"])
+        possible_spaces = get_possible_spots(unit["coords"], tech_amt, game_state["board_size"])
         distances = [dist((2, 2), pos)
                      for pos in possible_spaces]
         next_space = possible_spaces[distances.index(min(distances))]
@@ -30,7 +29,7 @@ class CombatStrategy:
     def decide_purchases(self, game_state):
         unit_data = game_state['unit_data']
         player_state = game_state['players'][self.player_index]
-        creds = player_state['creds']
+        creds = player_state['cp']
         technology_data = game_state['technology_data']
         ss_level = player_state["technology"]["shipsize"]
         purchases = {"technology": [], "units": []}
@@ -59,8 +58,6 @@ class CombatStrategy:
 
     # Choose the first unit to attack
     def decide_which_unit_to_attack(self, combat_state, coords, attacker_index):
-        for i, x in enumerate(combat_state[coords]):
-            print(x['player'] - 1, x['unit'])
         return next((i for i, x in enumerate(combat_state[coords]) if self.player_index != x['player'] - 1), None)
 
     # Don't screen any units

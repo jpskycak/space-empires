@@ -6,7 +6,7 @@ from game import Game
 
 player_strategies = DumbStrategy
 
-game = Game([player_strategies, player_strategies], 5, 'asc', 3, max_turns=2)
+game = Game([player_strategies, player_strategies], (5,5), 'asc', 3, max_turns=2)
 print('---------------------------------------------')
 game.initialize_game()
 game.play()

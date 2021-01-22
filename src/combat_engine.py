@@ -36,12 +36,12 @@ class CombatEngine:
             self.current_roll = self.rolls[self.dice_roll_index]
             attacking_ship = self.get_next_ally_ship(
                 fixed_ships, ships_that_shot)
-            defending_ship_index = attacking_ship.player.strategy.decide_which_unit_to_attack(self.generate_combat_array(), (attacking_ship.x, attacking_ship.y),  attacking_ship.player.ships.index(attacking_ship))
-            defending_ship_dict = self.generate_combat_array()[(attacking_ship.x, attacking_ship.y)][defending_ship_index]
-            for ship in self.game.players[defending_ship_dict['player'] - 1].ships:
-                if ship.ID == defending_ship_dict['unit']:
-                    defending_ship = ship
-                    break
+            defending_ship_index = attacking_ship.player.strategy.decide_which_unit_to_attack(self.generate_combat_array(
+            ), (attacking_ship.x, attacking_ship.y),  attacking_ship.player.ships.index(attacking_ship))
+            defending_ship_dict = self.combat_dict[(
+                attacking_ship.x, attacking_ship.y)][defending_ship_index]
+            defending_ship = next(
+                ship for ship in self.game.players[defending_ship_dict['player']].ships if ship.ID == defending_ship_dict['unit'])
             if defending_ship != None and attacking_ship != None:
                 hit_or_miss = self.start_fight(
                     attacking_ship, defending_ship)  # make'em fight
@@ -68,11 +68,11 @@ class CombatEngine:
                 return ship
 
     def start_fight(self, ship_1, ship_2):
-        print("Player", ship_1.player.player_number, "'s", ship_1.type, ship_1.ID,
-              "vs Player", ship_2.player.player_number, "'s", ship_2.type, ship_2.ID)
+        print("Player", ship_1.player.player_index, "'s", ship_1.type, ship_1.ID,
+              "vs Player", ship_2.player.player_index, "'s", ship_2.type, ship_2.ID)
         hit_or_miss = self.attack(ship_1, ship_2)
         if ship_2.hits_left < 1:
-            print("Player", ship_2.player.player_number,
+            print("Player", ship_2.player.player_index,
                   "'s unit was destroyed at co-ords", [ship_2.x, ship_2.y])
             print('-------------------------')
             ship_2.is_alive = False
@@ -86,19 +86,19 @@ class CombatEngine:
             (ship_2.defense + player_2.technology['defense'])
         die_roll = self.rolls[self.dice_roll_index]
         if die_roll == 1 or die_roll <= hit_threshold:
-            print('Player', player_1.player_number, 'Hit their shot, targeting Player',
-                  player_2.player_number, "'s unit", ship_2.type, ship_2.ID)
+            print('Player', player_1.player_index, 'Hit their shot, targeting Player',
+                  player_2.player_index, "'s unit", ship_2.type, ship_2.ID)
             ship_2.hits_left -= 1  # player 2's ship loses some hits_left
             return 'Hit'
         else:
-            print('Player', player_1.player_number, 'Missed their shot, targeting Player',
-                  player_2.player_number, "'s unit", ship_2.type, ship_2.ID)
+            print('Player', player_1.player_index, 'Missed their shot, targeting Player',
+                  player_2.player_index, "'s unit", ship_2.type, ship_2.ID)
             return 'Miss'
 
     def possible_fights(self):
         positions_of_ships = {}
-        for x in range(0, self.board_size + 1):
-            for y in range(0, self.board_size + 1):
+        for x in range(0, self.board_size[0] + 1):
+            for y in range(0, self.board_size[1] + 1):
                 if self.is_a_possible_fight_at_x_y(x, y):
                     for ship in self.board.ships_dict[(x, y)]:
                         if not self.if_it_can_fight(ship):
@@ -122,11 +122,11 @@ class CombatEngine:
         return False
 
     def generate_combat_array(self):
-        combat_dict = {}
+        self.combat_dict = {}
         for coords, ships in self.possible_fights().items():
             combat_at_location_arr = []
             for ship in ships:
                 combat_at_location_arr.append(
-                    {'player': ship.player.player_number, 'unit': ship.ID})
-            combat_dict[coords] = combat_at_location_arr
-        return combat_dict
+                    {'player': ship.player.player_index, 'unit': ship.ID})
+            self.combat_dict[coords] = combat_at_location_arr
+        return self.combat_dict

@@ -21,8 +21,8 @@ sys.path.append('src')
 
 
 class ColbyStrategyPlayer(Player):
-    def __init__(self, position, board_size, player_number, player_color):
-        super().__init__(position, board_size, player_number, player_color)
+    def __init__(self, position, board_size, player_index, player_color):
+        super().__init__(position, board_size, player_index, player_color)
         self.type = "'Better than Eli's bot' Player"
         self.creds = 0
         self.status = 'Playing'
@@ -58,7 +58,7 @@ class ColbyStrategyPlayer(Player):
         self.half_way_line = [(i, self.board_size // 2)
                               for i in range(0, self.board_size + 1)]
         self.strategy = BestStrategy(Player(
-            self.starting_position, self.board_size, self.player_number, player_color))
+            self.starting_position, self.board_size, self.player_index, player_color))
 
     def screen_ships(self, ships_at_x_y, board):
         return board.simple_sort(ships_at_x_y)
@@ -71,14 +71,14 @@ class ColbyStrategyPlayer(Player):
                 ship = Colony_Ship(self, position, self.board_size, True)
                 self.ships.append(ship)
                 self.creds -= ship.cost
-                print('Player', self.player_number, 'just bought a', ship.name)
+                print('Player', self.player_index, 'just bought a', ship.name)
         else:  # if other player is attacking
             while self.can_build_dreadnaughts():
                 position = self.find_closest_ship_yard_to_scout_death().position
                 ship = Dreadnaught(self, position, self.board_size, True)
                 self.ships.append(ship)
                 self.creds -= ship.cost
-                print('Player', self.player_number, 'just bought a', ship.name)
+                print('Player', self.player_index, 'just bought a', ship.name)
 
     def can_build_colony_ships(self):
         return self.finished_basic_upgrades and self.creds >= 8

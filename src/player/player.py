@@ -18,11 +18,11 @@ sys.path.append('src')
 
 
 class Player:
-    def __init__(self, strategy, position, board_size, player_number, player_color):
+    def __init__(self, strategy, position, board_size, player_index, player_color):
         self.creds = 0
         self.status = 'Playing'
         self.death_count = 0  # if winCount = amount of units self.lose = true
-        self.player_number = player_number
+        self.player_index = player_index
         self.player_color = player_color
         # starts out with 8 scouts later it would be 3 miners
         self.board_size = board_size
@@ -45,10 +45,11 @@ class Player:
             self, position, self.board_size, 1, home_base=True)
         self.colonies = []
         self.starting_position = position
-        self.technology = {'attack': 0, 'defense': 0, 'movement': 1, 'shipsize': 1, 'shipyard': 1, 'terraform': 0, 'tactics': 0, 'exploration': 0}
+        self.technology = {'attack': 0, 'defense': 0, 'movement': 1, 'shipsize': 1,
+                           'shipyard': 1, 'terraform': 0, 'tactics': 0, 'exploration': 0}
         self.fighting_class_tech = 0
         self.movement_tech_upgrade_number = 0
-        self.strategy = strategy(int(player_number) - 1)
+        self.strategy = strategy(int(player_index))
 
     def find_random_ship_yard(self):
         return self.ship_yards[random.randint(0, len(self.ship_yards) - 1)].position
@@ -66,40 +67,54 @@ class Player:
     def upgrade(self, stat_to_upgrade, game_state):
         _, can_upgrade_bool = self.can_upgrade(stat_to_upgrade, game_state)
         if can_upgrade_bool:
-            if stat_to_upgrade == 'attack' and self.technology['attack'] < 3:  # offense
+            # offense
+            if stat_to_upgrade == 'attack' and self.technology['attack'] < 3:
                 self.technology['attack'] += 1
-                print('Player', self.player_number, 'upgraded their attack strength from', self.technology['attack'] - 1, 'to', self.technology['attack'])
+                print('Player', self.player_index, 'upgraded their attack strength from',
+                      self.technology['attack'] - 1, 'to', self.technology['attack'])
 
-            elif stat_to_upgrade == 'defense' and self.technology['defense'] < 3:  # defense
+            # defense
+            elif stat_to_upgrade == 'defense' and self.technology['defense'] < 3:
                 self.technology['defense'] += 1
-                print('Player', self.player_number, 'upgraded their defense strength from', self.technology['defense'] - 1, 'to', self.technology['defense'])
+                print('Player', self.player_index, 'upgraded their defense strength from',
+                      self.technology['defense'] - 1, 'to', self.technology['defense'])
 
-            elif stat_to_upgrade == 'tactics' and self.technology['tactics'] < 3:  # tactics
+            # tactics
+            elif stat_to_upgrade == 'tactics' and self.technology['tactics'] < 3:
                 self.technology['tactics'] += 1
-                print('Player', self.player_number, 'upgraded their fighting class from', self.technology['tactics'] - 1, 'to', self.technology['tactics'])
+                print('Player', self.player_index, 'upgraded their fighting class from',
+                      self.technology['tactics'] - 1, 'to', self.technology['tactics'])
 
-            elif stat_to_upgrade == 'movement' and sum(self.technology['movement']) - 2 < 6:  # speed
+            # speed
+            elif stat_to_upgrade == 'movement' and sum(self.technology['movement']) - 2 < 6:
                 self.technology['movement'] += 1
-                print('Player', self.player_number, 'upgraded their movement speed from', sum(self.technology['movement']) - 3, 'to', sum(self.technology['movement']) - 2)
+                print('Player', self.player_index, 'upgraded their movement speed from', sum(
+                    self.technology['movement']) - 3, 'to', sum(self.technology['movement']) - 2)
 
-            elif stat_to_upgrade == 'shipyard' and self.technology['shipyard'] < 2:  # ship yard
+            # ship yard
+            elif stat_to_upgrade == 'shipyard' and self.technology['shipyard'] < 2:
                 self.technology['shipyard'] += 0.5
-                print('Player', self.player_number, "upgraded their ship-yard's building size from",self.technology['shipyard'] - 0.5, 'to', self.technology['shipyard'])
+                print('Player', self.player_index, "upgraded their ship-yard's building size from",
+                      self.technology['shipyard'] - 0.5, 'to', self.technology['shipyard'])
 
-            elif stat_to_upgrade == 'terraform' and self.technology['terraform'] < 2:  # terraform
+            # terraform
+            elif stat_to_upgrade == 'terraform' and self.technology['terraform'] < 2:
                 self.technology['terraform'] += 1
-                print('Player', self.player_number, "upgraded their ablility to terraform from", self.technology['terraform'] - 1, 'to', self.technology['terraform'])
+                print('Player', self.player_index, "upgraded their ablility to terraform from",
+                      self.technology['terraform'] - 1, 'to', self.technology['terraform'])
 
-            elif stat_to_upgrade == 'shipsize' and self.technology['shipsize'] < 6:  # biggest ship size that you can build
+            # biggest ship size that you can build
+            elif stat_to_upgrade == 'shipsize' and self.technology['shipsize'] < 6:
                 self.technology['shipsize'] += 1
-                print('Player', self.player_number, "upgraded their max building size from", self.technology['shipsize'] - 1, 'to', self.technology['shipsize'])
+                print('Player', self.player_index, "upgraded their max building size from",
+                      self.technology['shipsize'] - 1, 'to', self.technology['shipsize'])
 
     def can_upgrade(self, stat_to_upgrade, game_state):
         if stat_to_upgrade != 'movement':
             return self.upgrade_cost(stat_to_upgrade, game_state), self.creds >= self.upgrade_cost(stat_to_upgrade, game_state)
-        else: 
+        else:
             return self.upgrade_cost(stat_to_upgrade, game_state), self.creds >= self.upgrade_cost(stat_to_upgrade, game_state)
-            
+
     def upgrade_cost(self, stat_to_upgrade, game_state):
         if stat_to_upgrade != 'movement':
             return game_state['technology_data'][stat_to_upgrade][self.technology[stat_to_upgrade]]
@@ -107,10 +122,8 @@ class Player:
             return game_state['technology_data'][stat_to_upgrade][sum(self.technology[stat_to_upgrade]) - 3]
 
     def screen_ships(self, ships_at_x_y, board):
-        #print('ships_at_x_y', ships_at_x_y)
         players = self.get_players_in_list(ships_at_x_y)
         player_ships = [[ship for ship in ships_at_x_y] for player in players]
-        #print('player_ships', player_ships)
         for ships_1 in player_ships:
             for ships_2 in player_ships[player_ships.index(ships_1):player_ships.index(ships_1) + 1]:
                 while len(ships_1) > len(ships_2):
@@ -133,14 +146,13 @@ class Player:
         for ship in self.ships:
             for planet in board.planets:
                 if self.can_colonize_planet(ship, planet) and self.strategy.will_colonize_planet((ship.x, ship.y), game_state):
-                    print('it do be colonized')
                     if ship.terraform_tech >= planet.tier - 1:
-                        print('Player', self.player_number, 'just colonized a tier',
+                        print('Player', self.player_index, 'just colonized a tier',
                               planet.tier, 'planet at co-ords:', (planet.x, planet.y))
                         board.create_colony(self, planet, planet.position)
                         self.ships.remove(ship)
                     else:
-                        print('Player', self.player_number, "can't colonize a tier", planet.tier, 'planet at co-ords:',
+                        print('Player', self.player_index, "can't colonize a tier", planet.tier, 'planet at co-ords:',
                               (planet.x, planet.y), 'because their terraform tech is', ship.terraform_tech)
 
     # game not yet inputed cause infinite import loop bad

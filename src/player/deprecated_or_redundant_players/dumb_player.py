@@ -21,13 +21,13 @@ sys.path.append('src')
 
 
 class DumbPlayer(Player):
-    def __init__(self, position, board_size, player_number, player_color):
-        super().__init__(position, board_size, player_number, player_color)
+    def __init__(self, position, board_size, player_index, player_color):
+        super().__init__(position, board_size, player_index, player_color)
         self.type = 'Dumb Player'
         self.creds = 0
         self.status = 'Playing'
         self.death_count = 0  # if winCount = amount of units self.lose = true
-        self.player_number = player_number
+        self.player_index = player_index
         self.player_color = player_color
         self.ships = [
             Scout(self, position, self.board_size, 1, True),

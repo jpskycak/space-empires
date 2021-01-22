@@ -11,8 +11,8 @@ class Board:
     def __init__(self, game, board_size, asc_or_dsc):
         self.board_size = board_size
         self.game = game
-        self.player_home_bases = [
-            [self.board_size // 2, 0], [self.board_size // 2, self.board_size]]
+        self.player_home_bases = [[self.board_size[0] // 2, 0], [self.board_size[0] // 2, self.board_size[1]], [0, self.board_size[1] // 2], [
+            self.board_size[0], self.board_size[1] // 2]]
         self.ships_dict = {}
         self.misc_dict = {}
         self.dice_roll_index = 0
@@ -23,8 +23,8 @@ class Board:
         #print('asc_or_dsc', asc_or_dsc)
 
     def update_board(self):
-        for x in range(0, self.board_size + 1):
-            for y in range(0, self.board_size + 1):
+        for x in range(0, self.board_size[0] + 1):
+            for y in range(0, self.board_size[1] + 1):
                 ships_arr = []
                 for player in self.game.players:
                     for ship in player.ships:
@@ -38,18 +38,18 @@ class Board:
         #print('create planets and asteroids')
         self.planets = []
         self.asteroids = []
-        for i in range(0, self.board_size + 1):
-            for j in range(0, self.board_size + 1):
+        for x in range(0, self.board_size[0] + 1):
+            for y in range(0, self.board_size[1] + 1):
                 # 1,2 is a planet and 3,4, are asteroids and 5,6 are None
-                if [i, j] != self.player_home_bases[0] and [i, j] != self.player_home_bases[1]:
+                if [x, y] != self.player_home_bases[0] and [x, y] != self.player_home_bases[1]:
                     planet_or_asteroid = 1  # self.get_die_roll()
                     if planet_or_asteroid <= 2:
-                        self.misc_dict[(i, j)] = [self.create_planet([i, j])]
-                        self.planets.append((i,j))
-                        self.planets.append(self.create_planet([i, j]))
+                        self.misc_dict[(x, y)] = [self.create_planet([x, y])]
+                        self.planets.append((x,y))
+                        self.planets.append(self.create_planet([x, y]))
                     elif planet_or_asteroid > 2 and planet_or_asteroid <= 4:
-                        self.misc_dict[(i, j)] = [self.create_asteroid([i, j])]
-                        self.asteroids.append(self.create_asteroid([i, j]))
+                        self.misc_dict[(x, y)] = [self.create_asteroid([x, y])]
+                        self.asteroids.append(self.create_asteroid([x, y]))
 
     def create_planet(self, position):
         return Planet(position, random.randint(0, 2))

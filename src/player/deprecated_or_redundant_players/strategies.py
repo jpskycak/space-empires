@@ -26,7 +26,7 @@ class BasicStrategy:  # no movement or actual strategy, just funcitons like deci
         if turn == 1:
             return None
         else:
-            return self.simple_sort(game_state, game_state['players'][game_state['players'][self.player_index]['player_number']-1]['units'])[-1]
+            return self.simple_sort(game_state, game_state['players'][game_state['players'][self.player_index]['player_index']-1]['units'])[-1]
 
     def decide_which_unit_to_attack(self, attacking_ship, coords, game_state):
         return self.strongest_enemy_ship(game_state, game_state['combat_state'][coords])
@@ -68,7 +68,7 @@ class BasicStrategy:  # no movement or actual strategy, just funcitons like deci
 
     def strongest_enemy_ship(self, combat_state_ship_list):
         for ship_attributes in combat_state_ship_list:
-            if ship_attributes['player']['player_number'] != self.player_index + 1:
+            if ship_attributes['player']['player_index'] != self.player_index + 1:
                 return ship_attributes
 
     def decide_ship_movement(self, unit_index, game_state):

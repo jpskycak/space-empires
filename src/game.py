@@ -52,13 +52,13 @@ class Game:
         self.log.get_next_active_file('logs')
 
     def create_players(self):
-        starting_positions = [[self.board_size // 2, 0], [self.board_size // 2, self.board_size - 1], [0, self.board_size // 2], [
-            self.board_size, self.board_size // 2]]  # players now start at the axis' and not the corners
+        starting_positions = [[self.board_size[0] // 2, 0], [self.board_size[0] // 2, self.board_size[1] - 1], [0, self.board_size[1] // 2], [
+            self.board_size[0] - 1, self.board_size[1] // 2]]  # players now start at the axis' and not the corners
         colors = ['Blue', 'Red', 'Purple', 'Green']
         players = []
         for i, strategy in enumerate(self.player_strats):
             players.append(
-                Player(strategy, starting_positions[i], self.board_size, i + 1, colors[i]))
+                Player(strategy, starting_positions[i], self.board_size, i, colors[i]))
         '''for i in range(0, 2):
             if self.type_of_player == 1:
                 players.append(DumbPlayer(
@@ -91,7 +91,7 @@ class Game:
         for player in self.players:
             if player.status == 'Playing':
                 self.game_won = True
-                print('Player', player.player_number, 'WINS!')
+                print('Player', player.player_index, 'WINS!')
 
     def check_if_player_has_won(self):
         for player in self.players:
@@ -119,7 +119,7 @@ class Game:
             print('Economic Phase')
             self.economic_engine.complete_all_taxes(self.game_state)
             for player in self.players:
-                print('Player', player.player_number, 'Has',
+                print('Player', player.player_index, 'Has',
                       player.creds, 'creds extra after the economic phase.')
             self.state_obsolete()
             self.generate_state(phase='Movement')
@@ -127,7 +127,8 @@ class Game:
         self.board.update_board()
 
     def generate_state(self, phase=None, movement_round=0, initial_state=False):
-        movement_state = self.movement_engine.generate_movement_state(movement_round)
+        movement_state = self.movement_engine.generate_movement_state(
+            movement_round)
         self.game_state['unit_data'] = {
             'Battleship': {'cp_cost': 20, 'hullsize': 3, 'shipsize_needed': 5, 'tactics': 5, 'attack': 5, 'defense': 2, 'maintenance': 3},
             'Battlecruiser': {'cp_cost': 15, 'hullsize': 2, 'shipsize_needed': 4, 'tactics': 4, 'attack': 5, 'defense': 1, 'maintenance': 2},
@@ -157,7 +158,7 @@ class Game:
         if initial_state:
             self.game_state['players'] = {}
         for i, player in enumerate(self.players):
-            player_attributes = {'creds': player.creds, 'home_coords': (player.home_base.x, player.home_base.y), 'status': player.status, 'units': [
+            player_attributes = {'cp': player.creds, 'home_coords': (player.home_base.x, player.home_base.y), 'status': player.status, 'units': [
             ], 'colonies': [], 'shipyards': [], 'technology': player.technology}
             for unit in player.ships:
                 player_attributes['units'].append({'coords': (
@@ -198,7 +199,7 @@ class Game:
         print('')
 
         for player in self.players:
-            print('     Player:', player.player_number, '| Type:',
+            print('     Player:', player.player_index, '| Type:',
                   player.strategy.__name__, '| Status:', player.status)
             print('')
             print('          Player Ships')

@@ -27,7 +27,7 @@ class CombatStrategy:
 
     def decide_purchases(self, game_state):
         purchases = {}
-        creds = game_state['players'][self.player_num]['creds']
+        creds = game_state['players'][self.player_num]['cp']
         units = []
         if game_state['players'][self.player_num]['tech']['ss'] < 2:
             purchases['tech'] = ['ss']
