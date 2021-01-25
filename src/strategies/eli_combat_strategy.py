@@ -58,7 +58,7 @@ class CombatStrategy:
 
     # Choose the first unit to attack
     def decide_which_unit_to_attack(self, combat_state, coords, attacker_index):
-        return next((i for i, x in enumerate(combat_state[coords]) if self.player_index != x['player'] - 1), None)
+        return next((i for i, x in enumerate(combat_state[coords]) if self.player_index != x['player']), None)
 
     # Don't screen any units
     def decide_which_units_to_screen(self, combat_state):

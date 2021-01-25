@@ -37,7 +37,7 @@ class CombatEngine:
             attacking_ship = self.get_next_ally_ship(
                 fixed_ships, ships_that_shot)
             defending_ship_index = attacking_ship.player.strategy.decide_which_unit_to_attack(self.generate_combat_array(
-            ), (attacking_ship.x, attacking_ship.y),  attacking_ship.player.ships.index(attacking_ship))
+            ), (attacking_ship.x, attacking_ship.y), fixed_ships.index(attacking_ship))
             defending_ship_dict = self.combat_dict[(
                 attacking_ship.x, attacking_ship.y)][defending_ship_index]
             defending_ship = next(

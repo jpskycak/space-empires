@@ -142,11 +142,11 @@ class Game:
             'Base': {'cp_cost': 12, 'hullsize': 3, 'shipsize_needed': 2, 'tactics': 5, 'attack': 7, 'defense': 2, 'maintenance': 0},
         }
         self.game_state['technology_data'] = {
-            'shipsize': [10, 25, 45, 70, 95],
+            'shipsize': [0, 10, 25, 45, 70, 95],
             'attack': [20, 50, 90],
             'defense': [20, 50, 90],
-            'movement': [20, 50, 90, 130, 170],
-            'shipyard': [20, 50]
+            'movement': [0, 20, 50, 90, 130, 170],
+            'shipyard': [0, 20, 50]
         }
         self.game_state['board_size'] = self.board_size
         self.game_state['turn'] = self.turn

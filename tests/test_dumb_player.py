@@ -13,7 +13,7 @@ game.play()
 log = Logger()
 log.get_current_active_file('logs')  # get current file
 log.get_correct_example_file(
-    'test_logs/asc_combat_player_log.txt')  # ingest correct test
+    'test_logs/dumb_player_log.txt')  # ingest correct test
 
 print('')
 if log.compare_test_and_example():  # should give assert error if they aren't the same and give the line the test and the correct example are different

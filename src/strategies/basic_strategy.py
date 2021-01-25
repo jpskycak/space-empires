@@ -1,6 +1,5 @@
 import random
 
-
 class BasicStrategy:  # no movement or actual strategy, just funcitons like decide_removal or decide_which_unit_to_attack or simple_sort
     def __init__(self, player_index):  # wutever we need):
         self.player_index = player_index
@@ -9,6 +8,9 @@ class BasicStrategy:  # no movement or actual strategy, just funcitons like deci
         return self.simple_sort(game_state)[-1]['ID']
 
     def decide_which_unit_to_attack(self, combat_state, coords, attacker_index):
+        print('\ncombat_state', combat_state)
+        print('attacking_ship_index', attacker_index)
+        print('index of attacking', next(index for index, ship in enumerate(combat_state[coords]) if self.player_index != ship['player']), '\n')
         return next(index for index, ship in enumerate(combat_state[coords]) if self.player_index != ship['player'])
 
     def decide_which_units_to_screen(self, combat_state):

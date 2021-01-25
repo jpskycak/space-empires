@@ -1,8 +1,7 @@
-import random
-from strategies.basic_strategy import BasicStrategy
 import sys
 sys.path.append('src')
-
+import random
+from strategies.basic_strategy import BasicStrategy
 
 class DumbStrategy(BasicStrategy):
     def __init__(self, player_index):  # wutever else we need):

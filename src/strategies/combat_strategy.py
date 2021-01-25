@@ -1,8 +1,7 @@
-import random
-from strategies.basic_strategy import BasicStrategy
 import sys
 sys.path.append('src')
-
+import random
+from strategies.basic_strategy import BasicStrategy
 
 class CombatStrategy(BasicStrategy):
     def __init__(self, player_index):  # wutever else we need):
@@ -14,7 +13,7 @@ class CombatStrategy(BasicStrategy):
         purchases = {'units': [], 'technology': []}
         total_cost = 0
         while game_state['players'][self.player_index]['cp'] > total_cost:
-            if game_state['turn'] == 1 and game_state['players'][self.player_index]['technology']['shipsize'] == 1 and 'shipsize' not in purchases['technology']:
+            if game_state['turn'] == 0 and game_state['players'][self.player_index]['technology']['shipsize'] == 1 and 'shipsize' not in purchases['technology']:
                 if game_state['players'][self.player_index]['cp'] > total_cost + self.upgrade_costs('shipsize', game_state):
                     purchases['technology'].append('shipsize')
                     total_cost += self.upgrade_costs('shipsize', game_state)

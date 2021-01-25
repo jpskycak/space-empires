@@ -1,9 +1,9 @@
 import sys
 sys.path.append('src')
 #from strategies.combat_strategy import CombatStrategy
-from strategies.eli_combat_strategy import CombatStrategy
+#from strategies.eli_combat_strategy import CombatStrategy
 #from strategies.riley_combat_strategy import CombatStrategy
-#from strategies.george_combat_strategy import CombatStrategy
+from strategies.george_combat_strategy import CombatStrategy
 #from strategies.david_combat_strategy import CombatStrategy
 from game import Game
 from logger import Logger
@@ -29,12 +29,15 @@ log_2.get_correct_example_file(
     'test_logs/dsc_combat_player_log.txt')  # ingest correct test
 
 print('')
-if log_2.compare_test_and_example():  # should give assert error if they aren't the same and give the line the test and the correct example are different
-    print('Descending Die Combat Player Works!!!')
-else:
-    print('Descending Die Combat Player doenst work...')
-print('')
+
 if log_1.compare_test_and_example():  # should give assert error if they aren't the same and give the line the test and the correct example are different
     print('Ascending Die Combat Player Works!!!')
 else:
     print('Ascending Die Combat Player doenst work...')
+
+if log_2.compare_test_and_example():  # should give assert error if they aren't the same and give the line the test and the correct example are different
+    print('Descending Die Combat Player Works!!!')
+else:
+    print('Descending Die Combat Player doenst work...')
+
+print('')

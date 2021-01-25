@@ -1,45 +1,33 @@
-from units.destroyer import Destroyer
-from units.base import Base
-from units.shipyard import Shipyard
-from planet import Planet
-from units.colony import Colony
-from units.colonyship import Colonyship
-from units.cruiser import Cruiser
-from units.scout import Scout
-import sys
-sys.path.append('src')
-
-
 class CombatStrategy:
 
     def __init__(self, player_num):
         self.player_num = player_num
         self.buy_counter = 0
+        self.__name__ = 'GeorgeCombatStrategy'
 
     def decide_ship_movement(self, ship_index, game_state):
         ship_coords = game_state['players'][self.player_num]['units'][ship_index]['coords']
-        route = self.fastest_route(
-            ship_coords, [game_state['board_size'][0] // 2, game_state['board_size'][1] // 2])
+        route = self.fastest_route(ship_coords, [game_state['board_size'][0]// 2, game_state['board_size'][1]// 2])
         if len(route) > 0:
             return tuple(route[0])
         else:
-            return (0, 0)
+            return (0,0)
 
     def decide_purchases(self, game_state):
         purchases = {}
-        creds = game_state['players'][self.player_num]['cp']
+        cp = game_state['players'][self.player_num]['cp']
         units = []
-        if game_state['players'][self.player_num]['tech']['ss'] < 2:
-            purchases['tech'] = ['ss']
-            creds -= 10
+        if game_state['players'][self.player_num]['technology']['shipsize'] < 2:
+            purchases['technology'] = ['shipsize']
+            cp -= 10
         else:
-            purchases['tech'] = []
-        if creds > self.check_buy_counter().cost:
+            purchases['technology'] = []
+        unit = game_state['unit_data'][self.check_buy_counter()]
+        if cp > unit['cp_cost']:
             while True:
-                unit = self.check_buy_counter()
-                if creds >= unit.cost:
-                    units.append(unit)
-                    creds -= unit.cost
+                if cp >= unit['cp_cost']:
+                    units.append({'type': self.check_buy_counter(), 'coords' : game_state['players'][self.player_num]['home_coords']})
+                    cp -= unit['cp_cost']
                     self.buy_counter += 1
                 else:
                     break
@@ -48,13 +36,14 @@ class CombatStrategy:
 
     def check_buy_counter(self):
         if self.buy_counter % 2 == 0:
-            return Destroyer
+            return 'Destroyer'
         else:
-            return Scout
+            return 'Scout'
+
 
     def decide_removals(self, player_state):
         return -1
-
+        
     def decide_which_unit_to_attack(self, combat_state, location, attacker_index):
         for unit in combat_state[tuple(location)]:
             if unit['player'] != combat_state[tuple(location)][attacker_index]['player']:
@@ -67,11 +56,10 @@ class CombatStrategy:
         return []
 
     def directional_input(self, current, goal):
-        directions = [[1, 0], [-1, 0], [0, 1], [0, -1]]
+        directions = [[1, 0],[-1, 0],[0, 1],[0, -1],[0,0]]
         distances = []
         for i in range(len(directions)):
-            new_loc = [current[0] + directions[i]
-                       [0], current[1] + directions[i][1]]
+            new_loc = [current[0] + directions[i][0], current[1] + directions[i][1]]
             dist = self.distance(new_loc, goal)
             distances.append(dist)
         closest = min(distances)
@@ -86,5 +74,5 @@ class CombatStrategy:
         while(current != goal):
             direc = self.directional_input(current, goal)
             route.append(direc)
-            current = [current[0] + direc[0], current[1] + direc[1]]
+            current  = [current[0] + direc[0], current[1] + direc[1]]
         return route
