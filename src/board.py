@@ -100,21 +100,10 @@ class Board:
             else:
                 ship.player.ships.remove(ship)
         while len(fixed_arr) > 0:
-            strongest_ship = self.max_value(fixed_arr)
+            strongest_ship = max(fixed_arr, key=lambda ship: ship.technology['tactics'] + ship.technology['attack'] + ship.attack)
             sorted_arr.append(strongest_ship)
             fixed_arr.remove(strongest_ship)
         return sorted_arr
-
-    def max_value(self, arr):     
-        max_value = arr[0]
-        if len(arr) > 1:
-            for ship in arr[1:]:
-                if ship.type == 'Home Base':
-                    continue
-                else:
-                    if self.ship_1_fires_first(ship, max_value):
-                        max_value = ship
-        return max_value
 
 class Planet:
     def __init__(self, position, tier, is_colonized = False):
