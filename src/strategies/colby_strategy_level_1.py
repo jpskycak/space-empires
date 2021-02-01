@@ -3,10 +3,10 @@ sys.path.append('src')
 import random
 from strategies.basic_strategy import BasicStrategy
 
-class CombatStrategy(BasicStrategy):
+class ColbyStrategyLevel1(BasicStrategy):
     def __init__(self, player_index):  # wutever else we need):
         self.player_index = player_index
-        self.__name__ = 'AggressiveStrategy'
+        self.__name__ = 'ColbyStrategyLevel1'
         self.previous_buy = 'Scout'
 
     def decide_purchases(self, game_state):
@@ -46,24 +46,29 @@ class CombatStrategy(BasicStrategy):
         elif self.previous_buy == 'Destroyer':
             return 'Destroyer'
 
-    def decide_ship_movement(self, ship_index, game_state):
-        if self.player_index == 1: enemy_player_index = 0
-        else: enemy_player_index = 1
-        enemy_home_world_coords = game_state['players'][enemy_player_index]['home_coords']
-        ship = game_state['players'][self.player_index]['units'][ship_index]
-        ship_x, ship_y = ship['coords'][0], ship['coords'][1]
-        x, y = 0, 0
-        movement_tech = self.get_movement_tech(ship['technology']['movement'])
-        if ship_x != enemy_home_world_coords[0]:
-            if ship_x < enemy_home_world_coords[0]:
-                x += movement_tech[game_state['round']]
-            elif ship_x > enemy_home_world_coords[0]:
-                x -= movement_tech[game_state['round']]
-            return x, y
-        if ship_y != enemy_home_world_coords[1]:
-            if ship_y < enemy_home_world_coords[1]:
-                y += movement_tech[game_state['round']]
-            elif ship_y > enemy_home_world_coords[1]:
-                y -= movement_tech[game_state['round']]
-            return x, y
-        return x, y
+    def decide_ship_movement(self, unit_index, hidden_game_state):
+        myself = hidden_game_state['players'][self.player_index]
+        opponent_index = 1 - self.player_index
+        opponent = hidden_game_state['players'][opponent_index]
+        unit = myself['units'][unit_index]
+        x_unit, y_unit = unit['coords']
+        x_opp, y_opp = opponent['home_coords']
+        if unit_index == 0 and hidden_game_state['turn'] == 0:
+            return (-1,0)
+        elif unit_index == 0 and hidden_game_state['turn'] > 0 and hidden_game_state['players'][self.player_index]['units'][unit_index]['coords'][1] < 4:
+            return (0,1)
+        elif unit_index == 0 and hidden_game_state['players'][self.player_index]['units'][unit_index]['coords'][1] == 4 and hidden_game_state['players'][self.player_index]['units'][unit_index]['coords'][0] == 1:
+            return (1,0)
+        else:
+            translations = [(0,0), (1,0), (-1,0), (0,1), (0,-1)]
+            best_translation = (0,0)
+            smallest_distance_to_opponent = 999999999999
+            for translation in translations:
+                delta_x, delta_y = translation
+                x = x_unit + delta_x
+                y = x_unit + delta_y
+                dist = abs(x - x_opp) + abs(y - y_opp)
+                if dist < smallest_distance_to_opponent:
+                    best_translation = translation
+                    smallest_distance_to_opponent = dist
+            return best_translation

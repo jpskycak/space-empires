@@ -1,10 +1,10 @@
 import sys
 sys.path.append('src')
-from strategies.dumb_strategy import DumbStrategy
+from strategies.dumb_strategy_level_1 import DumbStrategyLevel1
 from logger import Logger
 from game import Game
 
-player_strategies = DumbStrategy
+player_strategies = DumbStrategyLevel1
 
 game = Game([player_strategies, player_strategies], (5,5), 'asc', 3, max_turns=2)
 print('---------------------------------------------')

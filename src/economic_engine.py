@@ -19,16 +19,14 @@ class EconomicEngine:
         self.board = board
         self.game = game
 
-    def complete_all_taxes(self, game_state):
+    def complete_all_taxes(self, game_state, hidden_game_state):
         for player in self.game.players:
             player.creds += self.income(player)
-            print('Player', player.player_index,
-                  "'s income is", self.income(player))
-            maintenance_cost = self.maintenance(player, game_state)
+            if self.game.print_state_obsolete: print('Player', player.player_index,"'s income is", self.income(player))
+            maintenance_cost = self.maintenance(player, game_state, hidden_game_state)
             player.creds -= maintenance_cost
-            print('Player', player.player_index,
-                  "'s maintenance is", maintenance_cost)
-            self.game.generate_state(phase='Economic')
+            if self.game.print_state_obsolete: print('Player', player.player_index, "'s maintenance is", maintenance_cost)
+            self.game.generate_full_state(phase='Economic')
             purchases = player.strategy.decide_purchases(game_state)
             for technology in purchases['technology']:
                 upgrade_cost = player.upgrade_cost(technology, game_state)
@@ -37,19 +35,17 @@ class EconomicEngine:
                     player.creds -= upgrade_cost
             for unit in purchases['units']:
                 ship_placement = unit['coords']
-                ship = self.create_ship(
-                    player, unit['type'], ship_placement, player.board_size, player.new_ship_index)
+                ship = self.create_ship(player, unit['type'], ship_placement, player.board_size, player.new_ship_index)
                 ship_size = player.technology['shipsize']
                 shipsize_needed = game_state['unit_data'][ship.type]['shipsize_needed']
                 hull_size_needed = game_state['unit_data'][ship.type]['hullsize']
-                hull_size_capibility = player.find_amount_of_hull_size_building_capibility(
-                    ship_placement)
+                hull_size_capibility = player.find_amount_of_hull_size_building_capibility(ship_placement)
                 if player.creds >= ship.cost and shipsize_needed >= ship_size and hull_size_capibility >= hull_size_needed:
                     player.ships.append(ship)
                     player.creds -= ship.cost
-                    print('Player', player.player_index, "bought a", ship.type)
+                    if self.game.print_state_obsolete: print('Player', player.player_index, "bought a", ship.type)
                     player.new_ship_index += 1
-            self.game.generate_state(phase='Economic')
+            self.game.generate_full_state(phase='Economic')
 
     def create_ship(self, player, ship, position, board_size, ID):
         if ship == 'Scout':
@@ -80,15 +76,14 @@ class EconomicEngine:
         income += player.home_base.income
         return income
 
-    def maintenance(self, player, game_state):
+    def maintenance(self, player, game_state, hidden_game_state):
         total_cost = self.maintenance_cost(player, game_state)
         removal_id = None
         if total_cost > player.creds:
-            removal_id = player.strategy.decide_removal(game_state)
+            removal_id = player.strategy.decide_removal(hidden_game_state)
             for index, ship in enumerate(player.ships):
                 if index == removal_id:
-                    print('Player', player.player_index,
-                          "couldn't maintain their", ship.type, 'ID', index)
+                    if self.game.print_state_obsolete: print('Player', player.player_index, "couldn't maintain their", ship.type, 'ID', index)
         player.ships = [ship for index, ship in enumerate(
             player.ships) if index is not removal_id]
         return total_cost

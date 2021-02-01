@@ -1,6 +1,6 @@
 Turn: 1
 Player: 1
-Status: Playing
+Is Alive: True
 Scout: Position: [4,0] 
 Scout: Position: [4,0]
 Scout: Position: [4,0] 
@@ -8,7 +8,7 @@ Scout: Position: [2,0]
 Scout: Position: [2,0] 
 
 Player: 2
-Status: Playing
+Is Alive: True
 Scout: Position: [4,4] 
 Scout: Position: [4,4]
 Scout: Position: [4,4]
@@ -17,7 +17,7 @@ Scout: Position: [2,4]
 
 Turn: 2
 Player: 1
-Status: Playing
+Is Alive: True
 Scout: Position: [4,0] 
 Scout: Position: [4,0] 
 Scout: Position: [4,0] 
@@ -25,7 +25,7 @@ Scout: Position: [4,0]
 Scout: Position: [4,0] 
 
 Player: 2
-Status: Playing
+Is Alive: True
 Scout: Position: [4,4] 
 Scout: Position: [4,4] 
 Scout: Position: [4,4] 

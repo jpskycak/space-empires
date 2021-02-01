@@ -20,6 +20,8 @@ class Board:
             self.rolls = [1, 2, 3, 4, 5, 6]
         elif asc_or_dsc == 'dsc':
             self.rolls = [6, 5, 4, 3, 2, 1]
+        self.planets = []
+        self.asteroids = []
         #print('asc_or_dsc', asc_or_dsc)
 
     def update_board(self):
@@ -27,7 +29,8 @@ class Board:
             for y in range(0, self.board_size[1] + 1):
                 ships_arr = []
                 for player in self.game.players:
-                    for ship in player.ships:
+                    player_ships = player.ships + player.ship_yards + [player.home_base]
+                    for ship in player_ships:
                         if ship.x == x and ship.y == y:
                             ships_arr.append(ship)
                 if len(ships_arr) > 0:
@@ -52,23 +55,22 @@ class Board:
                         self.asteroids.append(self.create_asteroid([x, y]))
 
     def create_planet(self, position):
-        return Planet(position, random.randint(0, 2))
+        return Planet(position, random.randint(0, 1))
 
     def create_asteroid(self, position):
-        return Asteroid(position, random.randint(0, 2), random.randint(0, 2))
+        return Asteroid(position, random.randint(1, 2))
 
     def create_colony(self, player, planet, position):
         planet.is_colonized = True
         player.colonies.append(Colony(self, len(player.colonies) + 1, position, self.board_size))
 
     # combat stuffs
-    def if_it_can_fight(self, ship): return not isinstance(ship, Colony_Ship) and not isinstance(
-        ship, Decoy) and not isinstance(ship, Miner) and not isinstance(ship, Colony)
+    def if_it_can_fight(self, ship): return not isinstance(ship, Colony_Ship) and not isinstance(ship, Decoy) and not isinstance(ship, Miner) and not isinstance(ship, Colony)
 
     def ship_1_fires_first(self, ship_1, ship_2):
-        if ship_1.fighting_class > ship_2.fighting_class:
+        if ship_1.technology['tactics'] > ship_2.technology['tactics']:
             return True
-        elif ship_1.fighting_class < ship_2.fighting_class:
+        elif ship_1.technology['tactics'] < ship_2.technology['tactics']:
             return False
         else:
             if ship_1.technology['attack'] > ship_2.technology['attack']:
@@ -91,27 +93,31 @@ class Board:
         return self.rolls[self.dice_roll_index]
 
     def simple_sort(self, arr):
-        fixed_arr, sorted_arr = [], []
-        for ship in arr:
-            if self.if_it_can_fight(ship):
-                fixed_arr.append(ship)
+        fixed_arr, sorted_arr = [ship for ship in arr if ship.type != 'Colony' and ship.type != 'Colony Ship' and ship.type != 'Decoy' and ship.type != 'Miner'], []
+        for ship in [ship for ship in arr if ship not in fixed_arr]:
+            if ship.type == 'Colony':
+                ship.player.colonies.remove(ship)
             else:
                 ship.player.ships.remove(ship)
         while len(fixed_arr) > 0:
-            sorted_arr.append(self.max_value(fixed_arr))
-            fixed_arr.remove(self.max_value(fixed_arr))
+            strongest_ship = self.max_value(fixed_arr)
+            sorted_arr.append(strongest_ship)
+            fixed_arr.remove(strongest_ship)
         return sorted_arr
 
-    def max_value(self, arr):
+    def max_value(self, arr):     
         max_value = arr[0]
-        for ship in arr[1:]:
-            if self.ship_1_fires_first(ship, max_value):
-                max_value = ship
+        if len(arr) > 1:
+            for ship in arr[1:]:
+                if ship.type == 'Home Base':
+                    continue
+                else:
+                    if self.ship_1_fires_first(ship, max_value):
+                        max_value = ship
         return max_value
 
-
 class Planet:
-    def __init__(self, position, tier):
+    def __init__(self, position, tier, is_colonized = False):
         self.position = position
         self.x = position[0]
         self.y = position[1]
@@ -120,10 +126,9 @@ class Planet:
         self.ship_yards_at_planet = []
         self.is_claimed = False  # for colony ships finding nearest planet
 
-
 class Asteroid:
-    def __init__(self, position, size, tier):
+    def __init__(self, position, tier):
         self.position = position
         self.x = position[0]
         self.y = position[1]
-        self.income = 5
+        self.income = 5 * tier

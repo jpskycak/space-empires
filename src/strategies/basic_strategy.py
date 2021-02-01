@@ -7,13 +7,10 @@ class BasicStrategy:  # no movement or actual strategy, just funcitons like deci
     def decide_removal(self, game_state):
         return self.simple_sort(game_state)[-1]['ID']
 
-    def decide_which_unit_to_attack(self, combat_state, coords, attacker_index):
-        print('\ncombat_state', combat_state)
-        print('attacking_ship_index', attacker_index)
-        print('index of attacking', next(index for index, ship in enumerate(combat_state[coords]) if self.player_index != ship['player']), '\n')
-        return next(index for index, ship in enumerate(combat_state[coords]) if self.player_index != ship['player'])
+    def decide_which_unit_to_attack(self, hidden_game_state_for_combat, coords, attacker_index):
+        return next(index for index, ship in enumerate(hidden_game_state_for_combat['combat'][coords]) if self.player_index != ship['player'])
 
-    def decide_which_units_to_screen(self, combat_state):
+    def decide_which_units_to_screen(self, hidden_game_state_for_combat):
         return []
 
     def simple_sort(self, game_state):
@@ -51,12 +48,7 @@ class BasicStrategy:  # no movement or actual strategy, just funcitons like deci
                     return False
                 else:
                     return True
-
-    def strongest_enemy_ship(self, combat_state_ship_list):
-        for index, unit_information in enumerate(combat_state_ship_list):
-            if unit_information['player'] != self.player_index + 1:
-                return index
-
+                    
     def decide_ship_movement(self, unit_index, game_state):
         ship_yards = game_state['players'][self.player_index]['shipyards']
         random_ship_yard = random.randint(1, len(ship_yards)) - 1

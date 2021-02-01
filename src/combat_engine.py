@@ -13,46 +13,58 @@ class CombatEngine:
         self.game = game
         self.board_size = board_size
         self.dice_roll_index = 0
-        if asc_or_dsc == 'asc':
-            self.rolls = [1, 2, 3, 4, 5, 6]
-        elif asc_or_dsc == 'dsc':
-            self.rolls = [6, 5, 4, 3, 2, 1]
-        self.current_roll = self.rolls[self.dice_roll_index]
+        self.asc_or_dsc = asc_or_dsc
+        if self.asc_or_dsc != 'random':
+            if self.asc_or_dsc == 'asc': self.rolls = [1, 2, 3, 4, 5, 6]
+            elif self.asc_or_dsc == 'dsc': self.rolls = [6, 5, 4, 3, 2, 1]
+            self.current_roll = self.rolls[self.dice_roll_index]
 
-    def complete_all_fights(self):
+    def complete_all_fights(self, hidden_game_state, screen_ships):
+        if self.game.print_state_obsolete: print('-------------------------')
         possible_fights = self.possible_fights()
         for _, ships in possible_fights.items():
-            self.complete_all_combats(ships)
+            if not self.game.game_won:
+                self.complete_all_combats(ships, hidden_game_state, screen_ships)
 
-    def complete_all_combats(self, ships):
-        fixed_ships = [ship for ship in ships if not isinstance(ship, Colony) and not isinstance(
-            ship, Colony_Ship) and not isinstance(ship, Decoy) and not isinstance(ship, Miner)]
+    def complete_all_combats(self, ships, hidden_game_state, screen_ships):
+        #screened_ships = ...
+        fixed_ships = [ship for ship in ships if not ship.type == 'Colony' and not ship.type == 'Colony Ship' and not ship.type == 'Decoy' and not ship.type == 'Miner']# and not in screened_ships]
         for ship in [ship for ship in ships if ship not in fixed_ships]:
-            ship.player.ships.remove(ship)
+            if ship.type == 'Colony': ship.player.colonies.remove(ship)
+            else: ship.player.ships.remove(ship)
         ships_that_shot = []
         while self.more_than_one_player_left_fighting(fixed_ships):
-            if len(ships_that_shot) == len(fixed_ships):
-                ships_that_shot = []
-            self.current_roll = self.rolls[self.dice_roll_index]
-            attacking_ship = self.get_next_ally_ship(
-                fixed_ships, ships_that_shot)
-            defending_ship_index = attacking_ship.player.strategy.decide_which_unit_to_attack(self.generate_combat_array(
-            ), (attacking_ship.x, attacking_ship.y), fixed_ships.index(attacking_ship))
-            defending_ship_dict = self.combat_dict[(
-                attacking_ship.x, attacking_ship.y)][defending_ship_index]
-            defending_ship = next(
-                ship for ship in self.game.players[defending_ship_dict['player']].ships if ship.ID == defending_ship_dict['unit'])
+            self.game.generate_full_state(phase='Combat')
+            if len(ships_that_shot) >= len(fixed_ships): ships_that_shot = []
+            if self.asc_or_dsc != 'random': self.current_roll = self.rolls[self.dice_roll_index]
+            else: self.current_roll = random.randint(0,10)
+            attacking_ship = self.get_next_ally_ship(fixed_ships, ships_that_shot)
+            defending_ship_index = attacking_ship.player.strategy.decide_which_unit_to_attack(self.game.hidden_game_state_state, (attacking_ship.x, attacking_ship.y), fixed_ships.index(attacking_ship))
+            defending_ship_dict = self.combat_dict[(attacking_ship.x, attacking_ship.y)][defending_ship_index]
+            for ship in fixed_ships:
+                if defending_ship_dict == {'unit': ship.ID, 'player': ship.player.player_index}:
+                    defending_ship = ship
+                    break
             if defending_ship != None and attacking_ship != None:
-                hit_or_miss = self.start_fight(
-                    attacking_ship, defending_ship)  # make'em fight
+                hit_or_miss = self.start_fight(attacking_ship, defending_ship)  # make'em fight
                 if not defending_ship.is_alive:
-                    defending_ship.player.ships.remove(defending_ship)
+                    if defending_ship.type == 'Shipyard': defending_ship.player.ship_yards.remove(defending_ship)
+                    elif defending_ship.type == 'Home Base':
+                        defending_ship.is_alive = False
+                        defending_ship.player.is_alive = False
+                        if self.game.print_state_obsolete: print('Player', attacking_ship.player.player_index, 'destroyed Player', defending_ship.player.player_index, "'s Home Base")
+                        if self.game.print_state_obsolete: print('---------------------------------------------')
+                        self.game.game_won = True
+                        break
+                    else: defending_ship.player.ships.remove(defending_ship)
                     fixed_ships.remove(defending_ship)
                 ships_that_shot.append(attacking_ship)
-            self.dice_roll_index += 1
-            if self.dice_roll_index > 5:
-                self.dice_roll_index = 0
-            self.current_roll = self.rolls[self.dice_roll_index]
+            if self.asc_or_dsc != 'random':
+                self.dice_roll_index += 1
+                if self.dice_roll_index > 5: self.dice_roll_index = 0
+                self.current_roll = self.rolls[self.dice_roll_index]
+            else:
+                self.current_roll = random.randint(0,10)
 
     def more_than_one_player_left_fighting(self, ships):
         if ships != []:
@@ -68,13 +80,13 @@ class CombatEngine:
                 return ship
 
     def start_fight(self, ship_1, ship_2):
-        print("Player", ship_1.player.player_index, "'s", ship_1.type, ship_1.ID,
+        if self.game.print_state_obsolete: print("Player", ship_1.player.player_index, "'s", ship_1.type, ship_1.ID,
               "vs Player", ship_2.player.player_index, "'s", ship_2.type, ship_2.ID)
         hit_or_miss = self.attack(ship_1, ship_2)
         if ship_2.hits_left < 1:
-            print("Player", ship_2.player.player_index,
-                  "'s unit was destroyed at co-ords", [ship_2.x, ship_2.y])
-            print('-------------------------')
+            if self.game.print_state_obsolete: print("Player", ship_2.player.player_index,
+                  "'s", ship_2.type, ship_2.ID, "was destroyed at co-ords", [ship_2.x, ship_2.y])
+            if self.game.print_state_obsolete: print('-------------------------')
             ship_2.is_alive = False
         return hit_or_miss
 
@@ -82,17 +94,13 @@ class CombatEngine:
     def attack(self, ship_1, ship_2):
         player_1 = ship_1.player
         player_2 = ship_2.player
-        hit_threshold = (ship_1.attack + player_1.technology['attack']) - \
-            (ship_2.defense + player_2.technology['defense'])
-        die_roll = self.rolls[self.dice_roll_index]
-        if die_roll == 1 or die_roll <= hit_threshold:
-            print('Player', player_1.player_index, 'Hit their shot, targeting Player',
-                  player_2.player_index, "'s unit", ship_2.type, ship_2.ID)
-            ship_2.hits_left -= 1  # player 2's ship loses some hits_left
+        hit_threshold = (ship_1.attack + player_1.technology['attack']) - (ship_2.defense + player_2.technology['defense'])
+        if self.current_roll == 1 or self.current_roll <= hit_threshold:
+            if self.game.print_state_obsolete: print('Player', player_1.player_index, 'Hit their shot, targeting Player', player_2.player_index, "'s", ship_2.type, ship_2.ID)
+            ship_2.hits_left -= ship_1.attack + ship_1.technology['attack']  # player 2's ship loses some hits_left
             return 'Hit'
         else:
-            print('Player', player_1.player_index, 'Missed their shot, targeting Player',
-                  player_2.player_index, "'s unit", ship_2.type, ship_2.ID)
+            if self.game.print_state_obsolete: print('Player', player_1.player_index, 'Missed their shot, targeting Player', player_2.player_index, "'s", ship_2.type, ship_2.ID)
             return 'Miss'
 
     def possible_fights(self):
@@ -101,14 +109,13 @@ class CombatEngine:
             for y in range(0, self.board_size[1] + 1):
                 if self.is_a_possible_fight_at_x_y(x, y):
                     for ship in self.board.ships_dict[(x, y)]:
-                        if not self.if_it_can_fight(ship):
-                            ship.player.ships.remove(ship)
-                    positions_of_ships[(x, y)] = [ship for ship in self.game.board.simple_sort(self.board.ships_dict[(x, y)]) if not isinstance(
-                        ship, Colony) and not isinstance(ship, Colony_Ship) and not isinstance(ship, Decoy) and not isinstance(ship, Miner)]
+                        if self.if_it_cant_fight(ship):
+                            if ship.type == 'Colony': ship.player.colonies.remove(ship)
+                            else: ship.player.ships.remove(ship)
+                    positions_of_ships[(x, y)] = [ship for ship in self.game.board.simple_sort(self.board.ships_dict[(x, y)]) if not self.if_it_cant_fight(ship)]
         return positions_of_ships
 
-    def if_it_can_fight(self, ship): return not isinstance(ship, Colony_Ship) and not isinstance(
-        ship, Decoy) and not isinstance(ship, Miner) and not isinstance(ship, Colony)
+    def if_it_cant_fight(self, ship): return ship.type == 'Colony' and ship.type == 'Decoy' and ship.type == 'Miner' and ship.type == 'Colony Ship'
 
     def is_a_possible_fight_at_x_y(self, x, y):
         self.board.update_board()
@@ -118,7 +125,6 @@ class CombatEngine:
             for ship in ships[0:]:
                 if ship.player != player_1:
                     return True
-
         return False
 
     def generate_combat_array(self):
@@ -126,7 +132,6 @@ class CombatEngine:
         for coords, ships in self.possible_fights().items():
             combat_at_location_arr = []
             for ship in ships:
-                combat_at_location_arr.append(
-                    {'player': ship.player.player_index, 'unit': ship.ID})
+                combat_at_location_arr.append({'player': ship.player.player_index, 'unit': ship.ID})
             self.combat_dict[coords] = combat_at_location_arr
         return self.combat_dict

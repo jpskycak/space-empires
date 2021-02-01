@@ -17,10 +17,8 @@ class Unit:
         self.board_size = board_size
         self.is_alive = True  # for ship yard and other stuffs
         self.technology = {'attack': 0, 'defense': 0, 'movement': 1, 'tactics': 0}
-        #self.attack_tech = 0
-        #self.defense_tech = 0
-        #self.movement_tech = [1, 1, 1]
-        self.ship_yard_tech = 0
+        self.attack = 0
+        self.defense = 0
         self.center = [self.board_size[0] // 2, self.board_size[1] // 2]
 '''
     def move_to_center(self, move_round):

@@ -34,8 +34,8 @@ class Logger:
         self.active_file.write(turn_string)
         for player_index, player in game_state['players'].items():
             player_string = 'Player: ' + \
-                str(player_index + 1) + '\nStatus: ' + \
-                str(player['status']) + '\n'
+                str(player_index + 1) + '\nIs Alive: ' + \
+                str(player['Is Alive']) + '\n'
             self.active_file.write(player_string)
             for ship_attributes in player['units']:
                 ship_string = str(ship_attributes['type']) + ': Position: [' + str(
@@ -44,12 +44,11 @@ class Logger:
             if log_colonies:
                 for colony_attributes in player['colonies'].values():
                     colony_string = str(colony_attributes['name']) + ' Colony ID:', str(
-                        colony_attributes['ID']) + ': [' + str(colony_attributes['coords'][0]) + str(colony_attributes['coords'][1]) + '] \n'
+                        colony_attributes['ID']) + ': [' + str(colony_attributes['coords'][0]) + ',' + str(colony_attributes['coords'][1]) + '] \n'
                     self.active_file.write(colony_string)
             if log_ship_yards:
-                for ship_yard_attributes in player['ship_yards'].values():
-                    ship_yard_string = 'Ship Yard ID:' + str(ship_yard_attributes['ID']) + ': [' + str(
-                        ship_yard_attributes['coords'][0]) + str(ship_yard_attributes['coords'][1]) + '] \n'
+                for ship_yard_attributes in player['shipyards']:
+                    ship_yard_string = 'Ship Yard ID:' + str(ship_yard_attributes['ID']) + ': [' + str(ship_yard_attributes['coords'][0]) + ',' + str(ship_yard_attributes['coords'][1]) + '] \n'
                     self.active_file.write(ship_yard_string)
             self.active_file.write('\n')
 
@@ -57,7 +56,6 @@ class Logger:
         self.active_file = open(self.active_file_name, 'r')  # get file
         return self.active_file.read()  # return contents of file
 
-    # I couldn't find anyway to do this other than using filecmp
     def compare_test_and_example(self):
         active_file = self.active_file.readlines()
         correct_file = self.correct_file.readlines()

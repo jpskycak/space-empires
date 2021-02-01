@@ -18,35 +18,23 @@ sys.path.append('src')
 
 
 class Player:
-    def __init__(self, strategy, position, board_size, player_index, player_color):
+    def __init__(self, strategy, position, board_size, player_index, player_color, colony_ships = False, ship_yards = False):
         self.creds = 0
-        self.status = 'Playing'
+        self.is_alive = True
         self.death_count = 0  # if winCount = amount of units self.lose = true
         self.player_index = player_index
         self.player_color = player_color
         # starts out with 8 scouts later it would be 3 miners
         self.board_size = board_size
-        self.new_ship_index = 7
-        self.ships = [
-            Scout(self, position, self.board_size, 1),
-            Scout(self, position, self.board_size, 2),
-            Scout(self, position, self.board_size, 3),
-            Colony_Ship(self, position, self.board_size, 4),
-            Colony_Ship(self, position, self.board_size, 5),
-            Colony_Ship(self, position, self.board_size, 6)
-        ]
-        self.ship_yards = [
-            Ship_Yard(self, position, self.board_size, 1),
-            Ship_Yard(self, position, self.board_size, 2),
-            Ship_Yard(self, position, self.board_size, 3),
-            Ship_Yard(self, position, self.board_size, 4)
-        ]
-        self.home_base = Colony(
-            self, position, self.board_size, 1, home_base=True)
+        self.new_ship_index = 4
+        if colony_ships: self.ships = [Scout(self, position, self.board_size, 1), Scout(self, position, self.board_size, 2), Scout(self, position, self.board_size, 3), Colony_Ship(self, position, self.board_size, 4), Colony_Ship(self, position, self.board_size, 5), Colony_Ship(self, position, self.board_size, 6)]
+        else: self.ships = [Scout(self, position, self.board_size, 1), Scout(self, position, self.board_size, 2), Scout(self, position, self.board_size, 3)]
+        if ship_yards: self.ship_yards = [Ship_Yard(self, position, self.board_size, 1), Ship_Yard(self, position, self.board_size, 2), Ship_Yard(self, position, self.board_size, 3), Ship_Yard(self, position, self.board_size, 4)]
+        else: self.ship_yards = []
+        self.home_base = Colony(self, position, self.board_size, 1, home_base=True)
         self.colonies = []
         self.starting_position = position
-        self.technology = {'attack': 0, 'defense': 0, 'movement': 1, 'shipsize': 1,
-                           'shipyard': 1, 'terraform': 0, 'tactics': 0, 'exploration': 0}
+        self.technology = {'attack': 0, 'defense': 0, 'movement': 1, 'shipsize': 1, 'shipyard': 1, 'terraform': 0, 'tactics': 0, 'exploration': 0}
         self.fighting_class_tech = 0
         self.movement_tech_upgrade_number = 0
         self.strategy = strategy(int(player_index))
@@ -70,44 +58,37 @@ class Player:
             # offense
             if stat_to_upgrade == 'attack' and self.technology['attack'] < 3:
                 self.technology['attack'] += 1
-                print('Player', self.player_index, 'upgraded their attack strength from',
-                      self.technology['attack'] - 1, 'to', self.technology['attack'])
+                if self.game.print_state_obsolete: print('Player', self.player_index, 'upgraded their attack strength from', self.technology['attack'] - 1, 'to', self.technology['attack'])
 
             # defense
             elif stat_to_upgrade == 'defense' and self.technology['defense'] < 3:
                 self.technology['defense'] += 1
-                print('Player', self.player_index, 'upgraded their defense strength from',
-                      self.technology['defense'] - 1, 'to', self.technology['defense'])
+                if self.game.print_state_obsolete: print('Player', self.player_index, 'upgraded their defense strength from', self.technology['defense'] - 1, 'to', self.technology['defense'])
 
             # tactics
             elif stat_to_upgrade == 'tactics' and self.technology['tactics'] < 3:
                 self.technology['tactics'] += 1
-                print('Player', self.player_index, 'upgraded their fighting class from',
-                      self.technology['tactics'] - 1, 'to', self.technology['tactics'])
+                if self.game.print_state_obsolete: print('Player', self.player_index, 'upgraded their fighting class from', self.technology['tactics'] - 1, 'to', self.technology['tactics'])
 
             # speed
             elif stat_to_upgrade == 'movement' and sum(self.technology['movement']) - 2 < 6:
                 self.technology['movement'] += 1
-                print('Player', self.player_index, 'upgraded their movement speed from', sum(
-                    self.technology['movement']) - 3, 'to', sum(self.technology['movement']) - 2)
+                if self.game.print_state_obsolete: print('Player', self.player_index, 'upgraded their movement speed from', sum(self.technology['movement']) - 3, 'to', sum(self.technology['movement']) - 2)
 
             # ship yard
             elif stat_to_upgrade == 'shipyard' and self.technology['shipyard'] < 2:
                 self.technology['shipyard'] += 0.5
-                print('Player', self.player_index, "upgraded their ship-yard's building size from",
-                      self.technology['shipyard'] - 0.5, 'to', self.technology['shipyard'])
+                if self.game.print_state_obsolete: print('Player', self.player_index, "upgraded their ship-yard's building size from", self.technology['shipyard'] - 0.5, 'to', self.technology['shipyard'])
 
             # terraform
             elif stat_to_upgrade == 'terraform' and self.technology['terraform'] < 2:
                 self.technology['terraform'] += 1
-                print('Player', self.player_index, "upgraded their ablility to terraform from",
-                      self.technology['terraform'] - 1, 'to', self.technology['terraform'])
+                if self.game.print_state_obsolete: print('Player', self.player_index, "upgraded their ablility to terraform from", self.technology['terraform'] - 1, 'to', self.technology['terraform'])
 
             # biggest ship size that you can build
             elif stat_to_upgrade == 'shipsize' and self.technology['shipsize'] < 6:
                 self.technology['shipsize'] += 1
-                print('Player', self.player_index, "upgraded their max building size from",
-                      self.technology['shipsize'] - 1, 'to', self.technology['shipsize'])
+                if self.game.print_state_obsolete: print('Player', self.player_index, "upgraded their max building size from", self.technology['shipsize'] - 1, 'to', self.technology['shipsize'])
 
     def can_upgrade(self, stat_to_upgrade, game_state):
         if stat_to_upgrade != 'movement':
@@ -147,13 +128,11 @@ class Player:
             for planet in board.planets:
                 if self.can_colonize_planet(ship, planet) and self.strategy.will_colonize_planet((ship.x, ship.y), game_state):
                     if ship.terraform_tech >= planet.tier - 1:
-                        print('Player', self.player_index, 'just colonized a tier',
-                              planet.tier, 'planet at co-ords:', (planet.x, planet.y))
+                        print('Player', self.player_index, 'just colonized a tier', planet.tier, 'planet at co-ords:', (planet.x, planet.y))
                         board.create_colony(self, planet, planet.position)
                         self.ships.remove(ship)
                     else:
-                        print('Player', self.player_index, "can't colonize a tier", planet.tier, 'planet at co-ords:',
-                              (planet.x, planet.y), 'because their terraform tech is', ship.terraform_tech)
+                        print('Player', self.player_index, "can't colonize a tier", planet.tier, 'planet at co-ords:', (planet.x, planet.y), 'because their terraform tech is', ship.terraform_tech)
 
     # game not yet inputed cause infinite import loop bad
     def can_colonize_planet(self, ship, planet, game=None):
