@@ -77,11 +77,12 @@ class Game:
         return players
 
     def play(self):
-        if self.print_state_obsolete: print('Initial State')
         self.generate_full_state()
-        if self.print_state_obsolete: self.state_obsolete()
         self.player_has_not_won = True
-        if self.print_state_obsolete: print('--------------------------------------------------')
+        if self.print_state_obsolete: 
+            print('Initial State')
+            self.state_obsolete()
+            print('--------------------------------------------------')
         while not self.game_won and not self.check_if_player_has_won() and self.turn <= self.max_turns:
             self.complete_turn()
             if self.can_log: self.log.log_info(self.game_state, log_ship_yards=True)
@@ -124,24 +125,28 @@ class Game:
         self.check_if_player_has_won()
         if not self.game_won:
             self.generate_full_state(phase='Movement')
-            if self.print_state_obsolete: print('Move Phase')
+            if self.print_state_obsolete: 
+                print('--------------------------------------------------')
+                print('Move Phase')
             self.movement_engine.complete_all_movements(self.board, self.hidden_game_state_state, self.number_of_movement_rounds)
             if self.print_state_obsolete: self.state_obsolete()
         if not self.game_won:
             self.generate_full_state(phase='Combat')
-            if self.print_state_obsolete: print('--------------------------------------------------')
-            if self.print_state_obsolete: print('Combat Phase')
+            if self.print_state_obsolete: 
+                print('--------------------------------------------------')
+                print('Combat Phase')
             self.combat_engine.complete_all_fights(self.hidden_game_state_for_combat_state, self.screen_ships)
             if self.print_state_obsolete: self.state_obsolete()
         if self.turn < self.max_turns and not self.game_won and self.economic_phase:
             self.generate_full_state(phase='Economic')
-            if self.print_state_obsolete: print('--------------------------------------------------')
-            if self.print_state_obsolete: print('Economic Phase')
+            if self.print_state_obsolete: 
+                print('--------------------------------------------------')
+                print('Economic Phase')
             self.economic_engine.complete_all_taxes(self.hidden_game_state_state)
             for player in self.players:
                 if self.print_state_obsolete: print('Player', player.player_index, 'Has', player.creds, 'creds extra after the economic phase.')
             if self.print_state_obsolete: self.state_obsolete()
-            if self.print_state_obsolete: print('--------------------------------------------------')
+                    
         self.board.update_board()
 
     def generate_full_state(self, phase=None, movement_round=0, initial_state=False):
@@ -167,6 +172,10 @@ class Game:
             'movement': [0, 20, 30, 40, 40, 40],
             'shipyard': [0, 20, 30]
         }
+        self.hidden_game_state_state['unit_data'] = self.game_state['unit_data']
+        self.hidden_game_state_for_combat_state['unit_data'] = self.game_state['unit_data']
+        self.hidden_game_state_state['technology_data'] = self.game_state['technology_data']
+        self.hidden_game_state_for_combat_state['technology_data'] = self.game_state['technology_data']
         self.game_state['board_size'] = self.board_size
         self.game_state['turn'] = self.turn
         self.game_state['phase'] = phase
@@ -215,9 +224,6 @@ class Game:
             for colonies in player.colonies: self.hidden_game_state_for_combat_state['players'][i]['colonies'].append({'coords': (colonies.x, colonies.y), 'type': colonies.type, 'ID': colonies.ID, 'hits_left': colonies.hits_left, 'technology': colonies.technology})
             for shipyards in player.ship_yards: self.hidden_game_state_for_combat_state['players'][i]['shipyards'].append({'coords': (shipyards.x, shipyards.y), 'type': shipyards.type, 'ID': shipyards.ID, 'hits_left': shipyards.hits_left, 'technology': shipyards.technology})
 
-    # misc functions
-
-    # obsolete but can be used for debugging
     def state_obsolete(self, print_planets_and_asteroids=False):
         if print_planets_and_asteroids:
             print('Asteroids')

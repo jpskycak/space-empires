@@ -20,34 +20,10 @@ class BasicStrategy:  # no movement or actual strategy, just funcitons like deci
                 fixed_arr.append(ship_attributes)
         sorted_arr = []
         while len(fixed_arr) > 0:
-            sorted_arr.append(self.max_value(game_state, fixed_arr))
-            fixed_arr.remove(self.max_value(game_state, fixed_arr))
+            strongest_ship = max(fixed_arr, key=lambda ship: ship['technology']['tactics'] + ship['technology']['tactics'] + game_state['unit_data'][ship['type']]['attack'])
+            sorted_arr.append(strongest_ship)
+            fixed_arr.remove(strongest_ship)
         return sorted_arr
-
-    def max_value(self, game_state, arr):
-        strongest_ship = arr[0]
-        for ship in arr[1:]:
-            if self.ship_1_fires_first(game_state, ship, strongest_ship):
-                strongest_ship = ship
-        return strongest_ship
-
-    def ship_1_fires_first(self, game_state, ship_1, ship_2):
-        if ship_1['technology']['tactics'] > ship_2['technology']['tactics']:
-            return True
-        elif ship_1['technology']['tactics'] < ship_2['technology']['tactics']:
-            return False
-        else:
-            if ship_1['technology']['attack'] > ship_2['technology']['attack']:
-                return True
-            elif ship_1['technology']['attack'] < ship_2['technology']['attack']:
-                return False
-            else:
-                if game_state['unit_data'][ship_1['type']]['attack'] > game_state['unit_data'][ship_2['type']]['attack']:
-                    return True
-                elif game_state['unit_data'][ship_2['type']]['attack'] > game_state['unit_data'][ship_1['type']]['attack']:
-                    return False
-                else:
-                    return True
                     
     def decide_ship_movement(self, unit_index, game_state):
         ship_yards = game_state['players'][self.player_index]['shipyards']

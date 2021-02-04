@@ -64,27 +64,6 @@ class Board:
         planet.is_colonized = True
         player.colonies.append(Colony(self, len(player.colonies) + 1, position, self.board_size))
 
-    # combat stuffs
-    def if_it_can_fight(self, ship): return not isinstance(ship, Colony_Ship) and not isinstance(ship, Decoy) and not isinstance(ship, Miner) and not isinstance(ship, Colony)
-
-    def ship_1_fires_first(self, ship_1, ship_2):
-        if ship_1.technology['tactics'] > ship_2.technology['tactics']:
-            return True
-        elif ship_1.technology['tactics'] < ship_2.technology['tactics']:
-            return False
-        else:
-            if ship_1.technology['attack'] > ship_2.technology['attack']:
-                return True
-            elif ship_1.technology['attack'] < ship_2.technology['attack']:
-                return False
-            else:
-                if ship_1.attack > ship_2.attack:
-                    return True
-                elif ship_1.attack < ship_2.attack:
-                    return False
-                else:
-                    return True
-
     def get_die_roll(self):
         if self.dice_roll_index == 5:
             self.dice_roll_index = 0

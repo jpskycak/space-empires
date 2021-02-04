@@ -52,8 +52,9 @@ class CombatEngine:
                     elif defending_ship.type == 'Home Base':
                         defending_ship.is_alive = False
                         defending_ship.player.is_alive = False
-                        if self.game.print_state_obsolete: print('Player', attacking_ship.player.player_index, 'destroyed Player', defending_ship.player.player_index, "'s Home Base")
-                        if self.game.print_state_obsolete: print('---------------------------------------------')
+                        if self.game.print_state_obsolete: 
+                            print('Player', attacking_ship.player.player_index, 'destroyed Player', defending_ship.player.player_index, "'s Home Base")
+                            print('---------------------------------------------')
                         self.game.game_won = True
                         break
                     else: defending_ship.player.ships.remove(defending_ship)
@@ -80,13 +81,12 @@ class CombatEngine:
                 return ship
 
     def start_fight(self, ship_1, ship_2):
-        if self.game.print_state_obsolete: print("Player", ship_1.player.player_index, "'s", ship_1.type, ship_1.ID,
-              "vs Player", ship_2.player.player_index, "'s", ship_2.type, ship_2.ID)
+        if self.game.print_state_obsolete: print("Player", ship_1.player.player_index, "'s", ship_1.type, ship_1.ID, "vs Player", ship_2.player.player_index, "'s", ship_2.type, ship_2.ID)
         hit_or_miss = self.attack(ship_1, ship_2)
         if ship_2.hits_left < 1:
-            if self.game.print_state_obsolete: print("Player", ship_2.player.player_index,
-                  "'s", ship_2.type, ship_2.ID, "was destroyed at co-ords", [ship_2.x, ship_2.y])
-            if self.game.print_state_obsolete: print('-------------------------')
+            if self.game.print_state_obsolete: 
+                print("Player", ship_2.player.player_index, "'s", ship_2.type, ship_2.ID, "was destroyed at co-ords", [ship_2.x, ship_2.y])
+                print('-------------------------')
             ship_2.is_alive = False
         return hit_or_miss
 
