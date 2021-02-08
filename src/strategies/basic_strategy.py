@@ -4,11 +4,11 @@ class BasicStrategy:  # no movement or actual strategy, just funcitons like deci
     def __init__(self, player_index):  # wutever we need):
         self.player_index = player_index
 
-    def decide_removal(self, game_state):
-        return self.simple_sort(game_state)[-1]['ID']
+    def decide_removal(self, hidden_game_state):
+        return self.simple_sort(hidden_game_state['players'][self.player_index]['units'])[-1]['ID']
 
     def decide_which_unit_to_attack(self, hidden_game_state_for_combat, coords, attacker_index):
-        return next(index for index, ship in enumerate(hidden_game_state_for_combat['combat'][coords]) if self.player_index != ship['player'])
+        return next(index for index, ship in enumerate(hidden_game_state_for_combat) if self.player_index != ship['player'])
 
     def decide_which_units_to_screen(self, hidden_game_state_for_combat):
         return []

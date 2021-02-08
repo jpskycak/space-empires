@@ -19,14 +19,14 @@ class CombatEngine:
             elif self.asc_or_dsc == 'dsc': self.rolls = [6, 5, 4, 3, 2, 1]
             self.current_roll = self.rolls[self.dice_roll_index]
 
-    def complete_all_fights(self, hidden_game_state, screen_ships):
+    def complete_all_fights(self, hidden_game_state_for_combat, screen_ships):
         if self.game.print_state_obsolete: print('-------------------------')
         possible_fights = self.possible_fights()
         for _, ships in possible_fights.items():
             if not self.game.game_won:
-                self.complete_all_combats(ships, hidden_game_state, screen_ships)
+                self.complete_all_combats(ships, hidden_game_state_for_combat, screen_ships)
 
-    def complete_all_combats(self, ships, hidden_game_state, screen_ships):
+    def complete_all_combats(self, ships, hidden_game_state_for_combat, screen_ships):
         #screened_ships = ...
         fixed_ships = [ship for ship in ships if not ship.type == 'Colony' and not ship.type == 'Colony Ship' and not ship.type == 'Decoy' and not ship.type == 'Miner']# and not in screened_ships]
         for ship in [ship for ship in ships if ship not in fixed_ships]:
@@ -35,11 +35,13 @@ class CombatEngine:
         ships_that_shot = []
         while self.more_than_one_player_left_fighting(fixed_ships):
             self.game.generate_full_state(phase='Combat')
+            hidden_game_state_for_combat = self.game.hidden_game_state_for_combat_state
             if len(ships_that_shot) >= len(fixed_ships): ships_that_shot = []
             if self.asc_or_dsc != 'random': self.current_roll = self.rolls[self.dice_roll_index]
             else: self.current_roll = random.randint(0,10)
             attacking_ship = self.get_next_ally_ship(fixed_ships, ships_that_shot)
-            defending_ship_index = attacking_ship.player.strategy.decide_which_unit_to_attack(self.game.hidden_game_state_state, (attacking_ship.x, attacking_ship.y), fixed_ships.index(attacking_ship))
+            location = (attacking_ship.x, attacking_ship.y)
+            defending_ship_index = attacking_ship.player.strategy.decide_which_unit_to_attack(hidden_game_state_for_combat['combat'][location], location, fixed_ships.index(attacking_ship))
             defending_ship_dict = self.combat_dict[(attacking_ship.x, attacking_ship.y)][defending_ship_index]
             for ship in fixed_ships:
                 if defending_ship_dict == {'unit': ship.ID, 'player': ship.player.player_index}:
