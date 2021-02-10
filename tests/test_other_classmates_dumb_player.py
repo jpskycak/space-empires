@@ -1,10 +1,10 @@
 import sys
 sys.path.append('src')
-#from strategies.dumb_strategy import DumbStrategy
-#from strategies.eli_dumb_strategy import DumbStrategy
-#from strategies.riley_dumb_strategy import DumbStrategy
-from strategies.george_dumb_strategy import DumbStrategy
-#from strategies.david_dumb_strategy import DumbStrategy
+#from strategies.classmate_strats.dumb_strategy import DumbStrategy
+#from strategies.classmate_strats.eli_dumb_strategy import DumbStrategy
+#from strategies.classmate_strats.riley_dumb_strategy import DumbStrategy
+from strategies.classmate_strats.george_dumb_strategy import DumbStrategy
+#from strategies.classmate_strats.david_dumb_strategy import DumbStrategy
 from logger import Logger
 from game import Game
 

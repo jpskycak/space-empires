@@ -34,10 +34,7 @@ class BasicStrategy:  # no movement or actual strategy, just funcitons like deci
         return False
 
     def upgrade_costs(self, stat_to_upgrade, game_state):
-        if stat_to_upgrade != 'movement':
-            return game_state['technology_data'][stat_to_upgrade][game_state['players'][self.player_index]['technology'][stat_to_upgrade] - 1]
-        else:
-            return game_state['technology_data'][stat_to_upgrade][sum(game_state['players'][self.player_index]['technology'][stat_to_upgrade]) - 2]
+        return game_state['technology_data'][stat_to_upgrade][game_state['players'][self.player_index]['technology'][stat_to_upgrade]]
 
     def get_movement_tech(self, ship_movement_level):
         if ship_movement_level == 1:

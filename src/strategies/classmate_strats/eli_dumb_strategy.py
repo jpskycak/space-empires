@@ -1,5 +1,5 @@
 import math
-from strategies.eli_strategy_util import is_in_bounds
+from strategies.classmate_strats.eli_strategy_util import is_in_bounds
 
 
 class DumbStrategy:

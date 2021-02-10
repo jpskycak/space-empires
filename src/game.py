@@ -23,12 +23,11 @@ from unit.carrier import Carrier
 
 
 class Game:
-    def __init__(self, player_strats, board_size, asc_or_dsc, type_of_player, print_state_obsolete = True, max_turns=1000, generate_planets = False, number_of_movement_rounds = 1, economic_phase = False, screen_ships = False, can_log = True):
+    def __init__(self, player_strats, board_size, asc_or_dsc, print_state_obsolete = True, max_turns=10000, generate_planets = False, number_of_movement_rounds = 3, economic_phase = True, number_of_economic_phases = 10000, screen_ships = False, can_log = True, build_player_ship_yards = True):
         self.board_size = board_size  # ex [5,5]
         self.game_won = False
         self.board = Board(self, board_size, asc_or_dsc)
         self.max_turns = max_turns
-        self.type_of_player = type_of_player
         self.combat_engine = CombatEngine(
             self.board, self, self.board_size, asc_or_dsc)
         self.movement_engine = MovementEngine(self.board, self)
@@ -46,6 +45,8 @@ class Game:
         self.number_of_movement_rounds = number_of_movement_rounds
         self.economic_phase = economic_phase
         self.screen_ships = screen_ships
+        self.number_of_economic_phases = number_of_economic_phases
+        self.build_player_ship_yards = build_player_ship_yards
 
     # main functions
     def initialize_game(self):
@@ -54,7 +55,7 @@ class Game:
             self.board.create_planets_and_asteroids()
         else: 
             for i, _ in enumerate(self.player_strats): 
-                self.board.misc_dict[(self.starting_positions[i][0], self.starting_positions[i][1])] = Planet(self.starting_positions[i], random.randint(0, 1), is_colonized=True)
+                self.board.misc_dict[tuple(self.starting_positions[i])] = Planet(self.starting_positions[i], 0, is_colonized=True)
         self.turn = 1
         self.generate_full_state(initial_state=True)
         if self.can_log: self.log.get_next_active_file('logs')
@@ -63,17 +64,7 @@ class Game:
         colors = ['Blue', 'Red', 'Purple', 'Green']
         players = []
         for i, strategy in enumerate(self.player_strats):
-            players.append(
-                Player(strategy, self.starting_positions[i], self.board_size, i, colors[i]))
-        '''for i in range(0, 2):
-            if self.type_of_player == 1:
-                players.append(DumbPlayer(self.starting_positions[i], self.board_size, i + 1, colors[i]))
-            if self.type_of_player == 2:
-                players.append(RandomPlayer(self.starting_positions[i], self.board_size, i + 1, colors[i]))
-            if self.type_of_player == 3:
-                players.append(CombatPlayer(self.starting_positions[i], self.board_size, i + 1, colors[i]))
-            if self.type_of_player == 4:
-                players.append(ColbyStrategyPlayer(self.starting_positions[i], self.board_size, i + 1, colors[i]))'''
+            players.append(Player(self, strategy, self.starting_positions[i], self.board_size, i, colors[i], ship_yards=self.build_player_ship_yards))
         return players
 
     def play(self):
@@ -91,34 +82,34 @@ class Game:
         return player_won
 
     def player_has_won(self):
-        is_alive = []
-        for player in self.players:
-            if player.home_base.is_alive:
-                player.is_alive = True
-                is_alive.append(True)
-            else:
-                player.is_alive = False
-                is_alive.append(False)
-        for i, aliveness in enumerate(is_alive):
-            if aliveness:
-                if self.print_state_obsolete: print('Player', i, 'WINS!')
-                return i
+        is_alive = self.aliveness()
+        #print('is_alive', [(self.game_state['players'][i], aliveness) for i, aliveness in enumerate(is_alive)])
+        if is_alive.count(True) == 1:
+            for i, aliveness in enumerate(is_alive):
+                if aliveness:
+                    if self.print_state_obsolete: print(self.players[i].strategy.__name__, 'WINS!')
+                    return i
+        return None
 
     def check_if_player_has_won(self):
-        is_alive = []
-        for player in self.players:
-            if player.home_base.is_alive:
-                player.is_alive = True
-                is_alive.append(True)
-            else:
-                player.is_alive = False
-                is_alive.append(False)
-        if is_alive.count(True) <= 1:
+        is_alive = self.aliveness()
+        if is_alive.count(True) == 1:
             self.game_won = True
             return True
         else:
             self.game_won = False
             return False
+
+    def aliveness(self):
+        is_alive = []
+        for player in self.players:
+            if player.home_base.is_alive:
+                player.is_alive = True
+                is_alive.append(True)
+            else:
+                player.is_alive = False
+                is_alive.append(False)
+        return is_alive
 
     def complete_turn(self):
         if self.print_state_obsolete: print('Turn', self.turn)
@@ -137,12 +128,12 @@ class Game:
                 print('Combat Phase')
             self.combat_engine.complete_all_fights(self.hidden_game_state_for_combat_state, self.screen_ships)
             if self.print_state_obsolete: self.state_obsolete()
-        if self.turn < self.max_turns and not self.game_won and self.economic_phase:
+        if self.turn < self.max_turns and not self.game_won and self.economic_phase and self.turn < self.number_of_economic_phases + 1:
             self.generate_full_state(phase='Economic')
             if self.print_state_obsolete: 
                 print('--------------------------------------------------')
                 print('Economic Phase')
-            self.economic_engine.complete_all_taxes(self.hidden_game_state_state)
+            self.economic_engine.complete_all_taxes(self.game_state)
             for player in self.players:
                 if self.print_state_obsolete: print('Player', player.player_index, 'Has', player.creds, 'creds extra after the economic phase.')
             if self.print_state_obsolete: self.state_obsolete()

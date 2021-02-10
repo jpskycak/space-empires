@@ -1,13 +1,15 @@
 import sys
 sys.path.append('src')
-from strategies.berserker_strategy_level_1 import BerserkerStrategyLevel1
-from strategies.random_strategy_level_1 import RandomStrategyLevel1
-from strategies.dumb_strategy_level_1 import DumbStrategyLevel1
-from strategies.colby_strategy_level_1 import ColbyStrategyLevel1
-from strategies.flanker_strategy_level_1 import FlankerStrategyLevel1
+from strategies.level_1.berserker_strategy_level_1 import BerserkerStrategyLevel1
+from strategies.level_1.random_strategy_level_1 import RandomStrategyLevel1
+from strategies.level_1.dumb_strategy_level_1 import DumbStrategyLevel1
+from strategies.level_1.colby_strategy_level_1 import ColbyStrategyLevel1
+from strategies.level_1.flanker_strategy_level_1 import FlankerStrategyLevel1
 from game import Game
 from logger import Logger
 import random
+
+random.seed(0)
 
 print('\nBerserker vs ...')
 

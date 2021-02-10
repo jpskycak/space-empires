@@ -1,5 +1,4 @@
-from strategies.eli_strategy_util import get_possible_spots, is_in_bounds, get_spaces
-
+from strategies.classmate_strats.eli_strategy_util import get_possible_spots, is_in_bounds, get_spaces
 
 class CombatStrategy:
     buy_destroyer = True

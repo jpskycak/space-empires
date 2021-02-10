@@ -18,7 +18,8 @@ sys.path.append('src')
 
 
 class Player:
-    def __init__(self, strategy, position, board_size, player_index, player_color, colony_ships = False, ship_yards = False):
+    def __init__(self, game, strategy, position, board_size, player_index, player_color, colony_ships = False, ship_yards = False):
+        self.game = game
         self.creds = 0
         self.is_alive = True
         self.death_count = 0  # if winCount = amount of units self.lose = true
@@ -31,7 +32,7 @@ class Player:
         else: self.ships = [Scout(self, position, self.board_size, 1), Scout(self, position, self.board_size, 2), Scout(self, position, self.board_size, 3)]
         if ship_yards: self.ship_yards = [Ship_Yard(self, position, self.board_size, 1), Ship_Yard(self, position, self.board_size, 2), Ship_Yard(self, position, self.board_size, 3), Ship_Yard(self, position, self.board_size, 4)]
         else: self.ship_yards = []
-        self.home_base = Colony(self, position, self.board_size, 1, home_base=True)
+        self.home_base = Colony(self, position, self.board_size, 1, home_base=True, turn_built = -1)
         self.colonies = []
         self.starting_position = position
         self.technology = {'attack': 0, 'defense': 0, 'movement': 1, 'shipsize': 1, 'shipyard': 1, 'terraform': 0, 'tactics': 0, 'exploration': 0}
@@ -91,16 +92,10 @@ class Player:
                 if self.game.print_state_obsolete: print('Player', self.player_index, "upgraded their max building size from", self.technology['shipsize'] - 1, 'to', self.technology['shipsize'])
 
     def can_upgrade(self, stat_to_upgrade, game_state):
-        if stat_to_upgrade != 'movement':
-            return self.upgrade_cost(stat_to_upgrade, game_state), self.creds >= self.upgrade_cost(stat_to_upgrade, game_state)
-        else:
-            return self.upgrade_cost(stat_to_upgrade, game_state), self.creds >= self.upgrade_cost(stat_to_upgrade, game_state)
+        return self.upgrade_cost(stat_to_upgrade, game_state), self.creds >= self.upgrade_cost(stat_to_upgrade, game_state)
 
     def upgrade_cost(self, stat_to_upgrade, game_state):
-        if stat_to_upgrade != 'movement':
-            return game_state['technology_data'][stat_to_upgrade][self.technology[stat_to_upgrade]]
-        else:
-            return game_state['technology_data'][stat_to_upgrade][sum(self.technology[stat_to_upgrade]) - 3]
+        return game_state['technology_data'][stat_to_upgrade][self.technology[stat_to_upgrade]]
 
     def screen_ships(self, ships_at_x_y, board):
         players = self.get_players_in_list(ships_at_x_y)
@@ -123,17 +118,18 @@ class Player:
         return players
 
     # check stuffs
-    def check_colonization(self, board, game_state):
-        for ship in self.ships:
-            for planet in board.planets:
-                if self.can_colonize_planet(ship, planet) and self.strategy.will_colonize_planet((ship.x, ship.y), game_state):
-                    if ship.terraform_tech >= planet.tier - 1:
-                        print('Player', self.player_index, 'just colonized a tier', planet.tier, 'planet at co-ords:', (planet.x, planet.y))
-                        board.create_colony(self, planet, planet.position)
-                        self.ships.remove(ship)
-                    else:
-                        print('Player', self.player_index, "can't colonize a tier", planet.tier, 'planet at co-ords:', (planet.x, planet.y), 'because their terraform tech is', ship.terraform_tech)
+    def check_colonization(self, ship, board, hidden_game_state):
+        for planet in board.planets:
+            if self.can_colonize_planet(ship, planet) and self.strategy.will_colonize_planet((ship.x, ship.y), hidden_game_state):
+                if ship.terraform_tech >= planet.tier - 1:
+                    print('Player', self.player_index, 'just colonized a tier', planet.tier, 'planet at co-ords:', (planet.x, planet.y))
+                    board.create_colony(self, planet, planet.position, hidden_game_state['turn'])
+                    self.ships.remove(ship)
+                    return True
+                else:
+                    print('Player', self.player_index, "can't colonize a tier", planet.tier, 'planet at co-ords:', (planet.x, planet.y), 'because their terraform tech is', ship.terraform_tech)
+                    return False
 
     # game not yet inputed cause infinite import loop bad
     def can_colonize_planet(self, ship, planet, game=None):
-        return isinstance(ship, Colony_Ship) and ship.x == planet.x and ship.y == planet.y and not planet.is_colonized
+        return ship.type == Colony_Ship and ship.x == planet.x and ship.y == planet.y and not planet.is_colonized

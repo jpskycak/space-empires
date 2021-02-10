@@ -41,18 +41,18 @@ class Board:
         #print('create planets and asteroids')
         self.planets = []
         self.asteroids = []
-        for x in range(0, self.board_size[0] + 1):
-            for y in range(0, self.board_size[1] + 1):
-                # 1,2 is a planet and 3,4, are asteroids and 5,6 are None
-                if [x, y] != self.player_home_bases[0] and [x, y] != self.player_home_bases[1]:
-                    planet_or_asteroid = 1  # self.get_die_roll()
-                    if planet_or_asteroid <= 2:
-                        self.misc_dict[(x, y)] = [self.create_planet([x, y])]
-                        self.planets.append((x,y))
-                        self.planets.append(self.create_planet([x, y]))
-                    elif planet_or_asteroid > 2 and planet_or_asteroid <= 4:
-                        self.misc_dict[(x, y)] = [self.create_asteroid([x, y])]
-                        self.asteroids.append(self.create_asteroid([x, y]))
+        positions = [(x,y) for x in range(0, self.board_size[0]) for y in range(0, self.board_size[1])]
+        for (x,y) in positions:
+            # 1,2 is a planet and 3,4, are asteroids and 5,6 are None
+            if [x, y] != self.player_home_bases[0] and [x, y] != self.player_home_bases[1]:
+                planet_or_asteroid = 1  # self.get_die_roll()
+                if planet_or_asteroid <= 2:
+                    self.misc_dict[(x, y)] = [self.create_planet([x, y])]
+                    self.planets.append((x,y))
+                    self.planets.append(self.create_planet([x, y]))
+                elif planet_or_asteroid > 2 and planet_or_asteroid <= 4:
+                    self.misc_dict[(x, y)] = [self.create_asteroid([x, y])]
+                    self.asteroids.append(self.create_asteroid([x, y]))
 
     def create_planet(self, position):
         return Planet(position, random.randint(0, 1))
@@ -60,9 +60,9 @@ class Board:
     def create_asteroid(self, position):
         return Asteroid(position, random.randint(1, 2))
 
-    def create_colony(self, player, planet, position):
+    def create_colony(self, player, planet, position, turn_built):
         planet.is_colonized = True
-        player.colonies.append(Colony(self, len(player.colonies) + 1, position, self.board_size))
+        player.colonies.append(Colony(self, len(player.colonies) + 1, position, self.board_size, turn_built))
 
     def get_die_roll(self):
         if self.dice_roll_index == 5:
