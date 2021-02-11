@@ -3,20 +3,23 @@ class MovementEngine:
         self.board = board
         self.game = game
 
-    def complete_all_movements(self, board, hidden_game_state, number_of_rounds):
+    def complete_all_movements(self, board, number_of_rounds):
         for movement_round in range(0, number_of_rounds):  # 3 rounds of movements
-            self.game.generate_full_state()
-            hidden_game_state = self.game.hidden_game_state_state
             for player in self.game.players:
+                self.game.generate_state(phase='Movement', current_player=player)
+                hidden_game_state = self.game.game_state
                 for ship_index, ship in enumerate(player.ships):
                     for _ in range(0, self.get_movement_tech(ship.technology['movement'])[movement_round]):
                         x, y = player.strategy.decide_ship_movement(ship_index, hidden_game_state)
                         if 0 <= ship.x + x and 0 <= ship.y + y and ship.x + x <= hidden_game_state['board_size'][0] - 1 and ship.y + y <= hidden_game_state['board_size'][0] - 1 and x+y <= self.get_movement_tech(ship.technology['movement'])[movement_round]:
                             if not self.cant_move_due_to_combat(ship) and not player.check_colonization(ship, self.board, hidden_game_state):
+                                if self.game.print_state_obsolete:
+                                    print('...')
                                 ship.x += x
                                 ship.y += y
                         else:
-                            print('\n' + player.strategy.__name__, 'Tried to cheat and move to', (ship.x + x, ship.y + y), 'so the program was aborted.')
+                            print('\n' + player.strategy.__name__, 'Tried to cheat and move to',
+                                  (ship.x + x, ship.y + y), 'so the program was aborted.')
                             exit()
                         player.check_colonization(ship, self.board, hidden_game_state)
 

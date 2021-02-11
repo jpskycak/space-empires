@@ -12,7 +12,7 @@ class BasicStrategy:  # no movement or actual strategy, just funcitons like deci
 
     def decide_which_units_to_screen(self, hidden_game_state_for_combat):
         return []
-
+        
     def simple_sort(self, game_state):
         fixed_arr = []
         for ship_attributes in game_state['players'][self.player_index]['units']:
@@ -27,7 +27,8 @@ class BasicStrategy:  # no movement or actual strategy, just funcitons like deci
                     
     def decide_ship_movement(self, unit_index, game_state):
         ship_yards = game_state['players'][self.player_index]['shipyards']
-        random_ship_yard = random.randint(1, len(ship_yards)) - 1
+        
+        random_ship_yard = math.floor(len(ship_yards)*random.random()) + 1
         return ship_yards[random_ship_yard]['coords'][0], ship_yards[random_ship_yard]['coords'][1]
 
     def will_colonize_planet(self, coordinates, game_state):

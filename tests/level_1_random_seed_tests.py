@@ -10,20 +10,30 @@ from logger import Logger
 import random
 import math
 
-strat_choices = [[BerserkerStrategyLevel1, FlankerStrategyLevel1], [FlankerStrategyLevel1, BerserkerStrategyLevel1]]
-winner_for_first_half = []
-winner_for_second_half = []
+strat_choices = [FlankerStrategyLevel1, BerserkerStrategyLevel1]
 
-for seed_number in range(1,10):
-    random.seed(seed_number)
-    game = Game(strat_choices[0], (5,5), 'random', 4, max_turns = 4, print_state_obsolete=False, can_log=True)
-    game.initialize_game()
-    winner_for_first_half.append(game.play())
+def run_simuations(strats, number_of_simulations):
+    first_half = run_half_simulations(strats, number_of_simulations // 2, 0)
+    second_half = run_half_simulations(strats[::-1], number_of_simulations // 2, number_of_simulations // 2)
+    draws = [game for game in (first_half + second_half) if game == None]# + [game for game in second_half if game is None]
+    return first_half,second_half,(first_half.count(0) + second_half.count(1)) / ((number_of_simulations - len(draws)) * .01), draws
 
-for seed_number in range(11,21):
-    random.seed(seed_number)
-    game = Game(strat_choices[1], (5,5), 'random', 4, max_turns = 4, print_state_obsolete=False, can_log=True)
-    game.initialize_game()
-    winner_for_second_half.append(game.play())
+def run_half_simulations(strats, number_of_simulations, seed_offset):
+    winner = []
+    for i in range(seed_offset, number_of_simulations+seed_offset):
+        random.seed(i+1)
 
-print('\nBerserker Won games', [index for index, player_index in enumerate(winner_for_first_half) if player_index == 0] + [index+5 for index, player_index in enumerate(winner_for_second_half) if player_index == 1], 'against Flanker!')
+        first_few_die_rolls = [math.ceil(10*random.random()) for _ in range(7)]
+        print('first few die rolls of game {}'.format(i))
+        print('\t',first_few_die_rolls,'\n')
+        
+        game = Game(strats, (5,5), 'random', print_state_obsolete=False, can_log=True, number_of_economic_phases=0, build_player_ship_yards=False, max_turns=5, number_of_movement_rounds=1)
+        game.initialize_game()
+        winner.append(game.play())
+    return winner
+
+games,games2, winrate, draws = run_simuations(strat_choices, 20)
+print('games,games2', games+games2)
+print('game indices', [index for index, outcome in enumerate(games) if outcome == 0] + [index+9 for index, outcome in enumerate(games2) if outcome == 1])
+print('\nFlanker Won', winrate, 'percent of the time against Berserker!')
+print('Flanker drew against Berserker', len(draws), 'times!')

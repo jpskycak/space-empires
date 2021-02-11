@@ -55,10 +55,10 @@ class Board:
                     self.asteroids.append(self.create_asteroid([x, y]))
 
     def create_planet(self, position):
-        return Planet(position, random.randint(0, 1))
+        return Planet(position, random.randint(0,1))
 
     def create_asteroid(self, position):
-        return Asteroid(position, random.randint(1, 2))
+        return Asteroid(position, random.randint(1,2))
 
     def create_colony(self, player, planet, position, turn_built):
         planet.is_colonized = True

@@ -11,6 +11,7 @@ class FlankerStrategyLevel1(BasicStrategy):
     def __init__(self, player_index):
         self.player_index = player_index
         self.flank_direction = (1,0)
+        self.flank_index = None
         self.__name__ = 'FlankerStrategyLevel1'
 
     def decide_ship_movement(self, unit_index, hidden_game_state):
@@ -24,8 +25,12 @@ class FlankerStrategyLevel1(BasicStrategy):
 
         translations = [(0,0), (1,0), (-1,0), (0,1), (0,-1)]
 
+        if self.flank_index is None:
+            if unit['type'] == 'Scout':
+                self.flank_index = unit_index
+
         # unit 0 does the flanking
-        if unit_index == 0:
+        if unit_index == self.flank_index:
             dist = abs(x_unit - x_opp) + abs(y_unit - y_opp)
             delta_x, delta_y = self.flank_direction
             reverse_flank_direction = (-delta_x, -delta_y)
@@ -36,12 +41,12 @@ class FlankerStrategyLevel1(BasicStrategy):
 
             # at the end, reverse the sidestep to get to enemy
             elif dist == 1:
-                reverse_flank_direction
+                return reverse_flank_direction
 
             # during the journey to the opponent, don't
             # reverse the sidestep
             else:
-                translations.remove(self.flank_direction)
+                translations.remove(reverse_flank_direction)
 
         best_translation = (0,0)
         smallest_distance_to_opponent = 999999999999

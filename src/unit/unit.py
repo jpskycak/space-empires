@@ -20,6 +20,22 @@ class Unit:
         self.attack = 0
         self.defense = 0
         self.center = [self.board_size[0] // 2, self.board_size[1] // 2]
+
+    def generate_state(self, current_player=False, combat=False):
+        if current_player or combat:
+            return {
+                'id': self.ID,
+                'coords': (self.x, self.y),
+                'type': self.type,
+                'hits_left': self.hits_left,
+                'technology': self.technology,
+                'player_index': self.player.player_index,
+            }
+        else:
+            return {
+                'coords': (self.x, self.y),
+                'player_index': self.player.player_index,
+            }
 '''
     def move_to_center(self, move_round):
         if self.can_move:

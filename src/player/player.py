@@ -41,7 +41,7 @@ class Player:
         self.strategy = strategy(int(player_index))
 
     def find_random_ship_yard(self):
-        return self.ship_yards[random.randint(0, len(self.ship_yards) - 1)].position
+        return self.ship_yards[random.randint()].position
 
     def find_amount_of_hull_size_building_capibility(self, position):
         total_hull_size_building_capibility_at_position = 0
@@ -116,6 +116,32 @@ class Player:
             if ship.player not in players:
                 players.append(ship.player)
         return players
+
+    def generate_state(self, current_player=True, combat=False):
+        if current_player:
+            return {
+                'name': self.strategy.__name__,
+                'Is Alive': self.is_alive,
+                'cp': self.creds,
+                'id': self.player_index,
+                'units': [unit.generate_state(current_player, combat) for unit in self.ships],
+                'colonies': [unit.generate_state(current_player, combat) for colony in self.colonies], 
+                'shipyards': [unit.generate_state(current_player, combat) for ship_yard in self.ship_yards],
+                'technology': self.technology,
+                'home_base': self.home_base.generate_state(current_player, combat),
+                'home_coords': (self.home_base.x, self.home_base.y)
+            }
+        else:
+            return {
+                'name': self.strategy.__name__,
+                'Is Alive': self.is_alive,
+                'id': self.player_index,
+                'units': [u.generate_state(current_player, combat) for u in self.ships],
+                'colonies': [unit.generate_state(current_player, combat) for colony in self.colonies], 
+                'shipyards': [unit.generate_state(current_player, combat) for ship_yard in self.ship_yards],
+                'home_base': self.home_base.generate_state(current_player, combat),
+                'home_coords': self.starting_position
+            }
 
     # check stuffs
     def check_colonization(self, ship, board, hidden_game_state):
