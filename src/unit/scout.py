@@ -12,3 +12,4 @@ class Scout(Unit):
         self.hits_left = 1
         self.cost = 6
         self.fighting_class = 0
+        self.technology = {tech: level for tech, level in player.technology.items()} #{'attack': 0, 'defense': 0, 'movement': 1, 'tactics': 0}

@@ -39,19 +39,19 @@ class CombatEngine:
             else:
                 ship.player.ships.remove(ship)
         ships_that_shot = []
+        if self.game.print_state_obsolete: print('fixed_ships', [ship.generate_state() for ship in fixed_ships])
         while self.more_than_one_player_left_fighting(fixed_ships):
             self.game.generate_state(phase='Combat')
-            if len(ships_that_shot) >= len(fixed_ships):
-                ships_that_shot = []
-            if self.asc_or_dsc != 'random':
-                self.current_roll = self.rolls[self.dice_roll_index]
-            else:
-                self.current_roll = math.floor(10*random.random()) + 1
-            attacking_ship, defending_ship = self.get_attacker_and_defender_ships(
-                location, fixed_ships, ships_that_shot)
+            
+            if len(ships_that_shot) >= len(fixed_ships): ships_that_shot = []
+            attacking_ship, defending_ship = self.get_attacker_and_defender_ships(location, fixed_ships, ships_that_shot)
+            if attacking_ship.type == 'Home Base' or attacking_ship.type == 'Colony':
+                ships_that_shot.append(attacking_ship)
+                continue
+            if self.asc_or_dsc != 'random': self.current_roll = self.rolls[self.dice_roll_index]
+            else: self.current_roll = math.floor(10*random.random()) + 1
             if defending_ship != None and attacking_ship != None:
-                hit_or_miss = self.start_fight(
-                    attacking_ship, defending_ship)  # make'em fight
+                hit_or_miss = self.start_fight(attacking_ship, defending_ship)
                 if not defending_ship.is_alive:
                     if defending_ship.type == 'Shipyard':
                         defending_ship.player.ship_yards.remove(defending_ship)
@@ -67,14 +67,9 @@ class CombatEngine:
                     else:
                         defending_ship.player.ships.remove(defending_ship)
                     fixed_ships.remove(defending_ship)
+                    try: ships_that_shot.remove(defending_ship)
+                    except: None
                 ships_that_shot.append(attacking_ship)
-                '''
-            if self.asc_or_dsc != 'random':
-                self.dice_roll_index += 1
-                if self.dice_roll_index > 5: self.dice_roll_index = 0
-                self.current_roll = self.rolls[self.dice_roll_index]
-            else:
-                self.current_roll = math.floor(10*random.random()) + 1'''
 
     def get_attacker_and_defender_ships(self, location, fixed_ships, ships_that_shot):
         attacking_ship = self.get_next_ally_ship(fixed_ships, ships_that_shot)
@@ -84,10 +79,9 @@ class CombatEngine:
         return attacking_ship, defending_ship
 
     def more_than_one_player_left_fighting(self, ships):
-        if ships != []:
-            players = [ships[0].player]
+        if len(ships) > 0:
             for ship in ships[1:]:
-                if ship.player not in players:
+                if ship.player is not ships[0].player:
                     return True
         return False
 
@@ -111,14 +105,24 @@ class CombatEngine:
     def attack(self, ship_1, ship_2):
         player_1 = ship_1.player
         player_2 = ship_2.player
-        hit_threshold = (ship_1.attack + player_1.technology['attack']) - (
-            ship_2.defense + player_2.technology['defense'])
-        if self.current_roll == 1 or self.current_roll <= hit_threshold:
+        hit_threshold = (ship_1.attack + ship_1.technology['attack']) - (ship_2.defense + ship_1.technology['defense'])
+        if self.game.print_state_obsolete:
+            print('\n\nself.current_roll', self.current_roll)
+            print('hit_threshold', hit_threshold)
+            print("(ship_1.attack + ship_1.technology['attack'])", (ship_1.attack + ship_1.technology['attack']))
+            print("(ship_2.defense + ship_1.technology['defense'])", (ship_2.defense + ship_1.technology['defense']))
+            print('\n\n')
+        if self.current_roll <= 1 or self.current_roll <= hit_threshold:
             if self.game.print_state_obsolete:
                 print('Player', player_1.player_index, 'Hit their shot, targeting Player',
                       player_2.player_index, "'s", ship_2.type, ship_2.ID)
             # player 2's ship loses some hits_left
-            ship_2.hits_left -= ship_1.attack + ship_1.technology['attack']
+            if ship_2.type == 'Home Base' or ship_2.type == 'Colony':
+                ship_2.hits_left -= 1
+                if ship_2.type == 'Home Base':  ship_2.income -= 5
+                if ship_2.type == 'Colony':  ship_2.income -= 2
+            else:
+                ship_2.hits_left -= ship_1.attack + ship_1.technology['attack']
             return True
         else:
             if self.game.print_state_obsolete:
@@ -137,9 +141,9 @@ class CombatEngine:
                         if ship.type == 'Colony':
                             ship.player.colonies.remove(ship)
                         else:
-                            ship.player.ships.remove(ship)
-                positions_of_ships[(x, y)] = [ship for ship in self.game.board.simple_sort(
-                    self.board.ships_dict[(x, y)]) if not self.if_it_cant_fight(ship)]
+                            ship.player.ships.remove(ship) 
+                positions_of_ships[(x, y)] = sorted(self.board.ships_dict[(x, y)], key=lambda ship: (ship.fighting_class, -ship.player.player_index, -ship.ID), reverse=True)
+
         return positions_of_ships
 
     def if_it_cant_fight(self, ship):

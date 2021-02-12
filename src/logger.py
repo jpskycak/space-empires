@@ -48,11 +48,11 @@ class Logger:
             if log_colonies:
                 for colony_attributes in player['colonies'].values():
                     colony_string = str(colony_attributes['name']) + ' Colony ID:', str(
-                        colony_attributes['ID']) + ': [' + str(colony_attributes['coords'][0]) + ',' + str(colony_attributes['coords'][1]) + '] \n'
+                        colony_attributes['id']) + ': [' + str(colony_attributes['coords'][0]) + ',' + str(colony_attributes['coords'][1]) + '] \n'
                     self.active_file.write(colony_string)
             if log_ship_yards:
                 for ship_yard_attributes in player['shipyards']:
-                    ship_yard_string = 'Ship Yard ID:' + str(ship_yard_attributes['ID']) + ': [' + str(
+                    ship_yard_string = 'Ship Yard ID:' + str(ship_yard_attributes['id']) + ': [' + str(
                         ship_yard_attributes['coords'][0]) + ',' + str(ship_yard_attributes['coords'][1]) + '] \n'
                     self.active_file.write(ship_yard_string)
             self.active_file.write('\n')

@@ -1,0 +1,49 @@
+Turn: 1
+FlankerStrategyLevel1
+Is Alive: True
+Home Base : Position: [2,0] 
+Scout: Position: [3,0] 
+Scout: Position: [2,1] 
+Scout: Position: [2,1] 
+
+BerserkerStrategyLevel1
+Is Alive: True
+Home Base : Position: [2,4] 
+Scout: Position: [2,3] 
+Scout: Position: [2,3] 
+Scout: Position: [2,3] 
+
+Turn: 2
+FlankerStrategyLevel1
+Is Alive: True
+Home Base : Position: [2,0] 
+Scout: Position: [3,1] 
+Scout: Position: [2,2] 
+
+BerserkerStrategyLevel1
+Is Alive: True
+Home Base : Position: [2,4] 
+Scout: Position: [2,2] 
+
+Turn: 3
+FlankerStrategyLevel1
+Is Alive: True
+Home Base : Position: [2,0] 
+Scout: Position: [3,2] 
+
+BerserkerStrategyLevel1
+Is Alive: True
+Home Base : Position: [2,4] 
+Scout: Position: [2,1] 
+
+Turn: 4
+FlankerStrategyLevel1
+Is Alive: True
+Home Base : Position: [2,0] 
+Scout: Position: [3,3] 
+
+BerserkerStrategyLevel1
+Is Alive: True
+Home Base : Position: [2,4] 
+Scout: Position: [2,0] 
+

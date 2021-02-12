@@ -92,8 +92,7 @@ class Game:
         if is_alive.count(True) == 1:
             for i, aliveness in enumerate(is_alive):
                 if aliveness:
-                    # if self.print_state_obsolete:
-                    print(self.players[i].strategy.__name__, 'WINS!')
+                    if self.print_state_obsolete: print(self.players[i].strategy.__name__, 'WINS!')
                     return i
         return None
 
@@ -122,12 +121,22 @@ class Game:
             print('Turn', self.turn)
         self.check_if_player_has_won()
         if not self.game_won:
+            if self.turn < self.max_turns and self.economic_phase and self.turn <= self.number_of_economic_phases:
+                self.generate_state(phase='Economic')
+                if self.print_state_obsolete:
+                    print('--------------------------------------------------')
+                    print('Economic Phase')
+                self.economic_engine.complete_all_taxes()
+                for player in self.players:
+                    if self.print_state_obsolete:
+                        print('Player', player.player_index, 'Has', player.creds, 'creds extra after the economic phase.')
+                if self.print_state_obsolete:
+                    self.state_obsolete()
             self.generate_state(phase='Movement')
             if self.print_state_obsolete:
                 print('--------------------------------------------------')
                 print('Move Phase')
-            self.movement_engine.complete_all_movements(
-                self.board, self.number_of_movement_rounds)
+            self.movement_engine.complete_all_movements(self.number_of_movement_rounds)
             if self.print_state_obsolete:
                 self.state_obsolete()
             self.generate_state(phase='Combat')
@@ -137,19 +146,7 @@ class Game:
             self.combat_engine.complete_all_fights()
             if self.print_state_obsolete:
                 self.state_obsolete()
-            if self.turn < self.max_turns and self.economic_phase and self.turn <= self.number_of_economic_phases:
-                self.generate_state(phase='Economic')
-                if self.print_state_obsolete:
-                    print('--------------------------------------------------')
-                    print('Economic Phase')
-                self.economic_engine.complete_all_taxes(self.game_state)
-                for player in self.players:
-                    if self.print_state_obsolete:
-                        print('Player', player.player_index, 'Has',
-                              player.creds, 'creds extra after the economic phase.')
-                if self.print_state_obsolete:
-                    self.state_obsolete()
-
+            
         self.board.update_board()
 
     def generate_state(self, current_player=None, phase=None, movement_round=0, initial_state=False):

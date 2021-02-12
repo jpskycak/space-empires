@@ -13,3 +13,4 @@ class Dreadnaught(Unit):
         self.hits_left = 3
         self.cost = 24
         self.fighting_class = 4
+        self.technology = {tech: level for tech, level in player.technology.items()} #{'attack': 0, 'defense': 0, 'movement': 1, 'tactics': 0}

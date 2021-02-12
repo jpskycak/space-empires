@@ -13,3 +13,4 @@ class Carrier(Unit):
         self.cost = 12
         self.fighting_class = 1
         self.stored_ships = stored_ships
+        self.technology = {tech: level for tech, level in player.technology.items()} #{'attack': 0, 'defense': 0, 'movement': 1, 'tactics': 0}

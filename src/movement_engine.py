@@ -3,7 +3,7 @@ class MovementEngine:
         self.board = board
         self.game = game
 
-    def complete_all_movements(self, board, number_of_rounds):
+    def complete_all_movements(self, number_of_rounds):
         for movement_round in range(0, number_of_rounds):  # 3 rounds of movements
             for player in self.game.players:
                 self.game.generate_state(phase='Movement', current_player=player)
@@ -13,8 +13,7 @@ class MovementEngine:
                         x, y = player.strategy.decide_ship_movement(ship_index, hidden_game_state)
                         if 0 <= ship.x + x and 0 <= ship.y + y and ship.x + x <= hidden_game_state['board_size'][0] - 1 and ship.y + y <= hidden_game_state['board_size'][0] - 1 and x+y <= self.get_movement_tech(ship.technology['movement'])[movement_round]:
                             if not self.cant_move_due_to_combat(ship) and not player.check_colonization(ship, self.board, hidden_game_state):
-                                if self.game.print_state_obsolete:
-                                    print('...')
+                                #if self.game.print_state_obsolete:
                                 ship.x += x
                                 ship.y += y
                         else:

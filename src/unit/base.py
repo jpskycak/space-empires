@@ -14,3 +14,4 @@ class Base(Unit):
         self.cost = 12
         self.fighting_class = 4
         self.can_move = False
+        self.technology = {'attack': 0, 'defense': 0, 'movement': 1, 'tactics': 0}

@@ -11,7 +11,7 @@ class MovementBerserkerStrategyLevel2(BasicStrategy):
     def decide_purchases(self, hidden_game_state):
         purchases = {'units': [], 'technology': []}
         total_cost = 0
-        if hidden_game_state['turn'] == 1 and hidden_game_state['players'][self.player_index]['technology']['movement'] == 0 and 'movement' not in purchases['technology']:
+        if hidden_game_state['turn'] == 1 and hidden_game_state['players'][self.player_index]['technology']['movement'] == 1 and 'movement' not in purchases['technology']:
             if hidden_game_state['players'][self.player_index]['cp'] > total_cost + self.upgrade_costs('movement', hidden_game_state):
                 purchases['technology'].append('movement')
                 total_cost += self.upgrade_costs('movement', hidden_game_state)

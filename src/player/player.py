@@ -20,7 +20,7 @@ sys.path.append('src')
 class Player:
     def __init__(self, game, strategy, position, board_size, player_index, player_color, colony_ships = False, ship_yards = False):
         self.game = game
-        self.creds = 0
+        self.creds = 10
         self.is_alive = True
         self.death_count = 0  # if winCount = amount of units self.lose = true
         self.player_index = player_index
@@ -28,14 +28,14 @@ class Player:
         # starts out with 8 scouts later it would be 3 miners
         self.board_size = board_size
         self.new_ship_index = 4
-        if colony_ships: self.ships = [Scout(self, position, self.board_size, 1), Scout(self, position, self.board_size, 2), Scout(self, position, self.board_size, 3), Colony_Ship(self, position, self.board_size, 4), Colony_Ship(self, position, self.board_size, 5), Colony_Ship(self, position, self.board_size, 6)]
-        else: self.ships = [Scout(self, position, self.board_size, 1), Scout(self, position, self.board_size, 2), Scout(self, position, self.board_size, 3)]
         if ship_yards: self.ship_yards = [Ship_Yard(self, position, self.board_size, 1), Ship_Yard(self, position, self.board_size, 2), Ship_Yard(self, position, self.board_size, 3), Ship_Yard(self, position, self.board_size, 4)]
         else: self.ship_yards = []
+        self.technology = {'attack': 0, 'defense': 0, 'movement': 1, 'shipsize': 1, 'shipyard': 1, 'terraform': 0, 'tactics': 0, 'exploration': 0}
+        if colony_ships: self.ships = [Scout(self, position, self.board_size, 1), Scout(self, position, self.board_size, 2), Scout(self, position, self.board_size, 3), Colony_Ship(self, position, self.board_size, 4), Colony_Ship(self, position, self.board_size, 5), Colony_Ship(self, position, self.board_size, 6)]
+        else: self.ships = [Scout(self, position, self.board_size, 1), Scout(self, position, self.board_size, 2), Scout(self, position, self.board_size, 3)]
         self.home_base = Colony(self, position, self.board_size, 1, home_base=True, turn_built = -1)
         self.colonies = []
         self.starting_position = position
-        self.technology = {'attack': 0, 'defense': 0, 'movement': 1, 'shipsize': 1, 'shipyard': 1, 'terraform': 0, 'tactics': 0, 'exploration': 0}
         self.fighting_class_tech = 0
         self.movement_tech_upgrade_number = 0
         self.strategy = strategy(int(player_index))
@@ -72,9 +72,9 @@ class Player:
                 if self.game.print_state_obsolete: print('Player', self.player_index, 'upgraded their fighting class from', self.technology['tactics'] - 1, 'to', self.technology['tactics'])
 
             # speed
-            elif stat_to_upgrade == 'movement' and sum(self.technology['movement']) - 2 < 6:
+            elif stat_to_upgrade == 'movement' and self.technology['movement'] < 6:
                 self.technology['movement'] += 1
-                if self.game.print_state_obsolete: print('Player', self.player_index, 'upgraded their movement speed from', sum(self.technology['movement']) - 3, 'to', sum(self.technology['movement']) - 2)
+                if self.game.print_state_obsolete: print('Player', self.player_index, 'upgraded their movement speed from', self.technology['movement'] - 1, 'to', self.technology['movement'])
 
             # ship yard
             elif stat_to_upgrade == 'shipyard' and self.technology['shipyard'] < 2:
@@ -125,8 +125,8 @@ class Player:
                 'cp': self.creds,
                 'id': self.player_index,
                 'units': [unit.generate_state(current_player, combat) for unit in self.ships],
-                'colonies': [unit.generate_state(current_player, combat) for colony in self.colonies], 
-                'shipyards': [unit.generate_state(current_player, combat) for ship_yard in self.ship_yards],
+                'colonies': [colony.generate_state(current_player, combat) for colony in self.colonies], 
+                'shipyards': [ship_yard.generate_state(current_player, combat) for ship_yard in self.ship_yards],
                 'technology': self.technology,
                 'home_base': self.home_base.generate_state(current_player, combat),
                 'home_coords': (self.home_base.x, self.home_base.y)
@@ -136,9 +136,9 @@ class Player:
                 'name': self.strategy.__name__,
                 'Is Alive': self.is_alive,
                 'id': self.player_index,
-                'units': [u.generate_state(current_player, combat) for u in self.ships],
-                'colonies': [unit.generate_state(current_player, combat) for colony in self.colonies], 
-                'shipyards': [unit.generate_state(current_player, combat) for ship_yard in self.ship_yards],
+                'units': [unit.generate_state(current_player, combat) for unit in self.ships],
+                'colonies': [colony.generate_state(current_player, combat) for colony in self.colonies], 
+                'shipyards': [ship_yard.generate_state(current_player, combat) for ship_yard in self.ship_yards],
                 'home_base': self.home_base.generate_state(current_player, combat),
                 'home_coords': self.starting_position
             }

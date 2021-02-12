@@ -22,18 +22,14 @@ def run_half_simulations(strats, number_of_simulations, seed_offset):
     winner = []
     for i in range(seed_offset, number_of_simulations+seed_offset):
         random.seed(i+1)
-
-        first_few_die_rolls = [math.ceil(10*random.random()) for _ in range(7)]
-        print('first few die rolls of game {}'.format(i))
-        print('\t',first_few_die_rolls,'\n')
-        
         game = Game(strats, (5,5), 'random', print_state_obsolete=False, can_log=True, number_of_economic_phases=0, build_player_ship_yards=False, max_turns=5, number_of_movement_rounds=1)
         game.initialize_game()
         winner.append(game.play())
     return winner
 
 games,games2, winrate, draws = run_simuations(strat_choices, 20)
-print('games,games2', games+games2)
-print('game indices', [index for index, outcome in enumerate(games) if outcome == 0] + [index+9 for index, outcome in enumerate(games2) if outcome == 1])
+
+print('\ngames,games2', games+games2)
+print('game indices', [index for index, outcome in enumerate(games) if outcome == 0] + [index+10 for index, outcome in enumerate(games2) if outcome == 1])
 print('\nFlanker Won', winrate, 'percent of the time against Berserker!')
 print('Flanker drew against Berserker', len(draws), 'times!')

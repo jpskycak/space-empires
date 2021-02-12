@@ -13,5 +13,6 @@ class Ship_Yard(Unit):
         self.defense = 0
         self.hits_left = 1
         self.cost = 6
-        self.fighting_class = 0
+        self.fighting_class = 2
         self.can_move = False
+        self.technology = {'attack': 0, 'defense': 0, 'movement': 1, 'tactics': 0}

@@ -34,9 +34,15 @@ class Board:
                         if ship.x == x and ship.y == y:
                             ships_arr.append(ship)
                 if len(ships_arr) > 0:
-                    self.ships_dict[(x, y)] = self.simple_sort(ships_arr)
+                    fixed_arr, sorted_arr = [ship for ship in ships_arr if ship.type != 'Colony' and ship.type != 'Colony Ship' and ship.type != 'Decoy' and ship.type != 'Miner'], []
+                    for ship in [ship for ship in ships_arr if ship not in fixed_arr]:
+                        if ship.type == 'Colony':
+                            ship.player.colonies.remove(ship)
+                        else:
+                            ship.player.ships.remove(ship)
+                    self.ships_dict[(x, y)] = sorted(fixed_arr,  key=lambda ship: (ship.fighting_class, -ship.player.player_index, -ship.ID), reverse=True)
 
-    # create <instert thing here> stuffs
+    # create planets and asteroids stuffs
     def create_planets_and_asteroids(self):
         #print('create planets and asteroids')
         self.planets = []
@@ -70,19 +76,6 @@ class Board:
         else:
             self.dice_roll_index += 1
         return self.rolls[self.dice_roll_index]
-
-    def simple_sort(self, arr):
-        fixed_arr, sorted_arr = [ship for ship in arr if ship.type != 'Colony' and ship.type != 'Colony Ship' and ship.type != 'Decoy' and ship.type != 'Miner'], []
-        for ship in [ship for ship in arr if ship not in fixed_arr]:
-            if ship.type == 'Colony':
-                ship.player.colonies.remove(ship)
-            else:
-                ship.player.ships.remove(ship)
-        while len(fixed_arr) > 0:
-            strongest_ship = max(fixed_arr, key=lambda ship: ship.technology['tactics'] + ship.technology['attack'] + ship.attack)
-            sorted_arr.append(strongest_ship)
-            fixed_arr.remove(strongest_ship)
-        return sorted_arr
 
 class Planet:
     def __init__(self, position, tier, is_colonized = False):

@@ -1,0 +1,97 @@
+Turn: 1
+NumbersBerserkerStrategyLevel2
+Is Alive: True
+Home Base : Position: [2,0] 
+Scout: Position: [2,1] 
+Scout: Position: [2,1] 
+Scout: Position: [2,1] 
+Scout: Position: [2,1] 
+Scout: Position: [2,1] 
+Scout: Position: [2,1] 
+Scout: Position: [2,1] 
+Ship Yard ID:1: [2,0] 
+Ship Yard ID:2: [2,0] 
+Ship Yard ID:3: [2,0] 
+Ship Yard ID:4: [2,0] 
+
+AttackBerserkerStrategyLevel2
+Is Alive: True
+Home Base : Position: [2,4] 
+Scout: Position: [2,3] 
+Scout: Position: [2,3] 
+Scout: Position: [2,3] 
+Scout: Position: [2,3] 
+Ship Yard ID:1: [2,4] 
+Ship Yard ID:2: [2,4] 
+Ship Yard ID:3: [2,4] 
+Ship Yard ID:4: [2,4] 
+
+Turn: 2
+NumbersBerserkerStrategyLevel2
+Is Alive: True
+Home Base : Position: [2,0] 
+Scout: Position: [2,2] 
+Scout: Position: [2,2] 
+Scout: Position: [2,2] 
+Scout: Position: [2,2] 
+Scout: Position: [2,2] 
+Scout: Position: [2,2] 
+Scout: Position: [2,2] 
+Ship Yard ID:1: [2,0] 
+Ship Yard ID:2: [2,0] 
+Ship Yard ID:3: [2,0] 
+Ship Yard ID:4: [2,0] 
+
+AttackBerserkerStrategyLevel2
+Is Alive: True
+Home Base : Position: [2,4] 
+Scout: Position: [2,2] 
+Ship Yard ID:1: [2,4] 
+Ship Yard ID:2: [2,4] 
+Ship Yard ID:3: [2,4] 
+Ship Yard ID:4: [2,4] 
+
+Turn: 3
+NumbersBerserkerStrategyLevel2
+Is Alive: True
+Home Base : Position: [2,0] 
+Scout: Position: [2,3] 
+Scout: Position: [2,3] 
+Scout: Position: [2,3] 
+Scout: Position: [2,3] 
+Scout: Position: [2,3] 
+Scout: Position: [2,3] 
+Scout: Position: [2,3] 
+Ship Yard ID:1: [2,0] 
+Ship Yard ID:2: [2,0] 
+Ship Yard ID:3: [2,0] 
+Ship Yard ID:4: [2,0] 
+
+AttackBerserkerStrategyLevel2
+Is Alive: True
+Home Base : Position: [2,4] 
+Ship Yard ID:1: [2,4] 
+Ship Yard ID:2: [2,4] 
+Ship Yard ID:3: [2,4] 
+Ship Yard ID:4: [2,4] 
+
+Turn: 4
+NumbersBerserkerStrategyLevel2
+Is Alive: True
+Home Base : Position: [2,0] 
+Scout: Position: [2,4] 
+Scout: Position: [2,4] 
+Scout: Position: [2,4] 
+Scout: Position: [2,4] 
+Scout: Position: [2,4] 
+Scout: Position: [2,4] 
+Scout: Position: [2,4] 
+Ship Yard ID:1: [2,0] 
+Ship Yard ID:2: [2,0] 
+Ship Yard ID:3: [2,0] 
+Ship Yard ID:4: [2,0] 
+
+AttackBerserkerStrategyLevel2
+Is Alive: True
+Home Base : Position: [2,4] 
+

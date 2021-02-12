@@ -13,3 +13,4 @@ class BattleCruiser(Unit):
         self.hits_left = 2
         self.cost = 15
         self.fighting_class = 3
+        self.technology = {tech: level for tech, level in player.technology.items()} #{'attack': 0, 'defense': 0, 'movement': 1, 'tactics': 0}
