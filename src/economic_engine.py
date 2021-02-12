@@ -21,25 +21,24 @@ class EconomicEngine:
 
     def complete_all_taxes(self):
         for player in self.game.players:
-            player.creds += self.income(player)
-            if self.game.print_state_obsolete:
-                print('Player', player.player_index,
-                      "'s income is", self.income(player))
+            player.income = self.income(player)
+            player.creds += player.income
+            if self.game.print_state_obsolete: print('Player', player.player_index, "'s income is", self.income(player))
             player.maintenance_cost = self.maintenance_cost(player)
             if player.creds < player.maintenance_cost:
                 self.remove_ships(player)
             player.creds -= player.maintenance_cost
-            if self.game.print_state_obsolete:
-                print('Player', player.player_index,
-                      "'s maintenance is", player.maintenance_cost)
+            if self.game.print_state_obsolete: print('Player', player.player_index, "'s maintenance is", player.maintenance_cost)
             self.game.generate_state(phase='Economic', current_player=player)
             purchases = player.strategy.decide_purchases(self.game.game_state)
+            corrected_purchases = {'units': [], 'technology': []}
             for technology in purchases['technology']:
-                upgrade_cost = player.upgrade_cost(
-                    technology, self.game.game_state)
+                upgrade_cost = player.upgrade_cost(technology, self.game.game_state)
                 if player.creds > upgrade_cost:
                     player.upgrade(technology, self.game.game_state)
                     player.creds -= upgrade_cost
+                    corrected_purchases['technology'].append(technology)
+
             ship_yard_build_stats = []
             self.game.generate_state(phase='Economic', current_player=player)
             for unit in purchases['units']:
@@ -66,9 +65,11 @@ class EconomicEngine:
                     player.ships.append(ship)
                     player.creds -= ship.cost
                     if self.game.print_state_obsolete:
-                        print('Player', player.player_index,
-                              "bought a", ship.type)
+                        print('Player', player.player_index, "bought a", ship.type)
                     player.new_ship_index += 1
+                    corrected_purchases['units'].append(unit)
+                
+            if self.game.can_log: self.game.log.log_economic(self.game.game_state, player.player_index, player.maintenance_cost, player.income, corrected_purchases)
         self.game.generate_state(phase='Economic')
 
     def create_ship(self, player, ship, position, board_size, ID):

@@ -1,98 +1,200 @@
+
 Turn: 1
 AttackBerserkerStrategyLevel2
 Is Alive: True
 Home Base : Position: [2,0] 
-Scout: Position: [2,1] 
-Scout: Position: [2,1] 
-Scout: Position: [2,1] 
-Scout: Position: [2,1] 
-Ship Yard ID:1: [2,0] 
-Ship Yard ID:2: [2,0] 
-Ship Yard ID:3: [2,0] 
-Ship Yard ID:4: [2,0] 
+Scout : Ship ID : 1 : Position : [2,0] 
+Scout : Ship ID : 2 : Position : [2,0] 
+Scout : Ship ID : 3 : Position : [2,0] 
+Shipyard : Ship Yard ID: 1 : Position : [2,0] 
+Shipyard : Ship Yard ID: 2 : Position : [2,0] 
+Shipyard : Ship Yard ID: 3 : Position : [2,0] 
+Shipyard : Ship Yard ID: 4 : Position : [2,0] 
+attack : Level : 0
+defense : Level : 0
+movement : Level : 1
+shipsize : Level : 1
+shipyard : Level : 1
+terraform : Level : 0
+tactics : Level : 0
+exploration : Level : 0
 
 NumbersBerserkerStrategyLevel2
 Is Alive: True
 Home Base : Position: [2,4] 
-Scout: Position: [2,3] 
-Scout: Position: [2,3] 
-Scout: Position: [2,3] 
-Scout: Position: [2,3] 
-Scout: Position: [2,3] 
-Scout: Position: [2,3] 
-Scout: Position: [2,3] 
-Ship Yard ID:1: [2,4] 
-Ship Yard ID:2: [2,4] 
-Ship Yard ID:3: [2,4] 
-Ship Yard ID:4: [2,4] 
+Scout : Ship ID : 1 : Position : [2,4] 
+Scout : Ship ID : 2 : Position : [2,4] 
+Scout : Ship ID : 3 : Position : [2,4] 
+Shipyard : Ship Yard ID: 1 : Position : [2,4] 
+Shipyard : Ship Yard ID: 2 : Position : [2,4] 
+Shipyard : Ship Yard ID: 3 : Position : [2,4] 
+Shipyard : Ship Yard ID: 4 : Position : [2,4] 
+attack : Level : 0
+defense : Level : 0
+movement : Level : 1
+shipsize : Level : 1
+shipyard : Level : 1
+terraform : Level : 0
+tactics : Level : 0
+exploration : Level : 0
+
+
+AttackBerserkerStrategyLevel2 : Maintenance : 3 : Income : 20
+Technology Purchases : 
+    attack
+Unit Purchases : 
+    Scout
+
+NumbersBerserkerStrategyLevel2 : Maintenance : 3 : Income : 20
+Technology Purchases : 
+Unit Purchases : 
+    Scout
+    Scout
+    Scout
+    Scout
+
+AttackBerserkerStrategyLevel2
+Is Alive: True
+Home Base : Position : [2,0] 
+Scout : Ship ID : 1 : Position Changes : [2,0] -> [2,1] 
+Scout : Ship ID : 2 : Position Changes : [2,0] -> [2,1] 
+Scout : Ship ID : 3 : Position Changes : [2,0] -> [2,1] 
+Scout : Ship ID : 4 : Position Changes : [2,0] -> [2,1] 
+Shipyard : Ship Yard ID: 1 : Position Changes : [2,0] -> [2,0] 
+Shipyard : Ship Yard ID: 2 : Position Changes : [2,0] -> [2,0] 
+Shipyard : Ship Yard ID: 3 : Position Changes : [2,0] -> [2,0] 
+Shipyard : Ship Yard ID: 4 : Position Changes : [2,0] -> [2,0] 
+
+
+NumbersBerserkerStrategyLevel2
+Is Alive: True
+Home Base : Position : [2,4] 
+Scout : Ship ID : 1 : Position Changes : [2,4] -> [2,3] 
+Scout : Ship ID : 2 : Position Changes : [2,4] -> [2,3] 
+Scout : Ship ID : 3 : Position Changes : [2,4] -> [2,3] 
+Scout : Ship ID : 4 : Position Changes : [2,4] -> [2,3] 
+Scout : Ship ID : 5 : Position Changes : [2,4] -> [2,3] 
+Scout : Ship ID : 6 : Position Changes : [2,4] -> [2,3] 
+Scout : Ship ID : 7 : Position Changes : [2,4] -> [2,3] 
+Shipyard : Ship Yard ID: 1 : Position Changes : [2,4] -> [2,4] 
+Shipyard : Ship Yard ID: 2 : Position Changes : [2,4] -> [2,4] 
+Shipyard : Ship Yard ID: 3 : Position Changes : [2,4] -> [2,4] 
+Shipyard : Ship Yard ID: 4 : Position Changes : [2,4] -> [2,4] 
+
 
 Turn: 2
 AttackBerserkerStrategyLevel2
 Is Alive: True
 Home Base : Position: [2,0] 
-Scout: Position: [2,2] 
-Scout: Position: [2,2] 
-Scout: Position: [2,2] 
-Ship Yard ID:1: [2,0] 
-Ship Yard ID:2: [2,0] 
-Ship Yard ID:3: [2,0] 
-Ship Yard ID:4: [2,0] 
+Scout : Ship ID : 1 : Position : [2,1] 
+Scout : Ship ID : 2 : Position : [2,1] 
+Scout : Ship ID : 3 : Position : [2,1] 
+Scout : Ship ID : 4 : Position : [2,1] 
+Shipyard : Ship Yard ID: 1 : Position : [2,0] 
+Shipyard : Ship Yard ID: 2 : Position : [2,0] 
+Shipyard : Ship Yard ID: 3 : Position : [2,0] 
+Shipyard : Ship Yard ID: 4 : Position : [2,0] 
+attack : Level : 1
+defense : Level : 0
+movement : Level : 1
+shipsize : Level : 1
+shipyard : Level : 1
+terraform : Level : 0
+tactics : Level : 0
+exploration : Level : 0
 
 NumbersBerserkerStrategyLevel2
 Is Alive: True
 Home Base : Position: [2,4] 
-Scout: Position: [2,2] 
-Ship Yard ID:1: [2,4] 
-Ship Yard ID:2: [2,4] 
-Ship Yard ID:3: [2,4] 
-Ship Yard ID:4: [2,4] 
+Scout : Ship ID : 1 : Position : [2,3] 
+Scout : Ship ID : 2 : Position : [2,3] 
+Scout : Ship ID : 3 : Position : [2,3] 
+Scout : Ship ID : 4 : Position : [2,3] 
+Scout : Ship ID : 5 : Position : [2,3] 
+Scout : Ship ID : 6 : Position : [2,3] 
+Scout : Ship ID : 7 : Position : [2,3] 
+Shipyard : Ship Yard ID: 1 : Position : [2,4] 
+Shipyard : Ship Yard ID: 2 : Position : [2,4] 
+Shipyard : Ship Yard ID: 3 : Position : [2,4] 
+Shipyard : Ship Yard ID: 4 : Position : [2,4] 
+attack : Level : 0
+defense : Level : 0
+movement : Level : 1
+shipsize : Level : 1
+shipyard : Level : 1
+terraform : Level : 0
+tactics : Level : 0
+exploration : Level : 0
+
+
+AttackBerserkerStrategyLevel2
+Is Alive: True
+Home Base : Position : [2,0] 
+Scout : Ship ID : 1 : Position Changes : [2,1] -> [2,2] 
+Scout : Ship ID : 2 : Position Changes : [2,1] -> [2,2] 
+Scout : Ship ID : 3 : Position Changes : [2,1] -> [2,2] 
+Scout : Ship ID : 4 : Position Changes : [2,1] -> [2,2] 
+Shipyard : Ship Yard ID: 1 : Position Changes : [2,0] -> [2,0] 
+Shipyard : Ship Yard ID: 2 : Position Changes : [2,0] -> [2,0] 
+Shipyard : Ship Yard ID: 3 : Position Changes : [2,0] -> [2,0] 
+Shipyard : Ship Yard ID: 4 : Position Changes : [2,0] -> [2,0] 
+
+
+NumbersBerserkerStrategyLevel2
+Is Alive: True
+Home Base : Position : [2,4] 
+Scout : Ship ID : 1 : Position Changes : [2,3] -> [2,2] 
+Scout : Ship ID : 2 : Position Changes : [2,3] -> [2,2] 
+Scout : Ship ID : 3 : Position Changes : [2,3] -> [2,2] 
+Scout : Ship ID : 4 : Position Changes : [2,3] -> [2,2] 
+Scout : Ship ID : 5 : Position Changes : [2,3] -> [2,2] 
+Scout : Ship ID : 6 : Position Changes : [2,3] -> [2,2] 
+Scout : Ship ID : 7 : Position Changes : [2,3] -> [2,2] 
+Shipyard : Ship Yard ID: 1 : Position Changes : [2,4] -> [2,4] 
+Shipyard : Ship Yard ID: 2 : Position Changes : [2,4] -> [2,4] 
+Shipyard : Ship Yard ID: 3 : Position Changes : [2,4] -> [2,4] 
+Shipyard : Ship Yard ID: 4 : Position Changes : [2,4] -> [2,4] 
+
+
+AttackBerserkerStrategyLevel2's Scout 1 shot NumbersBerserkerStrategyLevel2's Scout 1
+NumbersBerserkerStrategyLevel2's Scout 1 was destroyed at coords [2,2]
+AttackBerserkerStrategyLevel2's Scout 2 missed their shot on NumbersBerserkerStrategyLevel2's Scout 2
+AttackBerserkerStrategyLevel2's Scout 3 missed their shot on NumbersBerserkerStrategyLevel2's Scout 2
+
+AttackBerserkerStrategyLevel2's Scout 4 shot NumbersBerserkerStrategyLevel2's Scout 2
+NumbersBerserkerStrategyLevel2's Scout 2 was destroyed at coords [2,2]
+NumbersBerserkerStrategyLevel2's Scout 3 missed their shot on AttackBerserkerStrategyLevel2's Scout 1
+NumbersBerserkerStrategyLevel2's Scout 4 missed their shot on AttackBerserkerStrategyLevel2's Scout 1
+NumbersBerserkerStrategyLevel2's Scout 5 missed their shot on AttackBerserkerStrategyLevel2's Scout 1
+NumbersBerserkerStrategyLevel2's Scout 6 missed their shot on AttackBerserkerStrategyLevel2's Scout 1
+
+NumbersBerserkerStrategyLevel2's Scout 7 shot AttackBerserkerStrategyLevel2's Scout 1
+AttackBerserkerStrategyLevel2's Scout 1 was destroyed at coords [2,2]
+
+AttackBerserkerStrategyLevel2's Scout 2 shot NumbersBerserkerStrategyLevel2's Scout 3
+NumbersBerserkerStrategyLevel2's Scout 3 was destroyed at coords [2,2]
+AttackBerserkerStrategyLevel2's Scout 3 missed their shot on NumbersBerserkerStrategyLevel2's Scout 4
+
+AttackBerserkerStrategyLevel2's Scout 4 shot NumbersBerserkerStrategyLevel2's Scout 4
+NumbersBerserkerStrategyLevel2's Scout 4 was destroyed at coords [2,2]
+NumbersBerserkerStrategyLevel2's Scout 5 missed their shot on AttackBerserkerStrategyLevel2's Scout 2
+NumbersBerserkerStrategyLevel2's Scout 6 missed their shot on AttackBerserkerStrategyLevel2's Scout 2
+NumbersBerserkerStrategyLevel2's Scout 7 missed their shot on AttackBerserkerStrategyLevel2's Scout 2
+AttackBerserkerStrategyLevel2's Scout 2 missed their shot on NumbersBerserkerStrategyLevel2's Scout 5
+
+AttackBerserkerStrategyLevel2's Scout 3 shot NumbersBerserkerStrategyLevel2's Scout 5
+NumbersBerserkerStrategyLevel2's Scout 5 was destroyed at coords [2,2]
+
+AttackBerserkerStrategyLevel2's Scout 4 shot NumbersBerserkerStrategyLevel2's Scout 6
+NumbersBerserkerStrategyLevel2's Scout 6 was destroyed at coords [2,2]
+NumbersBerserkerStrategyLevel2's Scout 7 missed their shot on AttackBerserkerStrategyLevel2's Scout 2
+AttackBerserkerStrategyLevel2's Scout 2 missed their shot on NumbersBerserkerStrategyLevel2's Scout 7
+
+AttackBerserkerStrategyLevel2's Scout 3 shot NumbersBerserkerStrategyLevel2's Scout 7
+NumbersBerserkerStrategyLevel2's Scout 7 was destroyed at coords [2,2]
 
 Turn: 3
 AttackBerserkerStrategyLevel2
 Is Alive: True
 Home Base : Position: [2,0] 
-Scout: Position: [2,3] 
-Scout: Position: [2,3] 
-Scout: Position: [2,3] 
-Ship Yard ID:1: [2,0] 
-Ship Yard ID:2: [2,0] 
-Ship Yard ID:3: [2,0] 
-Ship Yard ID:4: [2,0] 
-
-NumbersBerserkerStrategyLevel2
-Is Alive: True
-Home Base : Position: [2,4] 
-Ship Yard ID:1: [2,4] 
-Ship Yard ID:2: [2,4] 
-Ship Yard ID:3: [2,4] 
-Ship Yard ID:4: [2,4] 
-
-Turn: 4
-AttackBerserkerStrategyLevel2
-Is Alive: True
-Home Base : Position: [2,0] 
-Scout: Position: [2,4] 
-Ship Yard ID:1: [2,0] 
-Ship Yard ID:2: [2,0] 
-Ship Yard ID:3: [2,0] 
-Ship Yard ID:4: [2,0] 
-
-NumbersBerserkerStrategyLevel2
-Is Alive: True
-Home Base : Position: [2,4] 
-Ship Yard ID:4: [2,4] 
-
-Turn: 5
-AttackBerserkerStrategyLevel2
-Is Alive: True
-Home Base : Position: [2,0] 
-Ship Yard ID:1: [2,0] 
-Ship Yard ID:2: [2,0] 
-Ship Yard ID:3: [2,0] 
-Ship Yard ID:4: [2,0] 
-
-NumbersBerserkerStrategyLevel2
-Is Alive: True
-Home Base : Position: [2,4] 
-Ship Yard ID:4: [2,4] 
-
+Scout : Ship ID : 2 : Position : [2,2] 

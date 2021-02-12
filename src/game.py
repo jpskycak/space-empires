@@ -77,22 +77,21 @@ class Game:
             self.state_obsolete()
             print('--------------------------------------------------')
         while not self.game_won and not self.check_if_player_has_won() and self.turn <= self.max_turns:
+            self.generate_state(current_player=None)
+            if self.can_log: self.log.log_turn(self.game_state)
             self.complete_turn()
-            if self.can_log:
-                self.log.log_turn(self.game_state, log_ship_yards=True)
             self.turn += 1
         player_won = self.player_has_won()
         return player_won
 
     def player_has_won(self):
         is_alive = self.aliveness()
-        #print('is_alive', [(self.game_state['players'][i], aliveness) for i, aliveness in enumerate(is_alive)])
-        if self.can_log:
-            self.log.end_logs()
         if is_alive.count(True) == 1:
             for i, aliveness in enumerate(is_alive):
                 if aliveness:
                     if self.print_state_obsolete: print(self.players[i].strategy.__name__, 'WINS!')
+                    if self.can_log:
+                        self.log.end_logs(player_who_won = self.players[i].generate_state(current_player=True))
                     return i
         return None
 
@@ -156,7 +155,6 @@ class Game:
             'turn': self.turn,
             'winner': None,
             'board_size':  self.board_size,
-            'players': [player.generate_state(current_player=(current_player == player), combat=(phase == 'Combat')) for player in self.players],
             'phase': phase,
             'round': movement_state['round'],
             'unit_data': {
@@ -179,6 +177,10 @@ class Game:
                 'shipyard': [0, 20, 30]
             },
         }
+        if current_player == None:
+            self.game_state['players'] = [player.generate_state(current_player=True, combat=(phase == 'Combat')) for player in self.players]
+        else:
+            self.game_state['players'] = [player.generate_state(current_player=(current_player==player), combat=(phase == 'Combat')) for player in self.players]
         if phase == 'Combat':
             self.game_state['combat'] = self.combat_engine.generate_combat_array()
 

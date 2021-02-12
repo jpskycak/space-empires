@@ -126,7 +126,7 @@ class Player:
                 'id': self.player_index,
                 'units': [unit.generate_state(current_player, combat) for unit in self.ships],
                 'colonies': [colony.generate_state(current_player, combat) for colony in self.colonies], 
-                'shipyards': [ship_yard.generate_state(current_player, combat) for ship_yard in self.ship_yards],
+                'ship_yards': [ship_yard.generate_state(current_player, combat) for ship_yard in self.ship_yards],
                 'technology': self.technology,
                 'home_base': self.home_base.generate_state(current_player, combat),
                 'home_coords': (self.home_base.x, self.home_base.y)
@@ -138,7 +138,7 @@ class Player:
                 'id': self.player_index,
                 'units': [unit.generate_state(current_player, combat) for unit in self.ships],
                 'colonies': [colony.generate_state(current_player, combat) for colony in self.colonies], 
-                'shipyards': [ship_yard.generate_state(current_player, combat) for ship_yard in self.ship_yards],
+                'ship_yards': [ship_yard.generate_state(current_player, combat) for ship_yard in self.ship_yards],
                 'home_base': self.home_base.generate_state(current_player, combat),
                 'home_coords': self.starting_position
             }

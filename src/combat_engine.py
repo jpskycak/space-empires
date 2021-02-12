@@ -52,6 +52,7 @@ class CombatEngine:
             else: self.current_roll = math.floor(10*random.random()) + 1
             if defending_ship != None and attacking_ship != None:
                 hit_or_miss = self.start_fight(attacking_ship, defending_ship)
+                if self.game.can_log: self.game.log.log_combat(attacking_ship.player.generate_state(combat=True), attacking_ship.generate_state(combat=True), defending_ship.player.generate_state(combat=True), defending_ship.generate_state(combat=True), hit_or_miss)
                 if not defending_ship.is_alive:
                     if defending_ship.type == 'Shipyard':
                         defending_ship.player.ship_yards.remove(defending_ship)
@@ -96,7 +97,7 @@ class CombatEngine:
         if ship_2.hits_left < 1:
             if self.game.print_state_obsolete:
                 print("Player", ship_2.player.player_index, "'s", ship_2.type,
-                      ship_2.ID, "was destroyed at co-ords", [ship_2.x, ship_2.y])
+                      ship_2.ID, "was destroyed at coords", [ship_2.x, ship_2.y])
                 print('-------------------------')
             ship_2.is_alive = False
         return hit_or_miss

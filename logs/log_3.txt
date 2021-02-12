@@ -1,49 +1,216 @@
+
 Turn: 1
 FlankerStrategyLevel1
 Is Alive: True
 Home Base : Position: [2,0] 
-Scout: Position: [3,0] 
-Scout: Position: [2,1] 
-Scout: Position: [2,1] 
+Scout : Ship ID : 1 : Position : [2,0] 
+Scout : Ship ID : 2 : Position : [2,0] 
+Scout : Ship ID : 3 : Position : [2,0] 
+attack : Level : 0
+defense : Level : 0
+movement : Level : 1
+shipsize : Level : 1
+shipyard : Level : 1
+terraform : Level : 0
+tactics : Level : 0
+exploration : Level : 0
 
 BerserkerStrategyLevel1
 Is Alive: True
 Home Base : Position: [2,4] 
-Scout: Position: [2,3] 
-Scout: Position: [2,3] 
-Scout: Position: [2,3] 
+Scout : Ship ID : 1 : Position : [2,4] 
+Scout : Ship ID : 2 : Position : [2,4] 
+Scout : Ship ID : 3 : Position : [2,4] 
+attack : Level : 0
+defense : Level : 0
+movement : Level : 1
+shipsize : Level : 1
+shipyard : Level : 1
+terraform : Level : 0
+tactics : Level : 0
+exploration : Level : 0
+
+
+FlankerStrategyLevel1
+Is Alive: True
+Home Base : Position : [2,0] 
+Scout : Ship ID : 1 : Position Changes : [2,0] -> [3,0] 
+Scout : Ship ID : 2 : Position Changes : [2,0] -> [2,1] 
+Scout : Ship ID : 3 : Position Changes : [2,0] -> [2,1] 
+
+
+BerserkerStrategyLevel1
+Is Alive: True
+Home Base : Position : [2,4] 
+Scout : Ship ID : 1 : Position Changes : [2,4] -> [2,3] 
+Scout : Ship ID : 2 : Position Changes : [2,4] -> [2,3] 
+Scout : Ship ID : 3 : Position Changes : [2,4] -> [2,3] 
+
 
 Turn: 2
 FlankerStrategyLevel1
 Is Alive: True
 Home Base : Position: [2,0] 
-Scout: Position: [3,1] 
-Scout: Position: [2,2] 
+Scout : Ship ID : 1 : Position : [3,0] 
+Scout : Ship ID : 2 : Position : [2,1] 
+Scout : Ship ID : 3 : Position : [2,1] 
+attack : Level : 0
+defense : Level : 0
+movement : Level : 1
+shipsize : Level : 1
+shipyard : Level : 1
+terraform : Level : 0
+tactics : Level : 0
+exploration : Level : 0
 
 BerserkerStrategyLevel1
 Is Alive: True
 Home Base : Position: [2,4] 
-Scout: Position: [2,2] 
+Scout : Ship ID : 1 : Position : [2,3] 
+Scout : Ship ID : 2 : Position : [2,3] 
+Scout : Ship ID : 3 : Position : [2,3] 
+attack : Level : 0
+defense : Level : 0
+movement : Level : 1
+shipsize : Level : 1
+shipyard : Level : 1
+terraform : Level : 0
+tactics : Level : 0
+exploration : Level : 0
+
+
+FlankerStrategyLevel1
+Is Alive: True
+Home Base : Position : [2,0] 
+Scout : Ship ID : 1 : Position Changes : [3,0] -> [3,1] 
+Scout : Ship ID : 2 : Position Changes : [2,1] -> [2,2] 
+Scout : Ship ID : 3 : Position Changes : [2,1] -> [2,2] 
+
+
+BerserkerStrategyLevel1
+Is Alive: True
+Home Base : Position : [2,4] 
+Scout : Ship ID : 1 : Position Changes : [2,3] -> [2,2] 
+Scout : Ship ID : 2 : Position Changes : [2,3] -> [2,2] 
+Scout : Ship ID : 3 : Position Changes : [2,3] -> [2,2] 
+
+
+FlankerStrategyLevel1's Scout 2 shot BerserkerStrategyLevel1's Scout 1
+BerserkerStrategyLevel1's Scout 1 was destroyed at coords [2,2]
+FlankerStrategyLevel1's Scout 3 missed their shot on BerserkerStrategyLevel1's Scout 2
+BerserkerStrategyLevel1's Scout 2 missed their shot on FlankerStrategyLevel1's Scout 2
+BerserkerStrategyLevel1's Scout 3 missed their shot on FlankerStrategyLevel1's Scout 2
+FlankerStrategyLevel1's Scout 2 missed their shot on BerserkerStrategyLevel1's Scout 2
+
+FlankerStrategyLevel1's Scout 3 shot BerserkerStrategyLevel1's Scout 2
+BerserkerStrategyLevel1's Scout 2 was destroyed at coords [2,2]
+
+BerserkerStrategyLevel1's Scout 3 shot FlankerStrategyLevel1's Scout 2
+FlankerStrategyLevel1's Scout 2 was destroyed at coords [2,2]
+FlankerStrategyLevel1's Scout 3 missed their shot on BerserkerStrategyLevel1's Scout 3
+
+BerserkerStrategyLevel1's Scout 3 shot FlankerStrategyLevel1's Scout 3
+FlankerStrategyLevel1's Scout 3 was destroyed at coords [2,2]
 
 Turn: 3
 FlankerStrategyLevel1
 Is Alive: True
 Home Base : Position: [2,0] 
-Scout: Position: [3,2] 
+Scout : Ship ID : 1 : Position : [3,1] 
+attack : Level : 0
+defense : Level : 0
+movement : Level : 1
+shipsize : Level : 1
+shipyard : Level : 1
+terraform : Level : 0
+tactics : Level : 0
+exploration : Level : 0
 
 BerserkerStrategyLevel1
 Is Alive: True
 Home Base : Position: [2,4] 
-Scout: Position: [2,1] 
+Scout : Ship ID : 3 : Position : [2,2] 
+attack : Level : 0
+defense : Level : 0
+movement : Level : 1
+shipsize : Level : 1
+shipyard : Level : 1
+terraform : Level : 0
+tactics : Level : 0
+exploration : Level : 0
+
+
+FlankerStrategyLevel1
+Is Alive: True
+Home Base : Position : [2,0] 
+Scout : Ship ID : 1 : Position Changes : [3,1] -> [3,2] 
+
+
+BerserkerStrategyLevel1
+Is Alive: True
+Home Base : Position : [2,4] 
+Scout : Ship ID : 3 : Position Changes : [2,2] -> [2,1] 
+
 
 Turn: 4
 FlankerStrategyLevel1
 Is Alive: True
 Home Base : Position: [2,0] 
-Scout: Position: [3,3] 
+Scout : Ship ID : 1 : Position : [3,2] 
+attack : Level : 0
+defense : Level : 0
+movement : Level : 1
+shipsize : Level : 1
+shipyard : Level : 1
+terraform : Level : 0
+tactics : Level : 0
+exploration : Level : 0
 
 BerserkerStrategyLevel1
 Is Alive: True
 Home Base : Position: [2,4] 
-Scout: Position: [2,0] 
+Scout : Ship ID : 3 : Position : [2,1] 
+attack : Level : 0
+defense : Level : 0
+movement : Level : 1
+shipsize : Level : 1
+shipyard : Level : 1
+terraform : Level : 0
+tactics : Level : 0
+exploration : Level : 0
 
+
+FlankerStrategyLevel1
+Is Alive: True
+Home Base : Position : [2,0] 
+Scout : Ship ID : 1 : Position Changes : [3,2] -> [3,3] 
+
+
+BerserkerStrategyLevel1
+Is Alive: True
+Home Base : Position : [2,4] 
+Scout : Ship ID : 3 : Position Changes : [2,1] -> [2,0] 
+
+
+BerserkerStrategyLevel1's Scout 3 shot FlankerStrategyLevel1's Home Base 1
+BerserkerStrategyLevel1's Scout 3 missed their shot on FlankerStrategyLevel1's Home Base 1
+BerserkerStrategyLevel1's Scout 3 missed their shot on FlankerStrategyLevel1's Home Base 1
+BerserkerStrategyLevel1's Scout 3 missed their shot on FlankerStrategyLevel1's Home Base 1
+BerserkerStrategyLevel1's Scout 3 missed their shot on FlankerStrategyLevel1's Home Base 1
+BerserkerStrategyLevel1's Scout 3 missed their shot on FlankerStrategyLevel1's Home Base 1
+
+BerserkerStrategyLevel1's Scout 3 shot FlankerStrategyLevel1's Home Base 1
+BerserkerStrategyLevel1's Scout 3 missed their shot on FlankerStrategyLevel1's Home Base 1
+BerserkerStrategyLevel1's Scout 3 missed their shot on FlankerStrategyLevel1's Home Base 1
+BerserkerStrategyLevel1's Scout 3 missed their shot on FlankerStrategyLevel1's Home Base 1
+BerserkerStrategyLevel1's Scout 3 missed their shot on FlankerStrategyLevel1's Home Base 1
+BerserkerStrategyLevel1's Scout 3 missed their shot on FlankerStrategyLevel1's Home Base 1
+
+BerserkerStrategyLevel1's Scout 3 shot FlankerStrategyLevel1's Home Base 1
+BerserkerStrategyLevel1's Scout 3 missed their shot on FlankerStrategyLevel1's Home Base 1
+BerserkerStrategyLevel1's Scout 3 missed their shot on FlankerStrategyLevel1's Home Base 1
+BerserkerStrategyLevel1's Scout 3 missed their shot on FlankerStrategyLevel1's Home Base 1
+
+BerserkerStrategyLevel1's Scout 3 shot FlankerStrategyLevel1's Home Base 1
+FlankerStrategyLevel1's Home Base 1 was destroyed at coords [2,0]
+BerserkerStrategyLevel1 Won!!!

@@ -27,7 +27,7 @@ class FlankerStrategyLevel2(BasicStrategy):
 
     def decide_ship_movement(self, unit_index, hidden_game_state):
         myself = hidden_game_state['players'][self.player_index]
-        opponent_index = 1 - self.player_index
+        opponent_index = self.player_index - 1
         opponent = hidden_game_state['players'][opponent_index]
 
         unit = myself['units'][unit_index]

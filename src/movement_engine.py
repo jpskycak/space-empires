@@ -4,6 +4,7 @@ class MovementEngine:
         self.game = game
 
     def complete_all_movements(self, number_of_rounds):
+        old_game_state = {key: value for key,value in self.game.game_state.items()}
         for movement_round in range(0, number_of_rounds):  # 3 rounds of movements
             for player in self.game.players:
                 self.game.generate_state(phase='Movement', current_player=player)
@@ -21,6 +22,8 @@ class MovementEngine:
                                   (ship.x + x, ship.y + y), 'so the program was aborted.')
                             exit()
                         player.check_colonization(ship, self.board, hidden_game_state)
+        self.game.generate_state(phase='Movement')
+        if self.game.can_log: self.game.log.log_movement(old_game_state, self.game.game_state)
 
     def generate_movement_state(self, movement_round):
         return {'round': movement_round}
