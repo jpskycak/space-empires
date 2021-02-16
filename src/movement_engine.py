@@ -12,7 +12,8 @@ class MovementEngine:
                 for ship_index, ship in enumerate(player.ships):
                     for _ in range(0, self.get_movement_tech(ship.technology['movement'])[movement_round]):
                         x, y = player.strategy.decide_ship_movement(ship_index, hidden_game_state)
-                        if 0 <= ship.x + x and 0 <= ship.y + y and ship.x + x <= hidden_game_state['board_size'][0] - 1 and ship.y + y <= hidden_game_state['board_size'][0] - 1 and x+y <= self.get_movement_tech(ship.technology['movement'])[movement_round]:
+                        
+                        if self.check_if_in_bounds(ship,x,y) and x+y <= self.get_movement_tech(ship.technology['movement'])[movement_round]:
                             if not self.cant_move_due_to_combat(ship) and not player.check_colonization(ship, self.board, hidden_game_state):
                                 #if self.game.print_state_obsolete:
                                 ship.x += x
@@ -24,6 +25,9 @@ class MovementEngine:
                         player.check_colonization(ship, self.board, hidden_game_state)
         self.game.generate_state(phase='Movement')
         if self.game.can_log: self.game.log.log_movement(old_game_state, self.game.game_state)
+
+    def check_if_in_bounds(self, ship, x,y):
+        return 0 <= ship.x + x and 0 <= ship.y + y and ship.x + x <= hidden_game_state['board_size'][0] - 1 and ship.y + y <= hidden_game_state['board_size'][0] - 1
 
     def generate_movement_state(self, movement_round):
         return {'round': movement_round}
