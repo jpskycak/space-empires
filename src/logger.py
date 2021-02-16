@@ -102,7 +102,7 @@ class Logger:
 
     def log_combat(self, player_1, ship_1, player_2, ship_2, did_ship_1_hit):
         if did_ship_1_hit:
-            combat_string = '\n' + str(player_1['name']) + "'s " + str(ship_1['type']) + ' ' + str(ship_1['id']) + ' shot ' + str(player_2['name']) + "'s " + str(ship_2['type']) + ' ' + str(ship_2['id'])
+            combat_string = str(player_1['name']) + "'s " + str(ship_1['type']) + ' ' + str(ship_1['id']) + ' shot ' + str(player_2['name']) + "'s " + str(ship_2['type']) + ' ' + str(ship_2['id'])
             if ship_2['hits_left'] < 1:
                 combat_string += '\n' + str(player_2['name']) + "'s " + str(ship_2['type']) + ' ' +  str(ship_2['id']) + ' was destroyed at coords [' + str(ship_2['coords'][0]) + ',' + str(ship_2['coords'][1]) + ']'
         else:

@@ -32,7 +32,10 @@ class CombatEngine:
 
     def complete_all_combats(self, location, ships):
         #screened_ships = ...
-        fixed_ships = [ship for ship in ships if not ship.type == 'Colony' and not ship.type == 'Colony Ship' and not ship.type == 'Decoy' and not ship.type == 'Miner' and (ship.x, ship.y) == location]  # and not in screened_ships]
+        fixed_ships = []
+        for ship in ships:
+            if ship.type not in ['Colony', 'Colony Ship', 'Decoy', 'Miner'] and (ship.x, ship.y) == location:
+                fixed_ships.append(ship)  # and not in screened_ships]
         for ship in [ship for ship in ships if ship not in fixed_ships and (ship.x, ship.y) == location]:
             if ship.type == 'Colony':
                 ship.player.colonies.remove(ship)
@@ -52,7 +55,11 @@ class CombatEngine:
             else: self.current_roll = math.floor(10*random.random()) + 1
             if defending_ship != None and attacking_ship != None:
                 hit_or_miss = self.start_fight(attacking_ship, defending_ship)
-                if self.game.can_log: self.game.log.log_combat(attacking_ship.player.generate_state(combat=True), attacking_ship.generate_state(combat=True), defending_ship.player.generate_state(combat=True), defending_ship.generate_state(combat=True), hit_or_miss)
+                attacking_ship_player_state = attacking_ship.player.generate_state(combat=True)
+                attacking_ship_state = attacking_ship.generate_state(combat=True)
+                defending_ship_player_state = defending_ship.player.generate_state(combat=True)
+                defending_ship_state = defending_ship.generate_state(combat=True)
+                if self.game.can_log: self.game.log.log_combat(attacking_ship_player_state, attacking_ship_state, defending_ship_player_state, defending_ship_state, hit_or_miss)
                 if not defending_ship.is_alive:
                     if defending_ship.type == 'Shipyard':
                         defending_ship.player.ship_yards.remove(defending_ship)

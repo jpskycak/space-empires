@@ -38,7 +38,6 @@ class EconomicEngine:
                     player.upgrade(technology, self.game.game_state)
                     player.creds -= upgrade_cost
                     corrected_purchases['technology'].append(technology)
-
             ship_yard_build_stats = []
             self.game.generate_state(phase='Economic', current_player=player)
             for unit in purchases['units']:
