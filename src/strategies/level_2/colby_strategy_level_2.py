@@ -22,12 +22,8 @@ class ColbyStrategyLevel2(BasicStrategy):
         unit = myself['units'][unit_index]
         x_unit, y_unit = unit['coords']
         x_opp, y_opp = opponent['home_coords']
-        if unit_index == 0 and unit['coords'][0] != 1:
-            return (-1,0)
-        elif unit_index == 1 and unit['coords'][0] != 3:
-            return (1,0)
-        elif (unit_index == 0 or unit_index == 1) and (unit['coords'][0] != 1 or unit['coords'][0] != 3) and unit['coords'][1] < 4:
-            return (0,1)
+        if hidden_game_state['turn'] < 5:
+            return (0,0)
         else:
             translations = [(0,0), (1,0), (-1,0), (0,1), (0,-1)]
             best_translation = (0,0)

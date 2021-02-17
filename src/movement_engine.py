@@ -25,7 +25,7 @@ class MovementEngine:
         if self.game.can_log: self.game.log.log_movement(old_game_state, self.game.game_state)
 
     def check_if_in_bounds(self, ship, x,y):
-        return 0 <= ship.x + x <= hidden_game_state['board_size'][0] - 1 and 0 <= ship.y + y <= hidden_game_state['board_size'][0] - 1
+        return 0 <= ship.x + x <= self.game.game_state['board_size'][0] - 1 and 0 <= ship.y + y <= self.game.game_state['board_size'][0] - 1
 
     def generate_movement_state(self, movement_round):
         return {'round': movement_round}

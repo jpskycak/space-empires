@@ -14,16 +14,52 @@ def run_simuations(strats, number_of_simulations):
     first_half = run_half_simulations(strats, number_of_simulations // 2, 0)
     second_half = run_half_simulations(strats[::-1], number_of_simulations // 2, number_of_simulations // 2 + 1)
     draws = [game for game in (first_half + second_half) if game == None]# + [game for game in second_half if game is None]
-    return (first_half.count(0) + second_half.count(1)) / ((number_of_simulations - len(draws)) * .01), draws
+    if len(draws) < number_of_simulations:
+        return (first_half.count(0) + second_half.count(1)) / ((number_of_simulations - len(draws)) * .01), draws
+    else:
+        return 0, draws
 
 def run_half_simulations(strats, number_of_simulations, seed_offset):
     winner = []
     for i in range(0, number_of_simulations):
         random.seed(i+seed_offset)
-        game = Game(strats, (5,5), 'random', print_state_obsolete=False, can_log=False, number_of_economic_phases=1, build_player_ship_yards=True, max_turns=5, number_of_movement_rounds=1)
+        game = Game(strats, (5,5), 'random', print_state_obsolete=False, can_log=False, number_of_economic_phases=1, build_player_ship_yards=True, max_turns=8, number_of_movement_rounds=1)
         game.initialize_game()
         winner.append(game.play())
     return winner
+
+
+print('\nColby vs ...')
+
+#Colby vs Attack Berserker
+strat_choices = [ColbyStrategyLevel2, AttackBerserkerStrategyLevel2]
+winrate, draws = run_simuations(strat_choices, 1000)
+print('\nColby Won', winrate, 'percent of the time against Attack Berserker!')
+print('Colby drew against Attack Berserker', len(draws), 'times!')
+
+#Colby vs Defense Berserker
+strat_choices = [ColbyStrategyLevel2, DefenseBerserkerStrategyLevel2]
+winrate, draws = run_simuations(strat_choices, 1000)
+print('\nColby Won', winrate, 'percent of the time against Defense Berserker!')
+print('Colby drew against Defense Berserker', len(draws), 'times!')
+
+#Colby vs Movement Berserker
+strat_choices = [ColbyStrategyLevel2, MovementBerserkerStrategyLevel2]
+winrate, draws = run_simuations(strat_choices, 1000)
+print('\nColby Won', winrate, 'percent of the time against Movement Berserker!')
+print('Colby drew against Movement Berserker', len(draws), 'times!')
+
+#Colby vs Numbers Berserker
+strat_choices = [ColbyStrategyLevel2, NumbersBerserkerStrategyLevel2]
+winrate, draws = run_simuations(strat_choices, 1000)
+print('\nColby Won', winrate, 'percent of the time against Numbers Berserker!')
+print('Colby drew against Numbers Berserker', len(draws), 'times!')
+
+#Colby vs Flanker
+strat_choices = [ColbyStrategyLevel2, FlankerStrategyLevel2]
+winrate, _ = run_simuations(strat_choices, 1000)
+print('\nColby Won', winrate, 'percent of the time against Flanker!')
+print('Colby drew against Defense Flanker', len(draws), 'times!')
 
 print('\nBerserker vs Berserker')
 
@@ -88,35 +124,3 @@ strat_choices = [FlankerStrategyLevel2, NumbersBerserkerStrategyLevel2]
 winrate, draws = run_simuations(strat_choices, 1000)
 print('\nFlanker Won', winrate, 'percent of the time against Numbers Berserker!')
 print('Flanker drew against Numbers Berserker', len(draws), 'times!')
-
-print('\nColby vs ...')
-
-#Colby vs Attack Berserker
-strat_choices = [ColbyStrategyLevel2, AttackBerserkerStrategyLevel2]
-winrate, draws = run_simuations(strat_choices, 1000)
-print('\nColby Won', winrate, 'percent of the time against Attack Berserker!')
-print('Colby drew against Attack Berserker', len(draws), 'times!')
-
-#Colby vs Defense Berserker
-strat_choices = [ColbyStrategyLevel2, DefenseBerserkerStrategyLevel2]
-winrate, draws = run_simuations(strat_choices, 1000)
-print('\nColby Won', winrate, 'percent of the time against Defense Berserker!')
-print('Colby drew against Defense Berserker', len(draws), 'times!')
-
-#Colby vs Movement Berserker
-strat_choices = [ColbyStrategyLevel2, MovementBerserkerStrategyLevel2]
-winrate, draws = run_simuations(strat_choices, 1000)
-print('\nColby Won', winrate, 'percent of the time against Movement Berserker!')
-print('Colby drew against Movement Berserker', len(draws), 'times!')
-
-#Colby vs Numbers Berserker
-strat_choices = [ColbyStrategyLevel2, NumbersBerserkerStrategyLevel2]
-winrate, draws = run_simuations(strat_choices, 1000)
-print('\nColby Won', winrate, 'percent of the time against Numbers Berserker!')
-print('Colby drew against Numbers Berserker', len(draws), 'times!')
-
-#Colby vs Flanker
-strat_choices = [ColbyStrategyLevel2, FlankerStrategyLevel2]
-winrate, _ = run_simuations(strat_choices, 1000)
-print('\nColby Won', winrate, 'percent of the time against Flanker!')
-print('Colby drew against Defense Flanker', len(draws), 'times!')
